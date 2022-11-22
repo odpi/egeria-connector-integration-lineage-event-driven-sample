@@ -83,7 +83,7 @@ public class SampleLineageEventReceiverIntegrationConnector extends OpenLineageE
         }
     }
     @Override
-    public void processEvent(String event)
+    synchronized public void processEvent(String event)
     {
         if (myContext != null)
         {
