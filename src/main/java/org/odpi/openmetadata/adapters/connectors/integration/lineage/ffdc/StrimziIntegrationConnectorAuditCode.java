@@ -128,7 +128,7 @@ public enum StrimziIntegrationConnectorAuditCode implements AuditLogMessageSet
     ;
 
     private String                     logMessageId;
-    private OMRSAuditLogRecordSeverity severity;
+    private final OMRSAuditLogRecordSeverity severity;
     private String                     logMessage;
     private String                     systemAction;
     private String                     userAction;

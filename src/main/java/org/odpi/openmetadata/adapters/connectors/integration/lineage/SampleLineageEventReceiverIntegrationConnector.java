@@ -31,7 +31,7 @@ public class SampleLineageEventReceiverIntegrationConnector extends OpenLineageE
     }
 
     @Override
-    public void start() throws ConnectorCheckedException {
+    public synchronized void start() throws ConnectorCheckedException {
         super.start();
 
         final String methodName = "start";
