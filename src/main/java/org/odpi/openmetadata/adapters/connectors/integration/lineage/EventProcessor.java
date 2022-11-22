@@ -15,7 +15,9 @@ import org.odpi.openmetadata.repositoryservices.connectors.openmetadatatopic.Ope
 
 import java.util.*;
 
-
+/**
+ * This class processes an event. The code here has been extracted from the integration connector, so it is easier to unit test.
+ */
 @SuppressWarnings("JavaUtilDate")
 public class EventProcessor  {
 
