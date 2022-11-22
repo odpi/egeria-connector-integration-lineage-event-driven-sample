@@ -211,7 +211,7 @@ public class EventProcessor  {
 
                 List<SchemaAttributeProperties> addSchemaAttributes = new ArrayList<>();
                 List<String> deleteSchemaAttributeGUIDs = new ArrayList<>();
-                List<SchemaAttributeElement> updateSchemaAttributes = new ArrayList<>();
+               // List<SchemaAttributeElement> updateSchemaAttributes = new ArrayList<>();
                 for (String existingQName : existingKeySet) {
                     if (jsonKeySet.contains(existingQName)) {
                         // TODO updates to attributes
