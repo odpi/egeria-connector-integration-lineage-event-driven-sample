@@ -3,22 +3,16 @@
 
 package org.odpi.openmetadata.adapters.connectors.integration.lineage;
 
-import org.odpi.openmetadata.accessservices.assetmanager.metadataelements.DataAssetElement;
-import org.odpi.openmetadata.accessservices.assetmanager.metadataelements.SchemaAttributeElement;
-import org.odpi.openmetadata.accessservices.assetmanager.metadataelements.SchemaTypeElement;
-import org.odpi.openmetadata.accessservices.assetmanager.properties.*;
 import org.odpi.openmetadata.adapters.connectors.integration.openlineage.OpenLineageEventReceiverIntegrationConnector;
 import org.odpi.openmetadata.adapters.connectors.integration.openlineage.ffdc.OpenLineageIntegrationConnectorAuditCode;
 import org.odpi.openmetadata.frameworks.connectors.Connector;
 import org.odpi.openmetadata.frameworks.connectors.ffdc.ConnectorCheckedException;
-import org.odpi.openmetadata.frameworks.connectors.ffdc.InvalidParameterException;
-import org.odpi.openmetadata.frameworks.connectors.ffdc.PropertyServerException;
-import org.odpi.openmetadata.frameworks.connectors.ffdc.UserNotAuthorizedException;
 import org.odpi.openmetadata.frameworks.connectors.properties.ConnectionProperties;
 import org.odpi.openmetadata.integrationservices.lineage.connector.LineageIntegratorContext;
 import org.odpi.openmetadata.repositoryservices.connectors.openmetadatatopic.OpenMetadataTopicConnector;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class SampleLineageEventReceiverIntegrationConnector extends OpenLineageEventReceiverIntegrationConnector {

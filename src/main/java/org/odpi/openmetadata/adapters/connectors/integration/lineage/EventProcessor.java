@@ -7,14 +7,9 @@ import org.odpi.openmetadata.accessservices.assetmanager.metadataelements.DataAs
 import org.odpi.openmetadata.accessservices.assetmanager.metadataelements.SchemaAttributeElement;
 import org.odpi.openmetadata.accessservices.assetmanager.metadataelements.SchemaTypeElement;
 import org.odpi.openmetadata.accessservices.assetmanager.properties.*;
-import org.odpi.openmetadata.adapters.connectors.integration.openlineage.OpenLineageEventReceiverIntegrationConnector;
-import org.odpi.openmetadata.adapters.connectors.integration.openlineage.ffdc.OpenLineageIntegrationConnectorAuditCode;
-import org.odpi.openmetadata.frameworks.connectors.Connector;
-import org.odpi.openmetadata.frameworks.connectors.ffdc.ConnectorCheckedException;
 import org.odpi.openmetadata.frameworks.connectors.ffdc.InvalidParameterException;
 import org.odpi.openmetadata.frameworks.connectors.ffdc.PropertyServerException;
 import org.odpi.openmetadata.frameworks.connectors.ffdc.UserNotAuthorizedException;
-import org.odpi.openmetadata.frameworks.connectors.properties.ConnectionProperties;
 import org.odpi.openmetadata.integrationservices.lineage.connector.LineageIntegratorContext;
 import org.odpi.openmetadata.repositoryservices.connectors.openmetadatatopic.OpenMetadataTopicConnector;
 
@@ -24,11 +19,10 @@ import java.util.*;
 public class EventProcessor  {
     private final Map<String, OpenMetadataTopicConnector> topicConnectors = new HashMap<>();
 
-    private LineageIntegratorContext                myContext       = null;
-    static final String SEPARATOR = "~";
+    private LineageIntegratorContext                myContext;
     private  List<String> inAssetGUIDs = null;
     private  List<String> outAssetGUIDs = null;
-    private Map<String,String> inputAssetMap = new HashMap<>();
+
 
 
     public EventProcessor(LineageIntegratorContext  myContext ) {
