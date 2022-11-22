@@ -18,7 +18,6 @@ import java.util.*;
 
 @SuppressWarnings("JavaUtilDate")
 public class EventProcessor  {
-    private final Map<String, OpenMetadataTopicConnector> topicConnectors = new HashMap<>();
 
     private LineageIntegratorContext                myContext;
     private  List<String> inAssetGUIDs = null;
