@@ -64,7 +64,6 @@ public class EventProcessor  {
      * @throws PropertyServerException property server Exception
      */
     public List<String> upsertAssets(  List<EventContent.AssetFromJSON> jsonAssets) throws InvalidParameterException, UserNotAuthorizedException, PropertyServerException {
-
         List<String> assetGUIDs = new ArrayList<>();
         for (EventContent.AssetFromJSON jsonAsset:jsonAssets) {
             String assetQualifiedName = jsonAsset.getQualifiedName();
@@ -294,10 +293,8 @@ public class EventProcessor  {
             String newDescription = eventContent.getProcessDescription();
             if (existingDisplayName == null) {
                 processProperties.setDisplayName(newDisplayName);
-            } else if (existingDisplayName !=null) {
-                if(!existingDisplayName.equals(newDisplayName)) {
-                    processProperties.setDisplayName(newDisplayName);
-                }
+            } else if(!existingDisplayName.equals(newDisplayName)) {
+                processProperties.setDisplayName(newDisplayName);
             }
             if(existingDescription ==null) {
                 processProperties.setDescription(newDescription);
@@ -306,6 +303,8 @@ public class EventProcessor  {
             }
 
             myContext.updateProcess(processElement.getElementHeader().getGUID(),true, processProperties, new Date());
+
+            // now check if there are any assets for this process that are not in the event
 
         }
         for (String assetGUID : inAssetGUIDs) {
