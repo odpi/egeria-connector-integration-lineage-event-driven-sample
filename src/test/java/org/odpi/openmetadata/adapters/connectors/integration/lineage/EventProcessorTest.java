@@ -118,16 +118,9 @@ public class EventProcessorTest
         assertTrue(lastNameFound);
         assertTrue(ageFound);
 
+        // test update assets and processes
 
-
-
-
-
-
-
-        // test update asset display Name
-
-        textPath = "src/test/resources/Sample2-update-asset-displayNames.json";
+        textPath = "src/test/resources/Sample2-update-assets-and-process.json";
         path = Paths.get(textPath);
         content = Files.readString(path);
         eventContent = new EventContent(content);
@@ -156,9 +149,41 @@ public class EventProcessorTest
         processElement = processElementList.get(0);
         assertTrue("1234567890".equals(processElement.getProcessProperties().getQualifiedName()));
         assertTrue("TestRes-2".equals(processElement.getProcessProperties().getDisplayName()));
+        assertTrue("TestResource-2".equals(processElement.getProcessProperties().getDescription()));
 
+        // replace assets
 
-
+//        textPath = "src/test/resources/Sample3-replace-assets.json";
+//        path = Paths.get(textPath);
+//        content = Files.readString(path);
+//        eventContent = new EventContent(content);
+//
+//        eventProcessor = new EventProcessor(mockContext);
+//        eventProcessor.processEvent(eventContent);
+//        assetList = mockContext.getDataAssetsByName("C6B7B1B717C840F686EE2426241ED18CE1D053019534F03495E8CD644976FA37-2",0, 1000,new Date());
+//        assertTrue(assetList!= null);
+//        assertTrue(assetList.size() ==1);
+//        inputDataAssetElement = assetList.get(0);
+//        assertTrue(inputDataAssetElement.getDataAssetProperties().getDisplayName().equals("Foo-3"));
+//        assertTrue(inputDataAssetElement.getElementHeader().getGUID() != null);
+//
+//
+//        assetList = mockContext.getDataAssetsByName("vertriebskunde-services.agree-kundendaten-3",0, 1000,new Date());
+//        assertTrue(assetList!= null);
+//        assertTrue(assetList.size() ==1);
+//        outputDataAssetElement = assetList.get(0);
+//        assertTrue(outputDataAssetElement.getDataAssetProperties().getDisplayName().equals("Kundendaten-3"));
+//        assertTrue(outputDataAssetElement.getElementHeader().getGUID() != null);
+//
+//
+//        processElementList = mockContext.getProcessesByName("1234567890", 0 , 1000,new Date());
+//        assertTrue(processElementList != null);
+//        assertTrue(!processElementList.isEmpty());
+//        processElement = processElementList.get(0);
+//        assertTrue("1234567890".equals(processElement.getProcessProperties().getQualifiedName()));
+//        assertTrue("TestRes-3".equals(processElement.getProcessProperties().getDisplayName()));
+//        assertTrue("TestResource-3".equals(processElement.getProcessProperties().getDescription()));
+//
 
 
 

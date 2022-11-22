@@ -4,6 +4,7 @@
 package org.odpi.openmetadata.adapters.connectors.integration.lineage;
 
 import org.odpi.openmetadata.accessservices.assetmanager.metadataelements.DataAssetElement;
+import org.odpi.openmetadata.accessservices.assetmanager.metadataelements.ProcessElement;
 import org.odpi.openmetadata.accessservices.assetmanager.metadataelements.SchemaAttributeElement;
 import org.odpi.openmetadata.accessservices.assetmanager.metadataelements.SchemaTypeElement;
 import org.odpi.openmetadata.accessservices.assetmanager.properties.*;
@@ -63,7 +64,6 @@ public class EventProcessor  {
      * @throws PropertyServerException property server Exception
      */
     public List<String> upsertAssets(  List<EventContent.AssetFromJSON> jsonAssets) throws InvalidParameterException, UserNotAuthorizedException, PropertyServerException {
-
         List<String> assetGUIDs = new ArrayList<>();
         for (EventContent.AssetFromJSON jsonAsset:jsonAssets) {
             String assetQualifiedName = jsonAsset.getQualifiedName();
@@ -77,6 +77,7 @@ public class EventProcessor  {
                 assetProperties.setTypeName(jsonAsset.getTypeName());
                 assetProperties.setQualifiedName(assetQualifiedName);
                 assetProperties.setDisplayName(jsonAsset.getDisplayName());
+
                 myContext.createDataAsset(true, assetProperties);
 
                 dataAssetElements = myContext.getDataAssetsByName(assetQualifiedName, 0, 1000, new Date());
@@ -99,15 +100,18 @@ public class EventProcessor  {
                         // error
                     } else {
                         String existingDisplayName = dataAssetElement.getDataAssetProperties().getDisplayName();
+
                         // if the display name has changed update it .
+                        DataAssetProperties assetProperties = new DataAssetProperties();
                         if (!existingDisplayName.equals(jsonAsset.getDisplayName())) {
-                            DataAssetProperties assetProperties = new DataAssetProperties();
+
                             assetProperties.setDisplayName(jsonAsset.getDisplayName());
-                            myContext.updateDataAsset(guid, true, assetProperties, new Date());
+
                         }
+
+                        myContext.updateDataAsset(guid, true, assetProperties, new Date());
                     }
                 }
-                //assetQualifiedNames.add(dataAssetElements.get(0).getDataAssetProperties().getQualifiedName());
 
             }
             if (assetGUID != null) {
@@ -213,7 +217,7 @@ public class EventProcessor  {
 
                 List<SchemaAttributeProperties> addSchemaAttributes = new ArrayList<>();
                 List<String> deleteSchemaAttributeGUIDs = new ArrayList<>();
-               // List<SchemaAttributeElement> updateSchemaAttributes = new ArrayList<>();
+                // List<SchemaAttributeElement> updateSchemaAttributes = new ArrayList<>();
                 for (String existingQName : existingKeySet) {
                     if (jsonKeySet.contains(existingQName)) {
                         // TODO updates to attributes
@@ -268,12 +272,42 @@ public class EventProcessor  {
      * @throws PropertyServerException property server Exception
      */
     private void saveLineage(EventContent eventContent) throws InvalidParameterException, PropertyServerException, UserNotAuthorizedException {
-        ProcessProperties processProperties = new ProcessProperties();
-        processProperties.setQualifiedName(eventContent.getProcessQualifiedName());
-        processProperties.setDisplayName(eventContent.getProcessDisplayName());
-        String processGUID = myContext.createProcess(true, ProcessStatus.ACTIVE,processProperties);
+        String processQualifiedName = eventContent.getProcessQualifiedName();
+        String processGUID = null;
 
-        for (String assetGUID :inAssetGUIDs) {
+
+        List<ProcessElement> processElementList = myContext.getProcessesByName(processQualifiedName,0, 1000, new Date());
+        if(processElementList == null || processElementList.isEmpty()) {
+            ProcessProperties processProperties = new ProcessProperties();
+            processProperties.setQualifiedName(processQualifiedName);
+            processProperties.setDisplayName(eventContent.getProcessDisplayName());
+            processProperties.setDescription(eventContent.getProcessDescription());
+            processGUID = myContext.createProcess(true, ProcessStatus.ACTIVE, processProperties);
+        } else {
+            // update
+            ProcessElement processElement = processElementList.get(0);
+            ProcessProperties processProperties = processElement.getProcessProperties();
+            String existingDisplayName = processProperties.getDisplayName();
+            String newDisplayName = eventContent.getProcessDisplayName();
+            String existingDescription = processProperties.getDescription();
+            String newDescription = eventContent.getProcessDescription();
+            if (existingDisplayName == null) {
+                processProperties.setDisplayName(newDisplayName);
+            } else if(!existingDisplayName.equals(newDisplayName)) {
+                processProperties.setDisplayName(newDisplayName);
+            }
+            if(existingDescription ==null) {
+                processProperties.setDescription(newDescription);
+            }else if (!existingDescription.equals(newDescription)) {
+                processProperties.setDescription(newDescription);
+            }
+
+            myContext.updateProcess(processElement.getElementHeader().getGUID(),true, processProperties, new Date());
+
+            // now check if there are any assets for this process that are not in the event
+
+        }
+        for (String assetGUID : inAssetGUIDs) {
             DataFlowProperties properties = new DataFlowProperties();
             DataAssetElement dataAssetElement = myContext.getDataAssetByGUID(assetGUID, new Date());
 
@@ -281,13 +315,14 @@ public class EventProcessor  {
             if (sql != null) {
                 properties.setFormula(sql);
             }
-            myContext.setupDataFlow(true,dataAssetElement.getElementHeader().getGUID(), processGUID, properties, new Date());
+            myContext.setupDataFlow(true, dataAssetElement.getElementHeader().getGUID(), processGUID, properties, new Date());
         }
-        for (String assetGUID :outAssetGUIDs) {
+        for (String assetGUID : outAssetGUIDs) {
 
             DataFlowProperties properties = new DataFlowProperties();
             DataAssetElement dataAssetElement = myContext.getDataAssetByGUID(assetGUID, new Date());
             myContext.setupDataFlow(true, processGUID, dataAssetElement.getElementHeader().getGUID(), properties, new Date());
         }
+
     }
 }

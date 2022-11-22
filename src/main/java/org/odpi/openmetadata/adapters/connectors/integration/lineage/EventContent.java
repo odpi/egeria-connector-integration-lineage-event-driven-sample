@@ -18,6 +18,8 @@ public class EventContent {
     private String processDisplayName = null;
     private String processQualifiedName = null;
 
+    private String processDescription = null;
+
     private List<AssetFromJSON> inputAssets = new ArrayList<>();
 
     private List<AssetFromJSON> outputAssets = new ArrayList<>();
@@ -49,6 +51,7 @@ public class EventContent {
 
         this.processDisplayName = root.path("Name").textValue();
         this.processQualifiedName = root.path("Id").textValue();
+        this.processDescription = root.path("Description").textValue();
         this.teamName = root.path("Team").textValue();
         if (inputNodes.isArray()) {
             inputNodes.size();
@@ -57,6 +60,7 @@ public class EventContent {
                 if (inputNode.isObject()) {
                     String qualifiedName = inputNode.path("Id").textValue();
                     String displayName = inputNode.path("Name").textValue();
+
                     String sql = inputNode.path("SQL").textValue();
                     if (sql != null) {
                         inputAssetSQLMap.put(qualifiedName,sql);
@@ -95,7 +99,7 @@ public class EventContent {
                         }
                     }
                     EventTypeFromJSON eventType = new EventTypeFromJSON(outputEventTypeDisplayName, outputEventTypeQualifiedName, outputAttributes);
-                    AssetFromJSON outputAsset = new AssetFromJSON(assetDisplayName, assetQualifiedName, "KafkaTopic", eventType);
+                    AssetFromJSON outputAsset = new AssetFromJSON(assetDisplayName, assetQualifiedName, "KafkaTopic",  eventType);
                     outputAssets.add(outputAsset);
                 } else {
                     //error
@@ -108,6 +112,10 @@ public class EventContent {
      //getters and setters
     public String getProcessDisplayName() {
         return processDisplayName;
+    }
+
+    public String getProcessDescription() {
+        return processDescription;
     }
 
     public String getTeamName() {
@@ -144,7 +152,7 @@ public class EventContent {
         }
         protected AssetFromJSON(String displayName, String qualifiedName, String typeName, EventTypeFromJSON eventType) {
            this(displayName, qualifiedName, typeName);
-            this.eventType = eventType;
+           this.eventType = eventType;
         }
 
 
