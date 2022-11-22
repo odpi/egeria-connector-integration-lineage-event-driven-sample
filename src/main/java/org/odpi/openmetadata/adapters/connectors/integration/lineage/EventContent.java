@@ -165,7 +165,7 @@ public class EventContent {
         }
     }
 
-    class Attribute {
+    static class Attribute {
         private String name;
 
         private String qualifiedName;
