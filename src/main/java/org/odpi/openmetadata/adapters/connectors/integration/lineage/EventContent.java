@@ -27,7 +27,7 @@ public class EventContent {
     static final String SEPARATOR = "~";
 
     protected EventContent(String jsonString) {
-        String methodName = "EventContent";
+       // String methodName = "EventContent";
         // process json
         ObjectMapper mapper = new ObjectMapper();
 
