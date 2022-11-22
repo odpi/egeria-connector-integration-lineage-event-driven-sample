@@ -130,7 +130,7 @@ public class EventContent {
         return inputAssetSQLMap.get(qualifiedName);
     }
 
-    class AssetFromJSON {
+    static class AssetFromJSON {
         private String displayName;
         private String qualifiedName;
         private String typeName;
@@ -198,7 +198,7 @@ public class EventContent {
 
     }
 
-    class EventTypeFromJSON {
+    static class EventTypeFromJSON {
         private String displayName;
         private String qualifiedName;
 
