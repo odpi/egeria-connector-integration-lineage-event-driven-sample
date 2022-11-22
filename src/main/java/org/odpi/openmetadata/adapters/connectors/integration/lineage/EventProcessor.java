@@ -16,6 +16,7 @@ import org.odpi.openmetadata.repositoryservices.connectors.openmetadatatopic.Ope
 import java.util.*;
 
 
+@SuppressWarnings("JavaUtilDate")
 public class EventProcessor  {
     private final Map<String, OpenMetadataTopicConnector> topicConnectors = new HashMap<>();
 
