@@ -268,8 +268,10 @@ public class MockLineageIntegratorContext extends LineageIntegratorContext
             existingProcessProperties.setDisplayName(newDisplayName);
         }
         String newDescription = processProperties.getDescription();
-        if (!newDescription.equals(existingProcessProperties.getDescription())) {
-            existingProcessProperties.setDescription(newDescription);
+        if (newDescription !=null) {
+            if (!newDescription.equals(existingProcessProperties.getDescription())) {
+                existingProcessProperties.setDescription(newDescription);
+            }
         }
 
     }

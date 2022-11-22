@@ -118,16 +118,9 @@ public class EventProcessorTest
         assertTrue(lastNameFound);
         assertTrue(ageFound);
 
+        // test update assets and processes
 
-
-
-
-
-
-
-        // test update asset display Name
-
-        textPath = "src/test/resources/Sample2-update-asset-displayNames.json";
+        textPath = "src/test/resources/Sample2-update-assets-and-process.json";
         path = Paths.get(textPath);
         content = Files.readString(path);
         eventContent = new EventContent(content);
@@ -156,6 +149,7 @@ public class EventProcessorTest
         processElement = processElementList.get(0);
         assertTrue("1234567890".equals(processElement.getProcessProperties().getQualifiedName()));
         assertTrue("TestRes-2".equals(processElement.getProcessProperties().getDisplayName()));
+        assertTrue("TestResource-2".equals(processElement.getProcessProperties().getDescription()));
 
 
 

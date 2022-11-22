@@ -1,7 +1,7 @@
 {
   "Id": "1234567890",
   "Name": "TestRes-2",
-  "Description": "TestResource",
+  "Description": "TestResource-2",
   "Bounded Context": "TestResource",
   "Team": "ITG",
   "Input": [{
