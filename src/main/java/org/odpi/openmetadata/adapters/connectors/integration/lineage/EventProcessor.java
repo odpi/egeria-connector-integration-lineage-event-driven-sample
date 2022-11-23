@@ -69,50 +69,20 @@ public class EventProcessor  {
             String assetQualifiedName = jsonAsset.getQualifiedName();
             String assetGUID = null;
             List<DataAssetElement> dataAssetElements = myContext.getDataAssetsByName(assetQualifiedName, 0, 1000, new Date());
-
+            DataAssetProperties assetProperties = new DataAssetProperties();
+            assetProperties.setTypeName(jsonAsset.getTypeName());
+            assetProperties.setQualifiedName(assetQualifiedName);
+            assetProperties.setDisplayName(jsonAsset.getDisplayName());
             if (dataAssetElements == null || dataAssetElements.isEmpty()) {
                 // create asset
-
-                DataAssetProperties assetProperties = new DataAssetProperties();
-                assetProperties.setTypeName(jsonAsset.getTypeName());
-                assetProperties.setQualifiedName(assetQualifiedName);
-                assetProperties.setDisplayName(jsonAsset.getDisplayName());
-
-                myContext.createDataAsset(true, assetProperties);
-
-                dataAssetElements = myContext.getDataAssetsByName(assetQualifiedName, 0, 1000, new Date());
-                // choosing the first element -
-                // TODO we could put up a warning if there are more than one,
-                if (dataAssetElements !=null && !dataAssetElements.isEmpty()) {
-                    DataAssetElement dataAssetElement=  dataAssetElements.get(0);
-                    if (dataAssetElement !=null && dataAssetElement.getElementHeader() != null) {
-                        assetGUID =  dataAssetElement.getElementHeader().getGUID();
-                    }
-                }
+                assetGUID = myContext.createDataAsset(true, assetProperties);
             } else {
                 // asset already exists - update it
                 DataAssetElement  dataAssetElement = dataAssetElements.get(0);
-                String guid =null;
                 if ( dataAssetElement.getElementHeader() != null) {
-                    guid = dataAssetElement.getElementHeader().getGUID();
-                    // TODO check if there is more than one and log warning
-                    if (guid == null) {
-                        // error
-                    } else {
-                        String existingDisplayName = dataAssetElement.getDataAssetProperties().getDisplayName();
-
-                        // if the display name has changed update it .
-                        DataAssetProperties assetProperties = new DataAssetProperties();
-                        if (!existingDisplayName.equals(jsonAsset.getDisplayName())) {
-
-                            assetProperties.setDisplayName(jsonAsset.getDisplayName());
-
-                        }
-
-                        myContext.updateDataAsset(guid, true, assetProperties, new Date());
-                    }
+                    assetGUID = dataAssetElement.getElementHeader().getGUID();
+                    myContext.updateDataAsset(assetGUID, false, assetProperties, new Date());
                 }
-
             }
             if (assetGUID != null) {
                 assetGUIDs.add(assetGUID);
@@ -151,18 +121,21 @@ public class EventProcessor  {
                 assetFromJSON.getTypeName(),
                 new Date());
 
+        SchemaTypeProperties schemaTypeProperties = new SchemaTypeProperties();
+        schemaTypeProperties.setTypeName("EventType");
+        EventContent.EventTypeFromJSON eventTypeFromJSON = assetFromJSON.getEventType();
+        schemaTypeProperties.setQualifiedName(eventTypeFromJSON.getQualifiedName());
+        schemaTypeProperties.setDisplayName(eventTypeFromJSON.getDisplayName());
+        String jsonEventTypeQualifiedName = eventTypeFromJson.getQualifiedName();
+        String schemaTypeGUID =null;
 
         if (childSchemaType ==null) {
-            SchemaTypeProperties schemaTypeProperties = new SchemaTypeProperties();
-            schemaTypeProperties.setTypeName("EventType");
-            EventContent.EventTypeFromJSON eventTypeFromJSON = assetFromJSON.getEventType();
-            schemaTypeProperties.setQualifiedName(eventTypeFromJSON.getQualifiedName());
-            schemaTypeProperties.setDisplayName(eventTypeFromJSON.getDisplayName());
-            String schemaTypeGUID = myContext.createSchemaType( true, schemaTypeProperties);
+            // create schema type as there is no child schema type
+            schemaTypeGUID = myContext.createSchemaType( true, schemaTypeProperties);
             //link to asset
             myContext.setupSchemaTypeParent(true,schemaTypeGUID,assetGUID,"KafkaTopic",null, new Date());
 
-            // for each schema attribute create it
+            // For each schema attribute create it
             for (EventContent.Attribute attribute:eventTypeFromJSON.getAttributes()) {
                 SchemaAttributeProperties schemaAttributeProperties = new SchemaAttributeProperties();
                 schemaAttributeProperties.setQualifiedName(attribute.getQualifiedName());
@@ -170,34 +143,16 @@ public class EventProcessor  {
                 schemaAttributeProperties.setTypeName(attribute.getType());
                 schemaAttributeProperties.setDescription(attribute.getDescription());
                 myContext.createSchemaAttribute(true,schemaTypeGUID,schemaAttributeProperties,new Date());
-
-                // link to schema type
             }
-
-
-
         } else {
-            String schemaTypeGUID = childSchemaType.getElementHeader().getGUID();
-            if (childSchemaType.getElementHeader().getType().getTypeName().equals("EventType")) {
-                // check whether we need to update it
-                String existingQualifiedName = childSchemaType.getSchemaTypeProperties().getQualifiedName();
-                String existingDisplayName = childSchemaType.getSchemaTypeProperties().getDisplayName();
-                String jsonEventTypeDisplayName = eventTypeFromJson.getDisplayName();
-                String jsonEventTypeQualifiedName = eventTypeFromJson.getQualifiedName();
+            // either the existing schema type is us - so we should update it or it is not and we should delete it
+            schemaTypeGUID = childSchemaType.getElementHeader().getGUID();
+            if (jsonEventTypeQualifiedName.equals(childSchemaType.getSchemaTypeProperties().getQualifiedName())) {
+                // update
 
-                boolean displayNameMatch = jsonEventTypeDisplayName.equals(existingDisplayName);
-                boolean qualifiedNameMatch = jsonEventTypeQualifiedName.equals(existingQualifiedName);
-                if (!(displayNameMatch && qualifiedNameMatch)) {
-                    // need to update
-                    SchemaTypeProperties schemaTypeProperties = new SchemaTypeProperties();
-                    if (!displayNameMatch) {
-                        schemaTypeProperties.setQualifiedName(jsonEventTypeQualifiedName);
-                    }
-                    if (!qualifiedNameMatch) {
-                        schemaTypeProperties.setQualifiedName(jsonEventTypeDisplayName);
-                    }
-                    myContext.updateSchemaType(schemaTypeGUID, true, schemaTypeProperties, new Date());
-                }
+
+                myContext.updateSchemaType(schemaTypeGUID, false, schemaTypeProperties, new Date());
+
                 // check the schema attributes
                 List<SchemaAttributeElement> existingSchemaAttributes = myContext.getNestedSchemaAttributes(schemaTypeGUID, 0, 1000, new Date());
 
@@ -210,49 +165,76 @@ public class EventProcessor  {
                     jsonAttributeMap.put(attribute.getQualifiedName(), attribute);
                 }
 
-                // TODO loops to determine adds updates and deletes for schema attributes
+                // TODO loops to determine updates and deletes for schema attributes
 
                 final Set<String> existingKeySet = existingSchemaAttributesMap.keySet();
                 final Set<String> jsonKeySet = jsonAttributeMap.keySet();
 
+                List<String> updateSchemaAttributeGUIDs = new ArrayList<>();
+                Map<String, EventContent.Attribute> updateGUIDToSchemaPropertyAttributesMap = new HashMap<>();
                 List<SchemaAttributeProperties> addSchemaAttributes = new ArrayList<>();
                 List<String> deleteSchemaAttributeGUIDs = new ArrayList<>();
-                // List<SchemaAttributeElement> updateSchemaAttributes = new ArrayList<>();
-                for (String existingQName : existingKeySet) {
-                    if (jsonKeySet.contains(existingQName)) {
-                        // TODO updates to attributes
-                        // String  schemaAttributeGUID ="";
-//            SchemaAttributeProperties schemaAttributeProperties = new SchemaAttributeProperties();
-//            myContext.updateSchemaAttribute(schemaAttributeGUID, true,schemaAttributeProperties, new Date());
 
-                    } else {
-                        deleteSchemaAttributeGUIDs.add(existingSchemaAttributesMap.get(existingQName).getElementHeader().getGUID());
+                for (String existingQName : existingKeySet) {
+                    String existingGUID = existingSchemaAttributesMap.get(existingQName).getElementHeader().getGUID();
+                    if (jsonKeySet.contains(existingQName)) {
+                        updateSchemaAttributeGUIDs.add(existingGUID);
+                        updateGUIDToSchemaPropertyAttributesMap.put(existingGUID,jsonAttributeMap.get(existingQName));
+                    }else {
+                        deleteSchemaAttributeGUIDs.add(existingGUID);
                     }
                 }
-                for (String jsonAttributeQName : jsonKeySet) {
-                    if (!existingKeySet.contains(jsonAttributeQName)) {
-                        EventContent.Attribute attributeToAdd = jsonAttributeMap.get(jsonAttributeQName);
-                        SchemaAttributeProperties schemaAttributeProperties = new SchemaAttributeProperties();
-                        schemaAttributeProperties.setQualifiedName(jsonEventTypeQualifiedName);
-                        schemaAttributeProperties.setDisplayName(attributeToAdd.getName());
-                        schemaAttributeProperties.setTypeName(attributeToAdd.getType());
-                        // TODO deal with minimum
-                        addSchemaAttributes.add(schemaAttributeProperties);
-                    }
-                }
-                // action the deletes
+
+                // action the delete attributes
                 for (String schemaAttributeGUID : deleteSchemaAttributeGUIDs) {
                     myContext.removeSchemaAttribute(schemaAttributeGUID, new Date());
                 }
-                // action the adds
-                for (SchemaAttributeProperties schemaAttributeProperties : addSchemaAttributes) {
-                    myContext.createSchemaAttribute(true, schemaTypeGUID, schemaAttributeProperties, new Date());
+                // action updates
+                Set<String> updatedQNames = new HashSet<>();
+                for (String schemaAttributeGUID : updateGUIDToSchemaPropertyAttributesMap.keySet()) {
+                    EventContent.Attribute jsonAttribute = updateGUIDToSchemaPropertyAttributesMap.get(schemaAttributeGUID);
+                    SchemaAttributeProperties schemaAttributeProperties = new SchemaAttributeProperties();
+                    schemaAttributeProperties.setQualifiedName(jsonAttribute.getQualifiedName());
+                    updatedQNames.add(jsonAttribute.getQualifiedName());
+                    schemaAttributeProperties.setDisplayName(jsonAttribute.getName());
+                    schemaAttributeProperties.setTypeName(jsonAttribute.getType());
+                    schemaAttributeProperties.setDescription(jsonAttribute.getDescription());
+                    myContext.updateSchemaAttribute(schemaAttributeGUID, false,schemaAttributeProperties , new Date());
                 }
+
+                // action adds. Add only those attributes that do not already exist
+                // For each schema attribute create it
+                for (EventContent.Attribute attribute:eventTypeFromJSON.getAttributes()) {
+                    if (!updatedQNames.contains(attribute.getQualifiedName())) {
+                        SchemaAttributeProperties schemaAttributeProperties = new SchemaAttributeProperties();
+                        schemaAttributeProperties.setQualifiedName(attribute.getQualifiedName());
+                        schemaAttributeProperties.setDisplayName(attribute.getName());
+                        schemaAttributeProperties.setTypeName(attribute.getType());
+                        schemaAttributeProperties.setDescription(attribute.getDescription());
+                        myContext.createSchemaAttribute(true, schemaTypeGUID, schemaAttributeProperties, new Date());
+                    }
+                }
+
             } else {
                 // delete - this should cascade and delete any children.
                 myContext.removeSchemaType(schemaTypeGUID, new Date());
+                // add the new one
+                schemaTypeGUID = myContext.createSchemaType( true, schemaTypeProperties);
+                //link to asset
+                myContext.setupSchemaTypeParent(true,schemaTypeGUID,assetGUID,"KafkaTopic",null, new Date());
+                // For each schema attribute create it
+                for (EventContent.Attribute attribute:eventTypeFromJSON.getAttributes()) {
+                    SchemaAttributeProperties schemaAttributeProperties = new SchemaAttributeProperties();
+                    schemaAttributeProperties.setQualifiedName(attribute.getQualifiedName());
+                    schemaAttributeProperties.setDisplayName(attribute.getName());
+                    schemaAttributeProperties.setTypeName(attribute.getType());
+                    schemaAttributeProperties.setDescription(attribute.getDescription());
+                    myContext.createSchemaAttribute(true,schemaTypeGUID,schemaAttributeProperties,new Date());
+                }
             }
         }
+        // the schema should now be there reflecting the event values.
+
 
     }
 
@@ -277,34 +259,23 @@ public class EventProcessor  {
 
 
         List<ProcessElement> processElementList = myContext.getProcessesByName(processQualifiedName,0, 1000, new Date());
+
+        ProcessProperties processProperties = new ProcessProperties();
+        processProperties.setQualifiedName(processQualifiedName);
+        processProperties.setDisplayName(eventContent.getProcessDisplayName());
+        processProperties.setDescription(eventContent.getProcessDescription());
+        // does this process already exist?
         if(processElementList == null || processElementList.isEmpty()) {
-            ProcessProperties processProperties = new ProcessProperties();
-            processProperties.setQualifiedName(processQualifiedName);
-            processProperties.setDisplayName(eventContent.getProcessDisplayName());
-            processProperties.setDescription(eventContent.getProcessDescription());
+            // process does not exist
             processGUID = myContext.createProcess(true, ProcessStatus.ACTIVE, processProperties);
         } else {
-            // update
+            // process exists update it
             ProcessElement processElement = processElementList.get(0);
-            ProcessProperties processProperties = processElement.getProcessProperties();
-            String existingDisplayName = processProperties.getDisplayName();
-            String newDisplayName = eventContent.getProcessDisplayName();
-            String existingDescription = processProperties.getDescription();
-            String newDescription = eventContent.getProcessDescription();
-            if (existingDisplayName == null) {
-                processProperties.setDisplayName(newDisplayName);
-            } else if(!existingDisplayName.equals(newDisplayName)) {
-                processProperties.setDisplayName(newDisplayName);
-            }
-            if(existingDescription ==null) {
-                processProperties.setDescription(newDescription);
-            }else if (!existingDescription.equals(newDescription)) {
-                processProperties.setDescription(newDescription);
-            }
 
-            myContext.updateProcess(processElement.getElementHeader().getGUID(),true, processProperties, new Date());
+            myContext.updateProcess(processElement.getElementHeader().getGUID(),false, processProperties, new Date());
 
             // now check if there are any assets for this process that are not in the event
+
 
         }
         for (String assetGUID : inAssetGUIDs) {
