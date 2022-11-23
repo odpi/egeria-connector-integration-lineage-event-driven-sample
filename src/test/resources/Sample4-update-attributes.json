@@ -1,0 +1,37 @@
+{
+  "Id": "1234567890",
+  "Name": "TestRes-3",
+  "Description": "TestResource-3",
+  "Bounded Context": "TestResource",
+  "Team": "ITG",
+  "Input": [{
+    "Id": "C6B7B1B717C840F686EE2426241ED18CE1D053019534F03495E8CD644976FA37-3",
+    "Name": "Foo-3",
+    "SQL": "select * from foo;"
+  }],
+  "Output": [{
+    "Id": "vertriebskunde-services.agree-kundendaten-3",
+    "Name": "Kundendaten-3",
+    "Schema-type": "json-schema",
+    "Schema": {
+      "$id": "https://example.com/person.schema.json",
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "title": "Person",
+      "type": "object",
+      "properties": {
+        "firstName": {
+          "type": "string",
+          "description": "The person's first name or name to be called."
+        },
+        "middleName": {
+          "type": "string",
+          "description": "The person's middle name."
+        },
+        "age": {
+          "description": "Age as a string to test type change.",
+          "type": "string"
+        }
+      }
+    }
+  }]
+}

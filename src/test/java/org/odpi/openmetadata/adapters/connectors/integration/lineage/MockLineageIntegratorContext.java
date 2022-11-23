@@ -33,6 +33,7 @@ public class MockLineageIntegratorContext extends LineageIntegratorContext
     // private Map<String, SchemaTypeElement> guidToSchemaTypeElementMap = new HashMap<>();
     // key is the schema type
     private Map<String, SchemaTypeElement>guidToSchemaTypeMap= new HashMap<>();
+    private Map<String, SchemaTypeElement>qnameToSchemaTypeMap= new HashMap<>();
 
 
     private Map<String, RelationshipElement> guidToAssetSchemaTypeMap = new HashMap<>();
@@ -40,6 +41,7 @@ public class MockLineageIntegratorContext extends LineageIntegratorContext
     private Map<String, SchemaAttributeElement> guidToSchemaAttributeElementMap= new HashMap<>();
 
     private Map<String, List<SchemaAttributeElement>> schemaTypeGUIDToNestedAttributesMap = new HashMap<>();
+    private Map<String, String> attributeGuidToParentGuid = new HashMap<>();
     public MockLineageIntegratorContext() {
         super(null,null,null,null,null,
                 null,null,null,null,null,null,null);
@@ -81,20 +83,7 @@ public class MockLineageIntegratorContext extends LineageIntegratorContext
                                 Date                effectiveTime)
     {
         DataAssetElement dataAssetElement =guidToDataAssetElementMap.get(assetGUID);
-        DataAssetProperties existingDataAssetProperties = dataAssetElement.getDataAssetProperties();
-        String newDisplayName = assetProperties.getDisplayName();
-        if (newDisplayName != null) {
-            if (!newDisplayName.equals(existingDataAssetProperties.getDisplayName())) {
-                existingDataAssetProperties.setDisplayName(newDisplayName);
-            }
-        }
-
-        String newDescription = assetProperties.getDescription();
-        if (newDescription !=null) {
-            if (!newDescription.equals(existingDataAssetProperties.getDescription())) {
-                existingDataAssetProperties.setDescription(newDescription);
-            }
-        }
+        dataAssetElement.setDataAssetProperties(assetProperties);
     }
     @Override
     public DataAssetElement getDataAssetByGUID(String openMetadataGUID,
@@ -129,16 +118,8 @@ public class MockLineageIntegratorContext extends LineageIntegratorContext
                                  SchemaTypeProperties schemaTypeProperties,
                                  Date                 effectiveTime)
     {
-        SchemaTypeProperties existingProperties =guidToSchemaTypeMap.get(schemaTypeGUID).getSchemaTypeProperties();
-        String newDisplayName =schemaTypeProperties.getDisplayName();
-        String newDescription = schemaTypeProperties.getDescription();
-
-        if (!newDisplayName.equals(existingProperties.getDisplayName())) {
-            existingProperties.setDisplayName(newDisplayName);
-        }
-        if (!newDescription.equals(existingProperties.getDescription())) {
-            existingProperties.setDescription(newDescription);
-        }
+        SchemaTypeElement schemaTypeElement = guidToSchemaTypeMap.get(schemaTypeGUID);
+        schemaTypeElement.setSchemaTypeProperties(schemaTypeProperties);
     }
 
     @Override
@@ -153,6 +134,7 @@ public class MockLineageIntegratorContext extends LineageIntegratorContext
         elementHeader.setGUID(guid);
         schemaTypeElement.setElementHeader(elementHeader);
         guidToSchemaTypeMap.put(guid,schemaTypeElement);
+        qnameToSchemaTypeMap.put( schemaTypeProperties.getQualifiedName(),schemaTypeElement);
         return guid;
     }
     @Override
@@ -189,6 +171,20 @@ public class MockLineageIntegratorContext extends LineageIntegratorContext
         return guidToSchemaTypeMap.get(schemaTypeGUID);
     }
     @Override
+    public List<SchemaTypeElement>   getSchemaTypeByName(String name,
+                                                         int    startFrom,
+                                                         int    pageSize,
+                                                         Date   effectiveTime) throws InvalidParameterException,
+            UserNotAuthorizedException,
+            PropertyServerException {
+        List<SchemaTypeElement> schemaTypeElementList = new ArrayList<>();
+        SchemaTypeElement schemaTypeElement =qnameToSchemaTypeMap.get(name);
+        if (schemaTypeElement !=null) {
+            schemaTypeElementList.add(schemaTypeElement);
+        }
+        return schemaTypeElementList;
+    }
+    @Override
     public List<SchemaAttributeElement>    getNestedSchemaAttributes(String parentSchemaElementGUID,
                                                                      int    startFrom,
                                                                      int    pageSize,
@@ -221,6 +217,9 @@ public class MockLineageIntegratorContext extends LineageIntegratorContext
         }
         attributeElements.add(schemaAttributeElement);
         schemaTypeGUIDToNestedAttributesMap.put(schemaElementGUID, attributeElements);
+        for (SchemaAttributeElement attributeElement:attributeElements) {
+            attributeGuidToParentGuid.put(attributeElement.getElementHeader().getGUID(),schemaElementGUID);
+        }
 
 
         return guid;
@@ -234,46 +233,57 @@ public class MockLineageIntegratorContext extends LineageIntegratorContext
             PropertyServerException
     {
         SchemaAttributeElement schemaAttributeElement = guidToSchemaAttributeElementMap.get(schemaAttributeGUID);
-        SchemaAttributeProperties existingSchemaAttributeProperties = schemaAttributeElement.getSchemaAttributeProperties();
-        String newDisplayName = schemaAttributeProperties.getDisplayName();
-        if (!newDisplayName.equals(existingSchemaAttributeProperties.getDisplayName())) {
-            existingSchemaAttributeProperties.setDisplayName(newDisplayName);
-        }
-        String newDescription = schemaAttributeProperties.getDescription();
-        if (!newDescription.equals(existingSchemaAttributeProperties.getDescription())) {
-            existingSchemaAttributeProperties.setDescription(newDescription);
-        }
-
-
+        schemaAttributeElement.setSchemaAttributeProperties(schemaAttributeProperties);
 
     }
 
     @Override
     public void removeSchemaType(String schemaTypeGUID, Date effectiveTime) throws InvalidParameterException, UserNotAuthorizedException, PropertyServerException {
+        SchemaTypeElement schemaTypeElement =guidToSchemaTypeMap.remove(schemaTypeGUID);
+        qnameToSchemaTypeMap.remove(schemaTypeElement.getSchemaTypeProperties().getQualifiedName());
+        String assetSchemaTypeGuid = null;
+        for (String guid:guidToAssetSchemaTypeMap.keySet()) {
+            RelationshipElement relationshipElement =guidToAssetSchemaTypeMap.get(guid);
+            if (relationshipElement.getEnd2GUID().getGUID().equals(schemaTypeGUID)) {
+                assetSchemaTypeGuid = guid;
+            }
+        }
+        if (assetSchemaTypeGuid != null) {
+            guidToAssetSchemaTypeMap.remove(assetSchemaTypeGuid);
+        }
 
+
+        // cascade - removeAttribute should update the schemaTypeGUIDToNestedAttributesMap as removeAttribute could be
+        // called from elsewhere
+        List<SchemaAttributeElement> attributes = schemaTypeGUIDToNestedAttributesMap.get(schemaTypeGUID);
+        Set<String> guidsToRemove = new HashSet<>();
+        for (SchemaAttributeElement attributeElement:attributes) {
+           guidsToRemove.add(attributeElement.getElementHeader().getGUID());
+        }
+        for (String guid:guidsToRemove) {
+            removeSchemaAttribute(guid, null);
+        }
     }
 
     @Override
     public void removeSchemaAttribute(String schemaAttributeGUID, Date effectiveTime) throws InvalidParameterException, UserNotAuthorizedException, PropertyServerException {
-
+          // remove from schemaTypeGUIDToNestedAttributesMap
+        String parentGUID =attributeGuidToParentGuid.get(schemaAttributeGUID);
+        List<SchemaAttributeElement> attributes = schemaTypeGUIDToNestedAttributesMap.get(parentGUID);
+        int indexToRemove = -1;
+        for (int i=0;i<attributes.size();i++) {
+            SchemaAttributeElement attribute = attributes.get(i);
+            if (attribute.getElementHeader().getGUID().equals(schemaAttributeGUID)) {
+                indexToRemove = i;
+            }
+        }
+        attributes.remove(indexToRemove);
     }
 
     @Override
     public void updateProcess(String processGUID, boolean isMergeUpdate, ProcessProperties processProperties, Date effectiveTime) throws InvalidParameterException, UserNotAuthorizedException, PropertyServerException {
         ProcessElement processElement = guidToProcessElementMap.get(processGUID);
-        ProcessProperties existingProcessProperties = processElement.getProcessProperties();
-
-        String newDisplayName = processProperties.getDisplayName();
-        if (!newDisplayName.equals(existingProcessProperties.getDisplayName())) {
-            existingProcessProperties.setDisplayName(newDisplayName);
-        }
-        String newDescription = processProperties.getDescription();
-        if (newDescription !=null) {
-            if (!newDescription.equals(existingProcessProperties.getDescription())) {
-                existingProcessProperties.setDescription(newDescription);
-            }
-        }
-
+        processElement.setProcessProperties(processProperties);
     }
     @Override
     public String createProcess(boolean           assetManagerIsHome,
@@ -325,9 +335,9 @@ public class MockLineageIntegratorContext extends LineageIntegratorContext
         ElementHeader consumerElementHeader = new ElementHeader();
         consumerElementHeader.setGUID(dataConsumerGUID);
         dataFlowElement.setDataConsumer(consumerElementHeader);
-        ElementHeader suppierElementHeader = new ElementHeader();
-        suppierElementHeader.setGUID(dataSupplierGUID);
-        dataFlowElement.setDataSupplier(suppierElementHeader);
+        ElementHeader supplierElementHeader = new ElementHeader();
+        supplierElementHeader.setGUID(dataSupplierGUID);
+        dataFlowElement.setDataSupplier(supplierElementHeader);
         guidToDataFlowElementMap.put(guid, dataFlowElement);
 
         return guid;
@@ -354,8 +364,40 @@ public class MockLineageIntegratorContext extends LineageIntegratorContext
         }
         return dataflowElements;
     }
+    @Override
+    public void updateDataFlow(String             dataFlowGUID,
+                               DataFlowProperties properties,
+                               Date               effectiveTime) throws InvalidParameterException,
+            UserNotAuthorizedException,
+            PropertyServerException {
+        DataFlowElement dataFlowElement =guidToDataFlowElementMap.get(dataFlowGUID);
+        dataFlowElement.setDataFlowProperties(properties);
 
+    }
 
+    @Override
+    public void clearDataFlow(String dataFlowGUID, Date effectiveTime) throws InvalidParameterException, UserNotAuthorizedException, PropertyServerException {
+        guidToDataFlowElementMap.remove(dataFlowGUID);
+    }
+    @Override
+    public DataFlowElement getDataFlow(String dataSupplierGUID,
+                                       String dataConsumerGUID,
+                                       String qualifiedName,
+                                       Date   effectiveTime) throws InvalidParameterException,
+            UserNotAuthorizedException,
+            PropertyServerException
+    {
+        DataFlowElement dataFlowElement =null;
+        for (String guid:guidToDataFlowElementMap.keySet()) {
+            DataFlowElement dataFlowElementToCheck = guidToDataFlowElementMap.get(guid);
+            if (dataFlowElementToCheck.getDataSupplier().getGUID().equals((dataSupplierGUID) ) &&
+                    (dataFlowElementToCheck.getDataSupplier().getGUID().equals(dataSupplierGUID))) {
+                dataFlowElement =dataFlowElementToCheck;
+            }
+        }
+
+    return dataFlowElement;
+    }
 
     private String createNewGUID() {
         return "" + guidCounter++;

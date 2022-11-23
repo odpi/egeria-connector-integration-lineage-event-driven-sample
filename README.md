@@ -24,16 +24,24 @@ The Output also describes an event schema.
 
 
 ### Assumptions
-- no deletion of assets or processes. Lineage is always adding these
-- finds are done on the qualified name and the first element returned is used.
+- No deletion of assets or processes. Lineage is always adding these
+- Where effectivity dates are specified - the current time is used
 - Only doing asset design lineage, no column lineage
+- All finds are done by qualifiedName - if more than one element is returned - we use the first. 
 - Catalog the assets, schema and process if required. This can result in 
-  - deletion, creation and / or updates of EventTypes and schemaAttributes
-- save the lineage flow Assets(DataSet) -> Process -> Assets(KafkaTopic)
+  - deletion, creation and / or updates of schemaAttributes
+  - deletion and creation of the Event type
+- Save the lineage flow Assets(DataSet) -> Process -> Assets(KafkaTopic)
+- change of the input and output assets results in removals of old dataflows as well as adding the new dataflows.
+- All updates are replacements not merge- e.g. schema attributes are replaced not merged
+- there is no support for update schematype (EventType) as it only has a title - which is used to derive the qualified name - so there is nothing to update.
+- there is no description for schematypes or assets
 ### Questions
 - dataflow relationships between the assets and process are [multi-link](https://egeria-project.org/concepts/uni-multi-link/?h=multi+link#multi-link-relationships)
 So have a qualified name - question on this - can it be null if we know there is only one?
-- Should be use EventSets to model multiple EventTypes?
+- Can we use EventSets to model multiple EventTypes? Yes- but still the asset would have one schematype
+which is the EventType
+- effectivity should be use current time or null (effective forever) 
 ### Example json
 {
 "Id": "1234567890",
