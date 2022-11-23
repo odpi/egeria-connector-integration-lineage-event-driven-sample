@@ -12,7 +12,7 @@ import java.util.*;
  * The EventContent is a java representation of the event json. It means that the connector can
  * retrieve elements like assets without needing to parse the json.
  */
-public class EventContent {
+public class LineageEventContentforSample {
 
     private String teamName;
     private String processDisplayName = null;
@@ -28,7 +28,7 @@ public class EventContent {
 
     static final String SEPARATOR = "~";
 
-    protected EventContent(String jsonString) {
+    protected LineageEventContentforSample(String jsonString) {
        // String methodName = "EventContent";
         // process json
         ObjectMapper mapper = new ObjectMapper();

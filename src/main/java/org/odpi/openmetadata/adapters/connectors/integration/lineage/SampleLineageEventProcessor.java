@@ -9,7 +9,6 @@ import org.odpi.openmetadata.frameworks.connectors.ffdc.InvalidParameterExceptio
 import org.odpi.openmetadata.frameworks.connectors.ffdc.PropertyServerException;
 import org.odpi.openmetadata.frameworks.connectors.ffdc.UserNotAuthorizedException;
 import org.odpi.openmetadata.integrationservices.lineage.connector.LineageIntegratorContext;
-import org.odpi.openmetadata.repositoryservices.connectors.openmetadatatopic.OpenMetadataTopicConnector;
 
 import java.util.*;
 
@@ -17,7 +16,7 @@ import java.util.*;
  * This class processes an event. The code here has been extracted from the integration connector, so it is easier to unit test.
  */
 @SuppressWarnings("JavaUtilDate")
-public class EventProcessor  {
+public class SampleLineageEventProcessor {
 
     private LineageIntegratorContext                myContext;
     private  List<String> inAssetGUIDs = null;
@@ -25,11 +24,11 @@ public class EventProcessor  {
 
 
 
-    public EventProcessor(LineageIntegratorContext  myContext ) {
+    public SampleLineageEventProcessor(LineageIntegratorContext  myContext ) {
         this.myContext = myContext;
     }
 
-    public void processEvent(EventContent eventContent)
+    public void processEvent(LineageEventContentforSample eventContent)
     {
         try {
             // upsert in assets
@@ -60,9 +59,9 @@ public class EventProcessor  {
      * @throws UserNotAuthorizedException user is not authorised
      * @throws PropertyServerException property server Exception
      */
-    public List<String> upsertAssets(  List<EventContent.AssetFromJSON> jsonAssets) throws InvalidParameterException, UserNotAuthorizedException, PropertyServerException {
+    public List<String> upsertAssets(  List<LineageEventContentforSample.AssetFromJSON> jsonAssets) throws InvalidParameterException, UserNotAuthorizedException, PropertyServerException {
         List<String> assetGUIDs = new ArrayList<>();
-        for (EventContent.AssetFromJSON jsonAsset:jsonAssets) {
+        for (LineageEventContentforSample.AssetFromJSON jsonAsset:jsonAssets) {
             String assetQualifiedName = jsonAsset.getQualifiedName();
             String assetGUID = null;
             List<DataAssetElement> dataAssetElements = myContext.getDataAssetsByName(assetQualifiedName, 0, 1000, new Date());
@@ -109,8 +108,8 @@ public class EventProcessor  {
      * @throws PropertyServerException property server Exception
      */
 
-    private void ensureSchemaIsCatalogued(EventContent.AssetFromJSON assetFromJSON, String assetGUID) throws InvalidParameterException, PropertyServerException, UserNotAuthorizedException {
-        EventContent.EventTypeFromJSON eventTypeFromJson = assetFromJSON.getEventType();
+    private void ensureSchemaIsCatalogued(LineageEventContentforSample.AssetFromJSON assetFromJSON, String assetGUID) throws InvalidParameterException, PropertyServerException, UserNotAuthorizedException {
+        LineageEventContentforSample.EventTypeFromJSON eventTypeFromJson = assetFromJSON.getEventType();
 
 
         SchemaTypeElement childSchemaType = myContext.getSchemaTypeForElement(
@@ -120,7 +119,7 @@ public class EventProcessor  {
 
         SchemaTypeProperties schemaTypeProperties = new SchemaTypeProperties();
         schemaTypeProperties.setTypeName("EventType");
-        EventContent.EventTypeFromJSON eventTypeFromJSON = assetFromJSON.getEventType();
+        LineageEventContentforSample.EventTypeFromJSON eventTypeFromJSON = assetFromJSON.getEventType();
         schemaTypeProperties.setQualifiedName(eventTypeFromJSON.getQualifiedName());
         schemaTypeProperties.setDisplayName(eventTypeFromJSON.getDisplayName());
         String jsonEventTypeQualifiedName = eventTypeFromJson.getQualifiedName();
@@ -133,7 +132,7 @@ public class EventProcessor  {
             myContext.setupSchemaTypeParent(true,schemaTypeGUID,assetGUID,"KafkaTopic",null, new Date());
 
             // For each schema attribute create it
-            for (EventContent.Attribute attribute:eventTypeFromJSON.getAttributes()) {
+            for (LineageEventContentforSample.Attribute attribute:eventTypeFromJSON.getAttributes()) {
                 SchemaAttributeProperties schemaAttributeProperties = new SchemaAttributeProperties();
                 schemaAttributeProperties.setQualifiedName(attribute.getQualifiedName());
                 schemaAttributeProperties.setDisplayName(attribute.getName());
@@ -154,25 +153,25 @@ public class EventProcessor  {
                 List<SchemaAttributeElement> existingSchemaAttributes = myContext.getNestedSchemaAttributes(schemaTypeGUID, 0, 1000, new Date());
 
                 Map<String, SchemaAttributeElement> existingSchemaAttributesMap = new HashMap<>();
-                Map<String, EventContent.Attribute> jsonAttributeMap = new HashMap<>();
+                Map<String, LineageEventContentforSample.Attribute> jsonAttributeMap = new HashMap<>();
                 for (SchemaAttributeElement schemaAttributeElement : existingSchemaAttributes) {
                     existingSchemaAttributesMap.put(schemaAttributeElement.getSchemaAttributeProperties().getQualifiedName(), schemaAttributeElement);
                 }
-                for (EventContent.Attribute attribute : eventTypeFromJson.getAttributes()) {
+                for (LineageEventContentforSample.Attribute attribute : eventTypeFromJson.getAttributes()) {
                     jsonAttributeMap.put(attribute.getQualifiedName(), attribute);
                 }
 
                 // TODO loops to determine updates and deletes for schema attributes
 
                 //  List<String> updateSchemaAttributeGUIDs = new ArrayList<>();
-                Map<String, EventContent.Attribute> updateGUIDToSchemaPropertyAttributesMap = new HashMap<>();
+                Map<String, LineageEventContentforSample.Attribute> updateGUIDToSchemaPropertyAttributesMap = new HashMap<>();
                 List<String> deleteSchemaAttributeGUIDs = new ArrayList<>();
 
                 Iterator<Map.Entry<String, SchemaAttributeElement>> iter= existingSchemaAttributesMap.entrySet().iterator();
                 while(iter.hasNext()) {
                     Map.Entry<String, SchemaAttributeElement>  entry = iter.next();
                     String existingGUID = entry.getValue().getElementHeader().getGUID();
-                    EventContent.Attribute existingJsonAttribute = jsonAttributeMap.get(entry.getKey());
+                    LineageEventContentforSample.Attribute existingJsonAttribute = jsonAttributeMap.get(entry.getKey());
                     if (null == existingJsonAttribute) {
                         // if the attribute in the store is not in the event, then delete it from the store
                         deleteSchemaAttributeGUIDs.add(existingGUID);
@@ -188,8 +187,8 @@ public class EventProcessor  {
                 }
                 // action updates
                 Set<String> updatedQNames = new HashSet<>();
-                for (Map.Entry<String, EventContent.Attribute> entry : updateGUIDToSchemaPropertyAttributesMap.entrySet()) {
-                    EventContent.Attribute jsonAttribute =entry.getValue();
+                for (Map.Entry<String, LineageEventContentforSample.Attribute> entry : updateGUIDToSchemaPropertyAttributesMap.entrySet()) {
+                    LineageEventContentforSample.Attribute jsonAttribute =entry.getValue();
                     SchemaAttributeProperties schemaAttributeProperties = new SchemaAttributeProperties();
                     schemaAttributeProperties.setQualifiedName(jsonAttribute.getQualifiedName());
                     updatedQNames.add(jsonAttribute.getQualifiedName());
@@ -201,7 +200,7 @@ public class EventProcessor  {
 
                 // action adds. Add only those attributes that do not already exist
                 // For each schema attribute create it
-                for (EventContent.Attribute attribute:eventTypeFromJSON.getAttributes()) {
+                for (LineageEventContentforSample.Attribute attribute:eventTypeFromJSON.getAttributes()) {
                     if (!updatedQNames.contains(attribute.getQualifiedName())) {
                         SchemaAttributeProperties schemaAttributeProperties = new SchemaAttributeProperties();
                         schemaAttributeProperties.setQualifiedName(attribute.getQualifiedName());
@@ -220,7 +219,7 @@ public class EventProcessor  {
                 //link to asset
                 myContext.setupSchemaTypeParent(true,schemaTypeGUID,assetGUID,"KafkaTopic",null, new Date());
                 // For each schema attribute create it
-                for (EventContent.Attribute attribute:eventTypeFromJSON.getAttributes()) {
+                for (LineageEventContentforSample.Attribute attribute:eventTypeFromJSON.getAttributes()) {
                     SchemaAttributeProperties schemaAttributeProperties = new SchemaAttributeProperties();
                     schemaAttributeProperties.setQualifiedName(attribute.getQualifiedName());
                     schemaAttributeProperties.setDisplayName(attribute.getName());
@@ -250,7 +249,7 @@ public class EventProcessor  {
      * @throws UserNotAuthorizedException user is not authorised
      * @throws PropertyServerException property server Exception
      */
-    private void saveLineage(EventContent eventContent) throws InvalidParameterException, PropertyServerException, UserNotAuthorizedException {
+    private void saveLineage(LineageEventContentforSample eventContent) throws InvalidParameterException, PropertyServerException, UserNotAuthorizedException {
         String processQualifiedName = eventContent.getProcessQualifiedName();
         String processGUID = null;
 
