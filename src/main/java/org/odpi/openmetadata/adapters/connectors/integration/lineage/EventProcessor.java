@@ -187,15 +187,15 @@ public class EventProcessor  {
                 }
                 // action updates
                 Set<String> updatedQNames = new HashSet<>();
-                for (String schemaAttributeGUID : updateGUIDToSchemaPropertyAttributesMap.keySet()) {
-                    EventContent.Attribute jsonAttribute = updateGUIDToSchemaPropertyAttributesMap.get(schemaAttributeGUID);
+                for (Map.Entry<String, EventContent.Attribute> entry : updateGUIDToSchemaPropertyAttributesMap.entrySet()) {
+                    EventContent.Attribute jsonAttribute =entry.getValue();
                     SchemaAttributeProperties schemaAttributeProperties = new SchemaAttributeProperties();
                     schemaAttributeProperties.setQualifiedName(jsonAttribute.getQualifiedName());
                     updatedQNames.add(jsonAttribute.getQualifiedName());
                     schemaAttributeProperties.setDisplayName(jsonAttribute.getName());
                     schemaAttributeProperties.setTypeName(jsonAttribute.getType());
                     schemaAttributeProperties.setDescription(jsonAttribute.getDescription());
-                    myContext.updateSchemaAttribute(schemaAttributeGUID, false,schemaAttributeProperties , new Date());
+                    myContext.updateSchemaAttribute(entry.getKey(), false,schemaAttributeProperties , new Date());
                 }
 
                 // action adds. Add only those attributes that do not already exist
