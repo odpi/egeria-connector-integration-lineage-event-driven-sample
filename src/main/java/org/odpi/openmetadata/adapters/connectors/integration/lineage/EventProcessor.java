@@ -3,10 +3,7 @@
 
 package org.odpi.openmetadata.adapters.connectors.integration.lineage;
 
-import org.odpi.openmetadata.accessservices.assetmanager.metadataelements.DataAssetElement;
-import org.odpi.openmetadata.accessservices.assetmanager.metadataelements.ProcessElement;
-import org.odpi.openmetadata.accessservices.assetmanager.metadataelements.SchemaAttributeElement;
-import org.odpi.openmetadata.accessservices.assetmanager.metadataelements.SchemaTypeElement;
+import org.odpi.openmetadata.accessservices.assetmanager.metadataelements.*;
 import org.odpi.openmetadata.accessservices.assetmanager.properties.*;
 import org.odpi.openmetadata.frameworks.connectors.ffdc.InvalidParameterException;
 import org.odpi.openmetadata.frameworks.connectors.ffdc.PropertyServerException;
@@ -271,13 +268,15 @@ public class EventProcessor  {
         } else {
             // process exists update it
             ProcessElement processElement = processElementList.get(0);
-
-            myContext.updateProcess(processElement.getElementHeader().getGUID(),false, processProperties, new Date());
-
-            // now check if there are any assets for this process that are not in the event
+            processGUID = processElement.getElementHeader().getGUID();
+            myContext.updateProcess(processGUID,false, processProperties, new Date());
 
 
         }
+        // now grab all the calling and called relationships.
+//        List<ProcessCallElement> processCallElements = myContext.getProcessCallers(processGUID, 0, 1000, new Date());
+//        List<ProcessCallElement> processCalledElements = myContext.getProcessCalled(processGUID,0, 1000, new Date());
+
         for (String assetGUID : inAssetGUIDs) {
             DataFlowProperties properties = new DataFlowProperties();
             DataAssetElement dataAssetElement = myContext.getDataAssetByGUID(assetGUID, new Date());
@@ -286,13 +285,23 @@ public class EventProcessor  {
             if (sql != null) {
                 properties.setFormula(sql);
             }
-            myContext.setupDataFlow(true, dataAssetElement.getElementHeader().getGUID(), processGUID, properties, new Date());
+            // if there is already a dataflow - update it, if not create it
+            DataFlowElement  existingDataflow = myContext.getDataFlow(assetGUID, processGUID, null, new Date());
+            if (existingDataflow == null) {
+                myContext.setupDataFlow(true, assetGUID, processGUID, properties, new Date());
+
+            } else {
+                myContext.updateDataFlow(existingDataflow.getDataFlowHeader().getGUID(), properties, new Date());
+            }
         }
         for (String assetGUID : outAssetGUIDs) {
-
             DataFlowProperties properties = new DataFlowProperties();
-            DataAssetElement dataAssetElement = myContext.getDataAssetByGUID(assetGUID, new Date());
-            myContext.setupDataFlow(true, processGUID, dataAssetElement.getElementHeader().getGUID(), properties, new Date());
+            DataFlowElement  existingDataflow = myContext.getDataFlow( processGUID,assetGUID, null, new Date());
+            if (existingDataflow == null) {
+                myContext.setupDataFlow(true, processGUID, assetGUID, properties, new Date());
+            } else {
+                myContext.updateDataFlow(existingDataflow.getDataFlowHeader().getGUID(), properties, new Date());
+            }
         }
 
     }

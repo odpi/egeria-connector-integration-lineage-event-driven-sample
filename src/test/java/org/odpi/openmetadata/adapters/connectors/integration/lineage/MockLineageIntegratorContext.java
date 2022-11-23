@@ -267,8 +267,7 @@ public class MockLineageIntegratorContext extends LineageIntegratorContext
 
     @Override
     public void removeSchemaAttribute(String schemaAttributeGUID, Date effectiveTime) throws InvalidParameterException, UserNotAuthorizedException, PropertyServerException {
-        SchemaAttributeElement schemaAttributeElement =guidToSchemaAttributeElementMap.remove(schemaAttributeGUID);
-        // remove from schemaTypeGUIDToNestedAttributesMap
+          // remove from schemaTypeGUIDToNestedAttributesMap
         String parentGUID =attributeGuidToParentGuid.get(schemaAttributeGUID);
         List<SchemaAttributeElement> attributes = schemaTypeGUIDToNestedAttributesMap.get(parentGUID);
         int indexToRemove = -1;
@@ -336,9 +335,9 @@ public class MockLineageIntegratorContext extends LineageIntegratorContext
         ElementHeader consumerElementHeader = new ElementHeader();
         consumerElementHeader.setGUID(dataConsumerGUID);
         dataFlowElement.setDataConsumer(consumerElementHeader);
-        ElementHeader suppierElementHeader = new ElementHeader();
-        suppierElementHeader.setGUID(dataSupplierGUID);
-        dataFlowElement.setDataSupplier(suppierElementHeader);
+        ElementHeader supplierElementHeader = new ElementHeader();
+        supplierElementHeader.setGUID(dataSupplierGUID);
+        dataFlowElement.setDataSupplier(supplierElementHeader);
         guidToDataFlowElementMap.put(guid, dataFlowElement);
 
         return guid;
@@ -365,8 +364,40 @@ public class MockLineageIntegratorContext extends LineageIntegratorContext
         }
         return dataflowElements;
     }
+    @Override
+    public void updateDataFlow(String             dataFlowGUID,
+                               DataFlowProperties properties,
+                               Date               effectiveTime) throws InvalidParameterException,
+            UserNotAuthorizedException,
+            PropertyServerException {
+        DataFlowElement dataFlowElement =guidToDataFlowElementMap.get(dataFlowGUID);
+        dataFlowElement.setDataFlowProperties(properties);
 
+    }
 
+    @Override
+    public void clearDataFlow(String dataFlowGUID, Date effectiveTime) throws InvalidParameterException, UserNotAuthorizedException, PropertyServerException {
+        guidToDataFlowElementMap.remove(dataFlowGUID);
+    }
+    @Override
+    public DataFlowElement getDataFlow(String dataSupplierGUID,
+                                       String dataConsumerGUID,
+                                       String qualifiedName,
+                                       Date   effectiveTime) throws InvalidParameterException,
+            UserNotAuthorizedException,
+            PropertyServerException
+    {
+        DataFlowElement dataFlowElement =null;
+        for (String guid:guidToDataFlowElementMap.keySet()) {
+            DataFlowElement dataFlowElementToCheck = guidToDataFlowElementMap.get(guid);
+            if (dataFlowElementToCheck.getDataSupplier().getGUID().equals((dataSupplierGUID) ) &&
+                    (dataFlowElementToCheck.getDataSupplier().getGUID().equals(dataSupplierGUID))) {
+                dataFlowElement =dataFlowElementToCheck;
+            }
+        }
+
+    return dataFlowElement;
+    }
 
     private String createNewGUID() {
         return "" + guidCounter++;
