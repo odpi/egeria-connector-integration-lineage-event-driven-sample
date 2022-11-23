@@ -164,18 +164,18 @@ public class EventProcessor  {
 
                 // TODO loops to determine updates and deletes for schema attributes
 
-                final Set<String> existingKeySet = existingSchemaAttributesMap.keySet();
+               // final Set<String> existingKeySet = existingSchemaAttributesMap.keySet();
                 final Set<String> jsonKeySet = jsonAttributeMap.keySet();
 
                 List<String> updateSchemaAttributeGUIDs = new ArrayList<>();
                 Map<String, EventContent.Attribute> updateGUIDToSchemaPropertyAttributesMap = new HashMap<>();
                 List<String> deleteSchemaAttributeGUIDs = new ArrayList<>();
 
-                for (String existingQName : existingKeySet) {
-                    String existingGUID = existingSchemaAttributesMap.get(existingQName).getElementHeader().getGUID();
-                    if (jsonKeySet.contains(existingQName)) {
+                for (Map.Entry<String, SchemaAttributeElement>  entry :existingSchemaAttributesMap.entrySet()) {
+                    String existingGUID = entry.getValue().getElementHeader().getGUID();
+                    if (jsonKeySet.contains(entry.getKey())) {
                         updateSchemaAttributeGUIDs.add(existingGUID);
-                        updateGUIDToSchemaPropertyAttributesMap.put(existingGUID,jsonAttributeMap.get(existingQName));
+                        updateGUIDToSchemaPropertyAttributesMap.put(existingGUID,jsonAttributeMap.get(entry.getKey()));
                     }else {
                         deleteSchemaAttributeGUIDs.add(existingGUID);
                     }
