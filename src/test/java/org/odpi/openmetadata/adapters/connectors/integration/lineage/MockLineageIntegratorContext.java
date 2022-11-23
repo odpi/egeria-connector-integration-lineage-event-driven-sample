@@ -244,7 +244,7 @@ public class MockLineageIntegratorContext extends LineageIntegratorContext
         String assetSchemaTypeGuid = null;
         for (String guid:guidToAssetSchemaTypeMap.keySet()) {
             RelationshipElement relationshipElement =guidToAssetSchemaTypeMap.get(guid);
-            if (relationshipElement.getEnd2GUID().equals(schemaTypeGUID)) {
+            if (relationshipElement.getEnd2GUID().getGUID().equals(schemaTypeGUID)) {
                 assetSchemaTypeGuid = guid;
             }
         }

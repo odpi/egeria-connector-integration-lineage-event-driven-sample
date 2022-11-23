@@ -169,7 +169,6 @@ public class EventProcessor  {
 
                 List<String> updateSchemaAttributeGUIDs = new ArrayList<>();
                 Map<String, EventContent.Attribute> updateGUIDToSchemaPropertyAttributesMap = new HashMap<>();
-                List<SchemaAttributeProperties> addSchemaAttributes = new ArrayList<>();
                 List<String> deleteSchemaAttributeGUIDs = new ArrayList<>();
 
                 for (String existingQName : existingKeySet) {
