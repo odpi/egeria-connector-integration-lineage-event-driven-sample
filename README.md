@@ -36,6 +36,8 @@ The Output also describes an event schema.
 - All updates are replacements not merge- e.g. schema attributes are replaced not merged
 - there is no support for update schematype (EventType) as it only has a title - which is used to derive the qualified name - so there is nothing to update.
 - there is no description for schematypes or assets
+- AssetManager is not used. So AssetManagerIsHome is false on call create calls.
+- all updates are replacements not merges.
 ### Questions
 - dataflow relationships between the assets and process are [multi-link](https://egeria-project.org/concepts/uni-multi-link/?h=multi+link#multi-link-relationships)
 So have a qualified name - question on this - can it be null if we know there is only one?
