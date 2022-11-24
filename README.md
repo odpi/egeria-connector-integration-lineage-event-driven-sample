@@ -38,6 +38,13 @@ The Output also describes an event schema.
 - there is no description for schematypes or assets
 - AssetManager is not used. So AssetManagerIsHome is false on call create calls.
 - all updates are replacements not merges.
+- if an event comes in with different input assets and or output assets, we do not remove the existing lineage relationships.
+- The lineage relationships shown here as DataFlow relationships. In practice, it depends on
+what the process is doing as to which lineage relationships should be created.
+- The Dataflow qualified name is set to null. This is not appropriate if multiple 
+supply chains create a lineage relationship between an asset and process. 
+- Only one EventType is supported under the Topic. [https://github.com/odpi/egeria/issues/7134](https://github.com/odpi/egeria/issues/7134) has been raised to allow
+support of EventTypeLists. This sample would need to be enhanced to make use of these new APIs.  
 ### Questions
 - dataflow relationships between the assets and process are [multi-link](https://egeria-project.org/concepts/uni-multi-link/?h=multi+link#multi-link-relationships)
 So have a qualified name - question on this - can it be null if we know there is only one?
