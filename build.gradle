@@ -66,8 +66,8 @@ dependencies {
     compileOnly "org.odpi.egeria:repository-services-apis"
     compileOnly "org.odpi.egeria:repository-services:${egeriaVersion}"
     compileOnly "org.odpi.egeria:topic-integrator-api:${egeriaVersion}"
-    compileOnly "org.odpi.egeria:openlineage-integration-connectors:${egeriaVersion}"
     implementation "org.odpi.egeria:asset-manager-api:${egeriaVersion}"
+    api "org.odpi.egeria:openlineage-integration-connectors:${egeriaVersion}"
     api "org.odpi.egeria:lineage-integrator-api:${egeriaVersion}"
     testImplementation 'org.junit.jupiter:junit-jupiter-api:${jupiterVersion}'
     testImplementation 'org.odpi.egeria:asset-manager-client:${egeriaVersion}'

@@ -15,8 +15,8 @@ public class SampleLineageEventReceiverIntegrationProvider extends ConnectorProv
 {
     //org.odpi.openmetadata.adapters.connectors.integration.lineage.SampleLineageEventReceiverIntegrationProvider
     private static final String connectorTypeGUID          = "f9d2da2d-0cd3-475a-8c38-f2ee50980ee5";
-    private static final String connectorTypeQualifiedName = "Lineage sample Integration Connector";
-    private static final String connectorTypeDisplayName   = "Lineage sample Integration Connector";
+    private static final String connectorTypeQualifiedName = "Lineage event sample Integration Connector";
+    private static final String connectorTypeDisplayName   = "Lineage event sample Integration Connector";
     private static final String connectorTypeDescription   = "Connector maintains a list of assets schemas and processes from event payloads.";
 
     /**
