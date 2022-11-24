@@ -71,7 +71,7 @@ public class SampleLineageEventProcessor {
             assetProperties.setDisplayName(jsonAsset.getDisplayName());
             if (dataAssetElements == null || dataAssetElements.isEmpty()) {
                 // create asset
-                assetGUID = myContext.createDataAsset(true, assetProperties);
+                assetGUID = myContext.createDataAsset(false, assetProperties);
             } else {
                 // asset already exists - update it
                 DataAssetElement  dataAssetElement = dataAssetElements.get(0);
@@ -127,9 +127,9 @@ public class SampleLineageEventProcessor {
 
         if (childSchemaType ==null) {
             // create schema type as there is no child schema type
-            schemaTypeGUID = myContext.createSchemaType( true, schemaTypeProperties);
+            schemaTypeGUID = myContext.createSchemaType( false, schemaTypeProperties);
             //link to asset
-            myContext.setupSchemaTypeParent(true,schemaTypeGUID,assetGUID,"KafkaTopic",null, new Date());
+            myContext.setupSchemaTypeParent(false,schemaTypeGUID,assetGUID,"KafkaTopic",null, new Date());
 
             // For each schema attribute create it
             for (LineageEventContentforSample.Attribute attribute:eventTypeFromJSON.getAttributes()) {
@@ -138,7 +138,7 @@ public class SampleLineageEventProcessor {
                 schemaAttributeProperties.setDisplayName(attribute.getName());
                 schemaAttributeProperties.setTypeName(attribute.getType());
                 schemaAttributeProperties.setDescription(attribute.getDescription());
-                myContext.createSchemaAttribute(true,schemaTypeGUID,schemaAttributeProperties,new Date());
+                myContext.createSchemaAttribute(false,schemaTypeGUID,schemaAttributeProperties,new Date());
             }
         } else {
             // either the existing schema type is us - so we should update it or it is not and we should delete it
@@ -207,7 +207,7 @@ public class SampleLineageEventProcessor {
                         schemaAttributeProperties.setDisplayName(attribute.getName());
                         schemaAttributeProperties.setTypeName(attribute.getType());
                         schemaAttributeProperties.setDescription(attribute.getDescription());
-                        myContext.createSchemaAttribute(true, schemaTypeGUID, schemaAttributeProperties, new Date());
+                        myContext.createSchemaAttribute(false, schemaTypeGUID, schemaAttributeProperties, new Date());
                     }
                 }
 
@@ -215,9 +215,9 @@ public class SampleLineageEventProcessor {
                 // delete - this should cascade and delete any children.
                 myContext.removeSchemaType(schemaTypeGUID, new Date());
                 // add the new one
-                schemaTypeGUID = myContext.createSchemaType( true, schemaTypeProperties);
+                schemaTypeGUID = myContext.createSchemaType( false, schemaTypeProperties);
                 //link to asset
-                myContext.setupSchemaTypeParent(true,schemaTypeGUID,assetGUID,"KafkaTopic",null, new Date());
+                myContext.setupSchemaTypeParent(false, schemaTypeGUID, assetGUID,"KafkaTopic",null, new Date());
                 // For each schema attribute create it
                 for (LineageEventContentforSample.Attribute attribute:eventTypeFromJSON.getAttributes()) {
                     SchemaAttributeProperties schemaAttributeProperties = new SchemaAttributeProperties();
@@ -225,7 +225,9 @@ public class SampleLineageEventProcessor {
                     schemaAttributeProperties.setDisplayName(attribute.getName());
                     schemaAttributeProperties.setTypeName(attribute.getType());
                     schemaAttributeProperties.setDescription(attribute.getDescription());
-                    myContext.createSchemaAttribute(true,schemaTypeGUID,schemaAttributeProperties,new Date());
+                    myContext.createSchemaAttribute(false, schemaTypeGUID,schemaAttributeProperties,new Date());
+
+              //myContext.setupSchemaTypeParent();
                 }
             }
         }
@@ -263,7 +265,7 @@ public class SampleLineageEventProcessor {
         // does this process already exist?
         if(processElementList == null || processElementList.isEmpty()) {
             // process does not exist
-            processGUID = myContext.createProcess(true, ProcessStatus.ACTIVE, processProperties);
+            processGUID = myContext.createProcess(false, ProcessStatus.ACTIVE, processProperties);
         } else {
             // process exists update it
             ProcessElement processElement = processElementList.get(0);
@@ -287,7 +289,7 @@ public class SampleLineageEventProcessor {
             // if there is already a dataflow - update it, if not create it
             DataFlowElement  existingDataflow = myContext.getDataFlow(assetGUID, processGUID, null, new Date());
             if (existingDataflow == null) {
-                myContext.setupDataFlow(true, assetGUID, processGUID, properties, new Date());
+                myContext.setupDataFlow(false, assetGUID, processGUID, properties, new Date());
 
             } else {
                 myContext.updateDataFlow(existingDataflow.getDataFlowHeader().getGUID(), properties, new Date());
@@ -297,7 +299,7 @@ public class SampleLineageEventProcessor {
             DataFlowProperties properties = new DataFlowProperties();
             DataFlowElement  existingDataflow = myContext.getDataFlow( processGUID,assetGUID, null, new Date());
             if (existingDataflow == null) {
-                myContext.setupDataFlow(true, processGUID, assetGUID, properties, new Date());
+                myContext.setupDataFlow(false, processGUID, assetGUID, properties, new Date());
             } else {
                 myContext.updateDataFlow(existingDataflow.getDataFlowHeader().getGUID(), properties, new Date());
             }

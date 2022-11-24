@@ -46,12 +46,10 @@ description = 'New code for Egeria'
 
 // TODO: Specify Dependency versions as variables
 ext {
-    egeriaVersion = '3.12'
+    egeriaVersion = '3.13'
     slf4jVersion = '1.7.36'
-   // jacksonVersion = '2.14'
-    jacksonVersion = '2.13.3'
-    jupiterVersion = '5.9.0'
-    httpclientVersion = '4.5.13'
+    jacksonVersion = '2.14.0'
+    jupiterVersion = '5.9.1'
 }
 dependencies {
     // This will set constraints so that dependencies here follow egeria versions
@@ -66,8 +64,8 @@ dependencies {
     compileOnly "org.odpi.egeria:repository-services-apis"
     compileOnly "org.odpi.egeria:repository-services:${egeriaVersion}"
     compileOnly "org.odpi.egeria:topic-integrator-api:${egeriaVersion}"
-    compileOnly "org.odpi.egeria:openlineage-integration-connectors:${egeriaVersion}"
     implementation "org.odpi.egeria:asset-manager-api:${egeriaVersion}"
+    compileOnly "org.odpi.egeria:openlineage-integration-connectors:${egeriaVersion}"
     api "org.odpi.egeria:lineage-integrator-api:${egeriaVersion}"
     testImplementation 'org.junit.jupiter:junit-jupiter-api:${jupiterVersion}'
     testImplementation 'org.odpi.egeria:asset-manager-client:${egeriaVersion}'
