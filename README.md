@@ -3,18 +3,19 @@
 
 # Egeria Open Lineage Event Receiver Integration Connector
 
-# Still being developed - not tested or fully functional.
+# Still being developed - not fully functional.
 
 See https://egeria-project.org for the main Egeria Documentation.
 
 This repo holds one sample [integration connector](https://egeria-project.org/concepts/integration-connector/?h=integration+conne) that shows how 
 to listen to a topic for json payloads. For an example of the json, see the bottom of this README. This integration connector is an extension of the 
 [Open Lineage Event Receiver Integration Connector](https://egeria-project.org/connectors/integration/open-lineage-event-receiver-integration-connector/).
-It does not process open lineage events, instead it process json events in the form describd at the bottom of the readme.
+It does not process open lineage events, instead it processes json events. See [here](https://github.com/odpi/egeria-connector-integration-lineage-event-driven-sample/tree/main/src/test/resources)
+for some sample json events.
 
-
-
-
+## Postman
+There is a sample postman file [here](https://github.com/odpi/egeria-connector-integration-lineage-event-driven-sample/postman) to
+configure and start this connector.
 
 ## Event json 
 

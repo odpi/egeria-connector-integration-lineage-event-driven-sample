@@ -1,0 +1,153 @@
+{
+	"info": {
+		"_postman_id": "06c5d93d-65ef-4a8b-adb7-5217c6272f00",
+		"name": "Egeria Integration Connector sample event Lineage",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "2330095"
+	},
+	"item": [
+		{
+			"name": "1. Update the server type",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{baseURL}}/open-metadata/admin-services/users/{{user}}/servers/{{server}}/server-type?typeName=Integration Daemon",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"open-metadata",
+						"admin-services",
+						"users",
+						"{{user}}",
+						"servers",
+						"{{server}}",
+						"server-type"
+					],
+					"query": [
+						{
+							"key": "typeName",
+							"value": "Integration Daemon"
+						}
+					]
+				},
+				"description": "Requests information about the author of the server platform."
+			},
+			"response": []
+		},
+		{
+			"name": "2. Configure the integration services audit log",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"class\":\"Connection\",\n   \"type\":{\n      \"class\":\"ElementType\",\n      \"elementTypeId\":\"114e9f8f-5ff3-4c32-bd37-a7eb42712253\",\n      \"elementTypeName\":\"Connection\",\n      \"elementTypeVersion\":1,\n      \"elementTypeDescription\":\"A set of properties to identify and configure a connector instance.\",\n      \"elementOrigin\":\"CONFIGURATION\"\n   },\n   \"guid\":\"5390bf3e-6b38-4eda-b34a-de55ac4252a7\",\n   \"qualifiedName\":\"DefaultAuditLog.Connection.viewserver\",\n   \"displayName\":\"DefaultAuditLog.Connection.viewserver\",\n   \"description\":\"OMRS default audit log connection.\",\n   \"connectorType\":{\n      \"class\":\"ConnectorType\",\n      \"type\":{\n         \"class\":\"ElementType\",\n         \"elementTypeId\":\"954421eb-33a6-462d-a8ca-b5709a1bd0d4\",\n         \"elementTypeName\":\"ConnectorType\",\n         \"elementTypeVersion\":1,\n         \"elementTypeDescription\":\"A set of properties describing a type of connector.\",\n         \"elementOrigin\":\"LOCAL_COHORT\"\n      },\n      \"guid\":\"4afac741-3dcc-4c60-a4ca-a6dede994e3f\",\n      \"qualifiedName\":\"Console Audit Log Store Connector\",\n      \"displayName\":\"Console Audit Log Store Connector\",\n      \"description\":\"Connector supports logging of audit log messages to stdout.\",\n      \"connectorProviderClassName\":\"org.odpi.openmetadata.adapters.repositoryservices.auditlogstore.console.ConsoleAuditLogStoreProvider\"\n   },\n   \"endpoint\":{\n      \"class\":\"Endpoint\",\n      \"type\":{\n         \"class\":\"ElementType\",\n         \"elementTypeId\":\"dbc20663-d705-4ff0-8424-80c262c6b8e7\",\n         \"elementTypeName\":\"Endpoint\",\n         \"elementTypeVersion\":1,\n         \"elementTypeDescription\":\"Description of the network address and related information needed to call a software service.\",\n         \"elementOrigin\":\"CONFIGURATION\"\n      },\n      \"guid\":\"836efeae-ab34-4425-89f0-6adf2faa1f2e\",\n      \"qualifiedName\":\"DefaultAuditLog.Endpoint.cocoView1.auditlog\",\n      \"displayName\":\"DefaultAuditLog.Endpoint.cocoView1.auditlog\",\n      \"description\":\"OMRS default audit log endpoint.\",\n      \"address\":\"cocoView1.auditlog\"\n   }\n}"
+				},
+				"url": {
+					"raw": "{{baseURL}}/open-metadata/admin-services/users/{{user}}/servers/{{server}}/audit-log-destinations/connection",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"open-metadata",
+						"admin-services",
+						"users",
+						"{{user}}",
+						"servers",
+						"{{server}}",
+						"audit-log-destinations",
+						"connection"
+					]
+				},
+				"description": "Requests information about the author of the server platform."
+			},
+			"response": []
+		},
+		{
+			"name": "3. Configure the sample lineage integrator service",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"class\": \"IntegrationServiceRequestBody\",\n    \"omagserverPlatformRootURL\": \"https://localhost:9443\",\n    \"omagserverName\": \"{{server}}\",\n    \"connectorUserId\": \"{{user}}\",\n    \"integrationConnectorConfigs\": [\n        {\n            \"class\": \"IntegrationConnectorConfig\",\n            \"connectorName\": \"LineageIntegrator\",\n            \"typeName\": \"Lineage sample Integration Connector\",\n            \"guid\":\"f9d2da2d-0cd3-475a-8c38-f2ee50980ee5\",\n            \"connection\": {\n                \"class\": \"VirtualConnection\",\n                \"qualifiedName\": \"Egeria:IntegrationConnector:Lineage:OpenLineageEventReceiverConnection\",\n                \"connectorType\": {\n                    \"class\": \"ConnectorType\",\n                    \"connectorProviderClassName\": \"org.odpi.openmetadata.adapters.connectors.integration.lineage.SampleLineageEventReceiverIntegrationProvider\"\n                },\n                \"embeddedConnections\": [\n                    {\n                        \"class\": \"EmbeddedConnection\",\n                        \"embeddedConnection\": {\n                            \"class\": \"Connection\",\n                            \"qualifiedName\": \"Kafka Open Metadata Topic Connector\",\n                            \"connectorType\": {\n                                \"class\": \"ConnectorType\",\n                                \"connectorProviderClassName\": \"org.odpi.openmetadata.adapters.eventbus.topic.kafka.KafkaOpenMetadataTopicProvider\"\n                            },\n                            \"endpoint\": {\n                                \"class\": \"Endpoint\",\n                                \"address\": \"{{topic-name}}\"\n                            },\n                            \"configurationProperties\": {\n                                \"producer\": {\n                                    \"bootstrap.servers\": \"{{kafkaep}}\"\n                                },\n                                \"local.server.id\":\"{{consumerid}}\",\n                                \"consumer\": {\n                                    \"bootstrap.servers\": \"{{kafkaep}}\"\n                                }\n                            }\n                        }\n                    }\n                ]\n            }\n        }\n    ]\n}"
+				},
+				"url": {
+					"raw": "{{baseURL}}/open-metadata/admin-services/users/{{user}}/servers/{{server}}/integration-services/lineage-integrator",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"open-metadata",
+						"admin-services",
+						"users",
+						"{{user}}",
+						"servers",
+						"{{server}}",
+						"integration-services",
+						"lineage-integrator"
+					]
+				},
+				"description": "Requests information about the author of the server platform."
+			},
+			"response": []
+		},
+		{
+			"name": "4. Start the server",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{baseURL}}/open-metadata/admin-services/users/{{user}}/servers/{{server}}/instance",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"open-metadata",
+						"admin-services",
+						"users",
+						"{{user}}",
+						"servers",
+						"{{server}}",
+						"instance"
+					]
+				},
+				"description": "Requests information about the author of the server platform."
+			},
+			"response": []
+		}
+	]
+}
