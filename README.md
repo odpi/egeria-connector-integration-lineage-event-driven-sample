@@ -14,8 +14,13 @@ It does not process open lineage events, instead it processes json events. See [
 for some sample json events.
 
 ## Postman
-There is a sample postman file [here](https://github.com/odpi/egeria-connector-integration-lineage-event-driven-sample/postman) to
+There is a sample postman file [here](https://github.com/odpi/egeria-connector-integration-lineage-event-driven-sample/blob/main/postman/Egeria%20Integration%20Connector%20sample%20event%20Lineage.postman_collection.json) to
 configure and start this connector.
+
+## Test Utility
+This is a java application that produces events for testing [here](https://github.com/odpi/egeria-connector-integration-lineage-event-driven-sample/blob/main/src/test/java/org/odpi/openmetadata/adapters/connectors/integration/lineage/utils/EventProducerUtility.java). It allows the user to easily submit any of the json files used in the junit.
+It is built with the junit tests using the top level gradle file.
+
 
 ## Event json 
 
