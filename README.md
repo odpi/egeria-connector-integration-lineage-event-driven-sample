@@ -54,9 +54,7 @@ support of EventTypeLists. This sample would need to be enhanced to make use of 
 ### Questions
 - dataflow relationships between the assets and process are [multi-link](https://egeria-project.org/concepts/uni-multi-link/?h=multi+link#multi-link-relationships)
 So have a qualified name - question on this - can it be null if we know there is only one?
-- Can we use EventSets to model multiple EventTypes? Yes- but still the asset would have one schematype
-which is the EventType
-- effectivity should be use current time or null (effective forever) 
+- effectivity should be use current time or null (effective forever)
 ### Example json
 {
 "Id": "1234567890",
