@@ -6,6 +6,7 @@ package org.odpi.openmetadata.adapters.connectors.integration.lineage;
 
 import org.junit.jupiter.api.Test;
 import org.odpi.openmetadata.accessservices.assetmanager.metadataelements.*;
+import org.odpi.openmetadata.accessservices.assetmanager.properties.PrimitiveSchemaTypeProperties;
 import org.odpi.openmetadata.accessservices.assetmanager.properties.SchemaAttributeProperties;
 import org.odpi.openmetadata.accessservices.assetmanager.properties.SchemaTypeProperties;
 import org.odpi.openmetadata.frameworks.connectors.ffdc.ConnectorCheckedException;
@@ -100,17 +101,23 @@ public class sampleLineageEventProcessorTest
             if (properties.getDisplayName().equals("firstName")) {
                 assertTrue(properties.getDescription().equals("The person's first name."));
                 assertTrue( properties.getQualifiedName().equals("vertriebskunde-services.agree-kundendaten~Person~firstName"));
-                assertTrue(properties.getTypeName().equals("string"));
+                assertTrue(properties.getTypeName().equals("EventSchemaAttribute"));
+                PrimitiveSchemaTypeProperties primitiveSchemaTypeProperties = (PrimitiveSchemaTypeProperties)properties.getSchemaType();
+                assertTrue(primitiveSchemaTypeProperties.getDataType().equals("string"));
                 firstNameFound = true;
             } else   if (properties.getDisplayName().equals("lastName")) {
                 assertTrue( properties.getDescription().equals("The person's last name."));
                 assertTrue( properties.getQualifiedName().equals("vertriebskunde-services.agree-kundendaten~Person~lastName"));
-                assertTrue(properties.getTypeName().equals("string"));
+                assertTrue(properties.getTypeName().equals("EventSchemaAttribute"));
+                PrimitiveSchemaTypeProperties primitiveSchemaTypeProperties = (PrimitiveSchemaTypeProperties)properties.getSchemaType();
+                assertTrue(primitiveSchemaTypeProperties.getDataType().equals("string"));
                 lastNameFound = true;
             } else   if (properties.getDisplayName().equals("age")) {
                 assertTrue(properties.getDescription().equals("Age in years which must be equal to or greater than zero."));
                 assertTrue(properties.getQualifiedName().equals("vertriebskunde-services.agree-kundendaten~Person~age"));
-                assertTrue(properties.getTypeName().equals("integer"));
+                assertTrue(properties.getTypeName().equals("EventSchemaAttribute"));
+                PrimitiveSchemaTypeProperties primitiveSchemaTypeProperties = (PrimitiveSchemaTypeProperties)properties.getSchemaType();
+                assertTrue(primitiveSchemaTypeProperties.getDataType().equals("integer"));
                 ageFound = true;
             }
         }
@@ -237,17 +244,23 @@ public class sampleLineageEventProcessorTest
             if (properties.getDisplayName().equals("firstName")) {
                 assertTrue(properties.getDescription().equals("The person's first name or name to be called."));
                 assertTrue( properties.getQualifiedName().equals("vertriebskunde-services.agree-kundendaten-3~Person~firstName"));
-                assertTrue(properties.getTypeName().equals("string"));
+                assertTrue(properties.getTypeName().equals("EventSchemaAttribute"));
+                PrimitiveSchemaTypeProperties primitiveSchemaTypeProperties = (PrimitiveSchemaTypeProperties)properties.getSchemaType();
+                assertTrue(primitiveSchemaTypeProperties.getDataType().equals("string"));
                 firstNameFound = true;
             } else   if (properties.getDisplayName().equals("middleName")) {
                 assertTrue( properties.getDescription().equals("The person's middle name."));
                 assertTrue( properties.getQualifiedName().equals("vertriebskunde-services.agree-kundendaten-3~Person~middleName"));
-                assertTrue(properties.getTypeName().equals("string"));
+                assertTrue(properties.getTypeName().equals("EventSchemaAttribute"));
+                PrimitiveSchemaTypeProperties primitiveSchemaTypeProperties = (PrimitiveSchemaTypeProperties)properties.getSchemaType();
+                assertTrue(primitiveSchemaTypeProperties.getDataType().equals("string"));
                 middleNameFound = true;
             } else   if (properties.getDisplayName().equals("age")) {
                 assertTrue(properties.getDescription().equals("Age as a string to test type change."));
                 assertTrue(properties.getQualifiedName().equals("vertriebskunde-services.agree-kundendaten-3~Person~age"));
-                assertTrue(properties.getTypeName().equals("string"));
+                assertTrue(properties.getTypeName().equals("EventSchemaAttribute"));
+                PrimitiveSchemaTypeProperties primitiveSchemaTypeProperties = (PrimitiveSchemaTypeProperties)properties.getSchemaType();
+                assertTrue(primitiveSchemaTypeProperties.getDataType().equals("string"));
                 ageFound = true;
             }
         }
@@ -312,17 +325,23 @@ public class sampleLineageEventProcessorTest
             if (properties.getDisplayName().equals("firstName")) {
                 assertTrue(properties.getDescription().equals("The person's first name or name to be called."));
                 assertTrue( properties.getQualifiedName().equals("vertriebskunde-services.agree-kundendaten-3~Person-2~firstName"));
-                assertTrue(properties.getTypeName().equals("string"));
+                assertTrue(properties.getTypeName().equals("EventSchemaAttribute"));
+                PrimitiveSchemaTypeProperties primitiveSchemaTypeProperties = (PrimitiveSchemaTypeProperties)properties.getSchemaType();
+                assertTrue(primitiveSchemaTypeProperties.getDataType().equals("string"));
                 firstNameFound = true;
             } else   if (properties.getDisplayName().equals("middleName")) {
                 assertTrue( properties.getDescription().equals("The person's middle name."));
                 assertTrue( properties.getQualifiedName().equals("vertriebskunde-services.agree-kundendaten-3~Person-2~middleName"));
-                assertTrue(properties.getTypeName().equals("string"));
+                assertTrue(properties.getTypeName().equals("EventSchemaAttribute"));
+                PrimitiveSchemaTypeProperties primitiveSchemaTypeProperties = (PrimitiveSchemaTypeProperties)properties.getSchemaType();
+                assertTrue(primitiveSchemaTypeProperties.getDataType().equals("string"));
                 middleNameFound = true;
             } else   if (properties.getDisplayName().equals("age")) {
                 assertTrue(properties.getDescription().equals("Age as a string to test type change."));
                 assertTrue(properties.getQualifiedName().equals("vertriebskunde-services.agree-kundendaten-3~Person-2~age"));
-                assertTrue(properties.getTypeName().equals("string"));
+                assertTrue(properties.getTypeName().equals("EventSchemaAttribute"));
+                PrimitiveSchemaTypeProperties primitiveSchemaTypeProperties = (PrimitiveSchemaTypeProperties)properties.getSchemaType();
+                assertTrue(primitiveSchemaTypeProperties.getDataType().equals("string"));
                 ageFound = true;
             }
         }
@@ -389,17 +408,23 @@ public class sampleLineageEventProcessorTest
             if (properties.getDisplayName().equals("firstName")) {
                 assertTrue(properties.getDescription().equals("The person's first name or name to be called."));
                 assertTrue( properties.getQualifiedName().equals("vertriebskunde-services.agree-kundendaten-3~Person-2~firstName"));
-                assertTrue(properties.getTypeName().equals("string"));
+                assertTrue(properties.getTypeName().equals("EventSchemaAttribute"));
+                PrimitiveSchemaTypeProperties primitiveSchemaTypeProperties = (PrimitiveSchemaTypeProperties)properties.getSchemaType();
+                assertTrue(primitiveSchemaTypeProperties.getDataType().equals("string"));
                 firstNameFound = true;
             } else   if (properties.getDisplayName().equals("middleName")) {
                 assertTrue( properties.getDescription().equals("The person's middle name."));
                 assertTrue( properties.getQualifiedName().equals("vertriebskunde-services.agree-kundendaten-3~Person-2~middleName"));
-                assertTrue(properties.getTypeName().equals("string"));
+                assertTrue(properties.getTypeName().equals("EventSchemaAttribute"));
+                PrimitiveSchemaTypeProperties primitiveSchemaTypeProperties = (PrimitiveSchemaTypeProperties)properties.getSchemaType();
+                assertTrue(primitiveSchemaTypeProperties.getDataType().equals("string"));
                 middleNameFound = true;
             } else   if (properties.getDisplayName().equals("age")) {
                 assertTrue(properties.getDescription().equals("Age as a string to test type change."));
                 assertTrue(properties.getQualifiedName().equals("vertriebskunde-services.agree-kundendaten-3~Person-2~age"));
-                assertTrue(properties.getTypeName().equals("string"));
+                assertTrue(properties.getTypeName().equals("EventSchemaAttribute"));
+                PrimitiveSchemaTypeProperties primitiveSchemaTypeProperties = (PrimitiveSchemaTypeProperties)properties.getSchemaType();
+                assertTrue(primitiveSchemaTypeProperties.getDataType().equals("string"));
                 ageFound = true;
             }
         }
