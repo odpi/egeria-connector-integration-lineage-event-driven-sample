@@ -18,6 +18,8 @@ import java.util.*;
 @SuppressWarnings("JavaUtilDate")
 public class SampleLineageEventProcessor {
 
+    public static final String EVENT_SCHEMA_ATTRIBUTE = "EventSchemaAttribute";
+    public static final String PRIMITIVE_SCHEMA_TYPE = "PrimitiveSchemaType";
     private LineageIntegratorContext                myContext;
     private  List<String> inAssetGUIDs = null;
     private  List<String> outAssetGUIDs = null;
@@ -83,7 +85,7 @@ public class SampleLineageEventProcessor {
             if (assetGUID != null) {
                 assetGUIDs.add(assetGUID);
                 if (jsonAsset.getEventType() != null) {
-                    ensureSchemaIsCatalogued(jsonAsset, assetGUID);
+                   ensureSchemaIsCatalogued(jsonAsset, assetGUID);
                 }
             } else {
                 //error
@@ -133,15 +135,10 @@ public class SampleLineageEventProcessor {
 
             // For each schema attribute create it
             for (LineageEventContentforSample.Attribute attribute:eventTypeFromJSON.getAttributes()) {
-                SchemaAttributeProperties schemaAttributeProperties = new SchemaAttributeProperties();
-                schemaAttributeProperties.setQualifiedName(attribute.getQualifiedName());
-                schemaAttributeProperties.setDisplayName(attribute.getName());
-                schemaAttributeProperties.setTypeName(attribute.getType());
-                schemaAttributeProperties.setDescription(attribute.getDescription());
-                myContext.createSchemaAttribute(false,schemaTypeGUID,schemaAttributeProperties,new Date());
+                createPrimitiveSchemaAttribute(schemaTypeGUID, attribute);
             }
         } else {
-            // either the existing schema type is us - so we should update it or it is not and we should delete it
+            // either the existing schema type is us - so we should update it or it is not so we should delete it.
             schemaTypeGUID = childSchemaType.getElementHeader().getGUID();
             if (jsonEventTypeQualifiedName.equals(childSchemaType.getSchemaTypeProperties().getQualifiedName())) {
                 // update
@@ -151,12 +148,16 @@ public class SampleLineageEventProcessor {
 
                 // check the schema attributes
                 List<SchemaAttributeElement> existingSchemaAttributes = myContext.getNestedSchemaAttributes(schemaTypeGUID, 0, 1000, new Date());
-
+                if (existingSchemaAttributes ==null) {
+                    existingSchemaAttributes= new ArrayList<>();
+                }
                 Map<String, SchemaAttributeElement> existingSchemaAttributesMap = new HashMap<>();
                 Map<String, LineageEventContentforSample.Attribute> jsonAttributeMap = new HashMap<>();
-                for (SchemaAttributeElement schemaAttributeElement : existingSchemaAttributes) {
-                    existingSchemaAttributesMap.put(schemaAttributeElement.getSchemaAttributeProperties().getQualifiedName(), schemaAttributeElement);
-                }
+
+                    for (SchemaAttributeElement schemaAttributeElement : existingSchemaAttributes) {
+                        existingSchemaAttributesMap.put(schemaAttributeElement.getSchemaAttributeProperties().getQualifiedName(), schemaAttributeElement);
+                    }
+
                 for (LineageEventContentforSample.Attribute attribute : eventTypeFromJson.getAttributes()) {
                     jsonAttributeMap.put(attribute.getQualifiedName(), attribute);
                 }
@@ -176,7 +177,7 @@ public class SampleLineageEventProcessor {
                         // if the attribute in the store is not in the event, then delete it from the store
                         deleteSchemaAttributeGUIDs.add(existingGUID);
                     } else {
-                        // if we have an exiting attribute in the store update it with the event values.
+                        // if we have an existing attribute in the store update it with the event values.
                         updateGUIDToSchemaPropertyAttributesMap.put(existingGUID, existingJsonAttribute);
                     }
                 }
@@ -188,26 +189,15 @@ public class SampleLineageEventProcessor {
                 // action updates
                 Set<String> updatedQNames = new HashSet<>();
                 for (Map.Entry<String, LineageEventContentforSample.Attribute> entry : updateGUIDToSchemaPropertyAttributesMap.entrySet()) {
-                    LineageEventContentforSample.Attribute jsonAttribute =entry.getValue();
-                    SchemaAttributeProperties schemaAttributeProperties = new SchemaAttributeProperties();
-                    schemaAttributeProperties.setQualifiedName(jsonAttribute.getQualifiedName());
-                    updatedQNames.add(jsonAttribute.getQualifiedName());
-                    schemaAttributeProperties.setDisplayName(jsonAttribute.getName());
-                    schemaAttributeProperties.setTypeName(jsonAttribute.getType());
-                    schemaAttributeProperties.setDescription(jsonAttribute.getDescription());
-                    myContext.updateSchemaAttribute(entry.getKey(), false,schemaAttributeProperties , new Date());
+                    updatedQNames.add(entry.getValue().getQualifiedName());
+                    updatePrimitiveSchemaAttribute(entry.getKey(), entry.getValue());
                 }
 
                 // action adds. Add only those attributes that do not already exist
                 // For each schema attribute create it
                 for (LineageEventContentforSample.Attribute attribute:eventTypeFromJSON.getAttributes()) {
                     if (!updatedQNames.contains(attribute.getQualifiedName())) {
-                        SchemaAttributeProperties schemaAttributeProperties = new SchemaAttributeProperties();
-                        schemaAttributeProperties.setQualifiedName(attribute.getQualifiedName());
-                        schemaAttributeProperties.setDisplayName(attribute.getName());
-                        schemaAttributeProperties.setTypeName(attribute.getType());
-                        schemaAttributeProperties.setDescription(attribute.getDescription());
-                        myContext.createSchemaAttribute(false, schemaTypeGUID, schemaAttributeProperties, new Date());
+                        createPrimitiveSchemaAttribute(schemaTypeGUID, attribute);
                     }
                 }
 
@@ -220,14 +210,7 @@ public class SampleLineageEventProcessor {
                 myContext.setupSchemaTypeParent(false, schemaTypeGUID, assetGUID,"KafkaTopic",null, new Date());
                 // For each schema attribute create it
                 for (LineageEventContentforSample.Attribute attribute:eventTypeFromJSON.getAttributes()) {
-                    SchemaAttributeProperties schemaAttributeProperties = new SchemaAttributeProperties();
-                    schemaAttributeProperties.setQualifiedName(attribute.getQualifiedName());
-                    schemaAttributeProperties.setDisplayName(attribute.getName());
-                    schemaAttributeProperties.setTypeName(attribute.getType());
-                    schemaAttributeProperties.setDescription(attribute.getDescription());
-                    myContext.createSchemaAttribute(false, schemaTypeGUID,schemaAttributeProperties,new Date());
-
-              //myContext.setupSchemaTypeParent();
+                    createPrimitiveSchemaAttribute(schemaTypeGUID, attribute);
                 }
             }
         }
@@ -235,6 +218,41 @@ public class SampleLineageEventProcessor {
 
 
     }
+
+    /**
+     * This method maps the event attribute and issues the createSchemaAttribute on the context.
+     * @param schemaTypeGUID parent schema type guid
+     * @param attribute attribute
+     * @throws InvalidParameterException Invalid parameter
+     * @throws UserNotAuthorizedException user not authorised
+     * @throws PropertyServerException property server exception
+     */
+    private void createPrimitiveSchemaAttribute(String schemaTypeGUID, LineageEventContentforSample.Attribute attribute) throws InvalidParameterException, UserNotAuthorizedException, PropertyServerException {
+        SchemaAttributeProperties schemaAttributeProperties = getSchemaAttributeProperties(attribute);
+        myContext.createSchemaAttribute(false, schemaTypeGUID,schemaAttributeProperties,new Date());
+    }
+    private void updatePrimitiveSchemaAttribute(String schemaAttributeGUID, LineageEventContentforSample.Attribute attribute) throws InvalidParameterException, UserNotAuthorizedException, PropertyServerException {
+        SchemaAttributeProperties schemaAttributeProperties = getSchemaAttributeProperties(attribute);
+        myContext.updateSchemaAttribute(schemaAttributeGUID,false, schemaAttributeProperties,new Date());
+    }
+
+    private static SchemaAttributeProperties getSchemaAttributeProperties(LineageEventContentforSample.Attribute attribute) {
+        String attributeQualifiedName = attribute.getQualifiedName();
+        String attributeDisplayName = attribute.getName();
+        SchemaAttributeProperties schemaAttributeProperties = new SchemaAttributeProperties();
+        schemaAttributeProperties.setQualifiedName(attributeQualifiedName);
+        schemaAttributeProperties.setDisplayName(attributeDisplayName);
+        schemaAttributeProperties.setTypeName(EVENT_SCHEMA_ATTRIBUTE);
+        schemaAttributeProperties.setDescription(attribute.getDescription());
+        PrimitiveSchemaTypeProperties primitiveSchemaTypeProperties= new PrimitiveSchemaTypeProperties();
+        primitiveSchemaTypeProperties.setQualifiedName(attributeQualifiedName);
+        primitiveSchemaTypeProperties.setDisplayName(attributeDisplayName);
+        primitiveSchemaTypeProperties.setDataType(attribute.getType());
+        primitiveSchemaTypeProperties.setTypeName(PRIMITIVE_SCHEMA_TYPE);
+        schemaAttributeProperties.setSchemaType(primitiveSchemaTypeProperties);
+        return schemaAttributeProperties;
+    }
+
 
     /**
      * Save the lineage. The input and assets will have been catalogued prior to this method.
