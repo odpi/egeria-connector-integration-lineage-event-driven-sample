@@ -39,7 +39,7 @@ public class sampleLineageEventProcessorTest
         LineageEventContentforSample eventContent = new LineageEventContentforSample(content);
 
         LineageIntegratorContext mockContext = new MockLineageIntegratorContext();
-        SampleLineageEventProcessor eventProcessor = new SampleLineageEventProcessor(mockContext);
+        SampleLineageEventProcessor eventProcessor = new SampleLineageEventProcessor(mockContext, null);
         eventProcessor.processEvent(eventContent);
         List<DataAssetElement> assetList = mockContext.getDataAssetsByName("C6B7B1B717C840F686EE2426241ED18CE1D053019534F03495E8CD644976FA37",0, 1000,new Date());
         assertTrue(assetList!= null);
@@ -132,7 +132,7 @@ public class sampleLineageEventProcessorTest
         content = Files.readString(path);
         eventContent = new LineageEventContentforSample(content);
 
-        eventProcessor = new SampleLineageEventProcessor(mockContext);
+        eventProcessor = new SampleLineageEventProcessor(mockContext, null);
         eventProcessor.processEvent(eventContent);
         assetList = mockContext.getDataAssetsByName("C6B7B1B717C840F686EE2426241ED18CE1D053019534F03495E8CD644976FA37",0, 1000,new Date());
         assertTrue(assetList!= null);
@@ -165,7 +165,7 @@ public class sampleLineageEventProcessorTest
         content = Files.readString(path);
         eventContent = new LineageEventContentforSample(content);
 
-        eventProcessor = new SampleLineageEventProcessor(mockContext);
+        eventProcessor = new SampleLineageEventProcessor(mockContext, null);
         eventProcessor.processEvent(eventContent);
         assetList = mockContext.getDataAssetsByName("C6B7B1B717C840F686EE2426241ED18CE1D053019534F03495E8CD644976FA37-3",0, 1000,new Date());
         assertTrue(assetList!= null);
@@ -198,7 +198,7 @@ public class sampleLineageEventProcessorTest
         content = Files.readString(path);
         eventContent = new LineageEventContentforSample(content);
 
-        eventProcessor = new SampleLineageEventProcessor(mockContext);
+        eventProcessor = new SampleLineageEventProcessor(mockContext, null);
         eventProcessor.processEvent(eventContent);
         assetList = mockContext.getDataAssetsByName("C6B7B1B717C840F686EE2426241ED18CE1D053019534F03495E8CD644976FA37-3",0, 1000,new Date());
         assertTrue(assetList!= null);
@@ -273,12 +273,12 @@ public class sampleLineageEventProcessorTest
         // Replace the event type
         List<SchemaTypeElement> schemaTypeElementList = mockContext.getSchemaTypeByName("vertriebskunde-services.agree-kundendaten-3~Person",0,1000,new Date());
         assert(schemaTypeElementList.size() == 1);
-        textPath = "src/test/resources/Sample5-replace-event-type.json";
+        textPath = "src/test/resources/Sample5-replace-eventtype.json";
         path = Paths.get(textPath);
         content = Files.readString(path);
         eventContent = new LineageEventContentforSample(content);
 
-        eventProcessor = new SampleLineageEventProcessor(mockContext);
+        eventProcessor = new SampleLineageEventProcessor(mockContext, null);
         eventProcessor.processEvent(eventContent);
         schemaTypeElementList = mockContext.getSchemaTypeByName("vertriebskunde-services.agree-kundendaten-3~Person",0,1000,new Date());
         assert(schemaTypeElementList.size() == 0);
@@ -355,7 +355,7 @@ public class sampleLineageEventProcessorTest
         content = Files.readString(path);
         eventContent = new LineageEventContentforSample(content);
 
-        eventProcessor = new SampleLineageEventProcessor(mockContext);
+        eventProcessor = new SampleLineageEventProcessor(mockContext, null);
         eventProcessor.processEvent(eventContent);
 
         assetList = mockContext.getDataAssetsByName("C6B7B1B717C840F686EE2426241ED18CE1D053019534F03495E8CD644976FA37-3",0, 1000,new Date());

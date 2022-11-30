@@ -87,7 +87,7 @@ public class SampleLineageEventReceiverIntegrationConnector extends OpenLineageE
     {
         if (myContext != null)
         {
-             SampleLineageEventProcessor eventProcessor = new SampleLineageEventProcessor(myContext);
+             SampleLineageEventProcessor eventProcessor = new SampleLineageEventProcessor(myContext, auditLog);
              LineageEventContentforSample eventContent = new LineageEventContentforSample(event);
              eventProcessor.processEvent(eventContent);
         }

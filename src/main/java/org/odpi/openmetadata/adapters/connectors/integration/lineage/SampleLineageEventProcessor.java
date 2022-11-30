@@ -5,6 +5,7 @@ package org.odpi.openmetadata.adapters.connectors.integration.lineage;
 
 import org.odpi.openmetadata.accessservices.assetmanager.metadataelements.*;
 import org.odpi.openmetadata.accessservices.assetmanager.properties.*;
+import org.odpi.openmetadata.frameworks.auditlog.AuditLog;
 import org.odpi.openmetadata.frameworks.connectors.ffdc.InvalidParameterException;
 import org.odpi.openmetadata.frameworks.connectors.ffdc.PropertyServerException;
 import org.odpi.openmetadata.frameworks.connectors.ffdc.UserNotAuthorizedException;
@@ -20,16 +21,28 @@ public class SampleLineageEventProcessor {
 
     public static final String EVENT_SCHEMA_ATTRIBUTE = "EventSchemaAttribute";
     public static final String PRIMITIVE_SCHEMA_TYPE = "PrimitiveSchemaType";
+    private final AuditLog auditLog;
     private LineageIntegratorContext                myContext;
     private  List<String> inAssetGUIDs = null;
     private  List<String> outAssetGUIDs = null;
 
 
-
-    public SampleLineageEventProcessor(LineageIntegratorContext  myContext ) {
+    /**
+     * Constructor for SampleLineageEventProcessor
+     *
+     * @param myContext LineageIntegratorContext on which we communicate with the Egeria eco-system.
+     * @param auditLog
+     */
+    public SampleLineageEventProcessor(LineageIntegratorContext  myContext, AuditLog auditLog) {
         this.myContext = myContext;
+        this.auditLog = auditLog;
     }
 
+    /**
+     * Process the event.
+     *
+     * @param eventContent
+     */
     public void processEvent(LineageEventContentforSample eventContent)
     {
         try {
@@ -40,11 +53,21 @@ public class SampleLineageEventProcessor {
             saveLineage(eventContent);
 
         } catch (InvalidParameterException e) {
-            throw new RuntimeException(e);
+           if (auditLog != null) {
+
+           }
         } catch (PropertyServerException e) {
-            throw new RuntimeException(e);
+            if (auditLog != null) {
+
+            }
         } catch (UserNotAuthorizedException e) {
-            throw new RuntimeException(e);
+            if (auditLog != null) {
+
+            }
+        } catch (Exception e) {
+            if (auditLog != null) {
+
+            }
         }
     }
 
@@ -162,9 +185,6 @@ public class SampleLineageEventProcessor {
                     jsonAttributeMap.put(attribute.getQualifiedName(), attribute);
                 }
 
-                // TODO loops to determine updates and deletes for schema attributes
-
-                //  List<String> updateSchemaAttributeGUIDs = new ArrayList<>();
                 Map<String, LineageEventContentforSample.Attribute> updateGUIDToSchemaPropertyAttributesMap = new HashMap<>();
                 List<String> deleteSchemaAttributeGUIDs = new ArrayList<>();
 
