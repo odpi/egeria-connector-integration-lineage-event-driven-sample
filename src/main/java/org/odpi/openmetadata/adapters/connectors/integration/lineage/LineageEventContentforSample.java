@@ -5,7 +5,8 @@ package org.odpi.openmetadata.adapters.connectors.integration.lineage;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+import org.odpi.openmetadata.adapters.connectors.integration.lineage.ffdc.LineageEventSampleConnectorErrorCode;
+import org.odpi.openmetadata.frameworks.connectors.ffdc.ConnectorCheckedException;
 import java.util.*;
 
 /**
@@ -28,8 +29,9 @@ public class LineageEventContentforSample {
 
     static final String SEPARATOR = "~";
 
-    protected LineageEventContentforSample(String jsonString) {
-       // String methodName = "EventContent";
+    protected LineageEventContentforSample(String jsonString, String connectorName) throws ConnectorCheckedException {
+        String methodName = "LineageEventContentforSample -constructor";
+
         // process json
         ObjectMapper mapper = new ObjectMapper();
 
@@ -37,20 +39,40 @@ public class LineageEventContentforSample {
         try {
             root = mapper.readTree(jsonString);
         } catch (JsonProcessingException error) {
-            throw new RuntimeException(error);
-            //todo
-//            throw new ConnectorCheckedException(StrimziIntegrationConnectorErrorCode.ERROR_PARSING_REST_RESPONSE.getMessageDefinition(connectorName,
-//                    targetURL, error.getClass().getName(), error.getMessage()),
-//                    this.getClass().getName(),
-//                    methodName,
-//                    error);
+            throw new ConnectorCheckedException(LineageEventSampleConnectorErrorCode.INVALID_EVENT_JSON.getMessageDefinition(connectorName,
+                    jsonString
+                    , error.getClass().getName(), error.getMessage()),
+                    this.getClass().getName(),
+                    methodName,
+                    error);
         }
 
         JsonNode inputNodes = root.path("Input");
+        if (inputNodes == null || inputNodes.isEmpty()) {
+            throw new ConnectorCheckedException(LineageEventSampleConnectorErrorCode.INVALID_EVENT_NO_INPUT.getMessageDefinition(connectorName,
+                    jsonString),
+                    this.getClass().getName(),
+                    methodName);
+        }
         JsonNode outputNodes = root.path("Output");
+        if (outputNodes == null || outputNodes.isEmpty()) {
+            throw new ConnectorCheckedException(LineageEventSampleConnectorErrorCode.INVALID_EVENT_NO_OUTPUT.getMessageDefinition(connectorName,
+                    jsonString),
+                    this.getClass().getName(),
+                    methodName);
+        }
 
-        this.processDisplayName = root.path("Name").textValue();
         this.processQualifiedName = root.path("Id").textValue();
+        if (this.processQualifiedName == null || this.processQualifiedName.length() == 0) {
+            throw new ConnectorCheckedException(LineageEventSampleConnectorErrorCode.INVALID_EVENT_NO_PROCESS_ID.getMessageDefinition(connectorName,
+                    jsonString),
+                    this.getClass().getName(),
+                    methodName);
+        }
+        this.processDisplayName = root.path("Name").textValue();
+        if (this.processDisplayName == null || this.processDisplayName.length() == 0) {
+            this.processDisplayName =this.processQualifiedName;
+        }
         this.processDescription = root.path("Description").textValue();
         this.teamName = root.path("Team").textValue();
         if (inputNodes.isArray()) {
@@ -59,6 +81,12 @@ public class LineageEventContentforSample {
                 JsonNode inputNode = inputNodes.get(i);
                 if (inputNode.isObject()) {
                     String qualifiedName = inputNode.path("Id").textValue();
+                    if (qualifiedName == null || qualifiedName.length() == 0) {
+                        throw new ConnectorCheckedException(LineageEventSampleConnectorErrorCode.INVALID_EVENT_INPUT_ASSET_HAS_NO_ID.getMessageDefinition(connectorName,
+                                jsonString),
+                                this.getClass().getName(),
+                                methodName);
+                    }
                     String displayName = inputNode.path("Name").textValue();
 
                     String sql = inputNode.path("SQL").textValue();
@@ -69,45 +97,67 @@ public class LineageEventContentforSample {
 
                     inputAssets.add(assetFromJSON);
                 } else {
-                    //error
+                    throw new ConnectorCheckedException(LineageEventSampleConnectorErrorCode.INVALID_EVENT_INPUT_NOT_OBJECT.getMessageDefinition(connectorName,
+                            jsonString),
+                            this.getClass().getName(),
+                            methodName);
                 }
             }
         }
+        //else not required if it is an empty array ot comes though as if there is no element
         if (outputNodes.isArray()) {
-            outputNodes.size();
             for (int i = 0; i < outputNodes.size(); i++) {
                 JsonNode outputNode = outputNodes.get(i);
                 if (outputNode.isObject()) {
                     String assetQualifiedName = outputNode.path("Id").textValue();
-                    String assetDisplayName = outputNode.path("Name").textValue();
-                    JsonNode schemaNode = outputNode.path("Schema");
-
-                    String outputEventTypeDisplayName = schemaNode.path("title").textValue();
-                    String outputEventTypeQualifiedName = assetQualifiedName + SEPARATOR + outputEventTypeDisplayName;
-                    JsonNode propertiesNode = schemaNode.path("properties");
-                    Iterator<String> propertyIterator = propertiesNode.fieldNames();
-                    List<Attribute> outputAttributes = new ArrayList<>();
-                    while (propertyIterator.hasNext()) {
-                        String propertyName = propertyIterator.next();
-                        JsonNode propertyNode = propertiesNode.path(propertyName);
-                        if (propertyNode.isObject()) {
-                            String type = propertyNode.path("type").textValue();
-                            String description = propertyNode.path("description").textValue();
-                            String attributeQualifiedName =outputEventTypeQualifiedName + SEPARATOR + propertyName;
-                            Attribute attribute = new Attribute(propertyName, attributeQualifiedName, type, description);
-                            outputAttributes.add(attribute);
-                        }
+                    if (assetQualifiedName == null || assetQualifiedName.length() == 0) {
+                        throw new ConnectorCheckedException(LineageEventSampleConnectorErrorCode.INVALID_EVENT_INPUT_ASSET_HAS_NO_ID.getMessageDefinition(connectorName,
+                                jsonString),
+                                this.getClass().getName(),
+                                methodName);
                     }
-                    EventTypeFromJSON eventType = new EventTypeFromJSON(outputEventTypeDisplayName, outputEventTypeQualifiedName, outputAttributes);
-                    AssetFromJSON outputAsset = new AssetFromJSON(assetDisplayName, assetQualifiedName, "KafkaTopic",  eventType);
+                    String assetDisplayName = outputNode.path("Name").textValue();
+                    if (assetDisplayName == null || assetDisplayName.length() == 0) {
+                        assetDisplayName =assetQualifiedName;
+                    }
+                    JsonNode schemaNode = outputNode.path("Schema");
+                    AssetFromJSON outputAsset = null;
+                    if (schemaNode != null ) {
+                        String outputEventTypeDisplayName = schemaNode.path("title").textValue();
+                        String outputEventTypeQualifiedName = assetQualifiedName + SEPARATOR + outputEventTypeDisplayName;
+                        JsonNode propertiesNode = schemaNode.path("properties");
+                        Iterator<String> propertyIterator = propertiesNode.fieldNames();
+                        List<Attribute> outputAttributes = new ArrayList<>();
+                        while (propertyIterator.hasNext()) {
+                            String propertyName = propertyIterator.next();
+                            JsonNode propertyNode = propertiesNode.path(propertyName);
+                            if (propertyNode.isObject()) {
+                                String type = propertyNode.path("type").textValue();
+                                String description = propertyNode.path("description").textValue();
+                                String attributeQualifiedName = outputEventTypeQualifiedName + SEPARATOR + propertyName;
+                                Attribute attribute = new Attribute(propertyName, attributeQualifiedName, type, description);
+                                outputAttributes.add(attribute);
+                            }
+                        }
+                        EventTypeFromJSON eventType = new EventTypeFromJSON(outputEventTypeDisplayName, outputEventTypeQualifiedName, outputAttributes);
+                       outputAsset = new AssetFromJSON(assetDisplayName, assetQualifiedName, "KafkaTopic", eventType);
+                    } else {
+                        // if we do not find a schema , just catalog the assets and process and lineage
+                        // TODO warning
+                        outputAsset = new AssetFromJSON(assetDisplayName, assetQualifiedName, "KafkaTopic");
+                    }
                     outputAssets.add(outputAsset);
+
                 } else {
-                    //error
+                    throw new ConnectorCheckedException(LineageEventSampleConnectorErrorCode.INVALID_EVENT_OUTPUT_NOT_OBJECT.getMessageDefinition(connectorName,
+                            jsonString),
+                            this.getClass().getName(),
+                            methodName);
                 }
             }
-        } else {
-            // error not array
         }
+        //else not required if it is an empty array ot comes though as if there is no element
+
     }
      //getters and setters
     public String getProcessDisplayName() {

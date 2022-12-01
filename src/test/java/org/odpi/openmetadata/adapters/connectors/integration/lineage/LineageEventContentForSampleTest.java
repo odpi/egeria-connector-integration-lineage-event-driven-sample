@@ -13,6 +13,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
@@ -25,9 +26,7 @@ public class LineageEventContentForSampleTest
     @Test
     void testEventContent() throws IOException, ConnectorCheckedException {
         String textPath = "src/test/resources/Sample1.json";
-        Path path = Paths.get(textPath);
-        String content = Files.readString(path);
-        LineageEventContentforSample eventContent = new LineageEventContentforSample(content);
+        LineageEventContentforSample eventContent = getLineageEventContentforSample(textPath);
 
         assertTrue("TestRes".equals(eventContent.getProcessDisplayName()));
         assertTrue("1234567890".equals(eventContent.getProcessQualifiedName()));
@@ -73,6 +72,57 @@ public class LineageEventContentForSampleTest
         assertTrue(ageAttr.getQualifiedName().equals("vertriebskunde-services.agree-kundendaten~Person~age"));
 
     }
+
+
+
+//    @Test
+//    void testBadlyFormedEventContent() throws IOException {
+//        testBadEvent( "src/test/resources/badly-formed-events/notjson.txt",
+//                "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-001");
+//        testBadEvent( "src/test/resources/badly-formed-events/empty.json",
+//                "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-001");
+//        testBadEvent( "src/test/resources/badly-formed-events/emptyInput.json",
+//                "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-002");
+//        testBadEvent( "src/test/resources/badly-formed-events/InputWithEmptyObject.json",
+//                "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-003");
+//        testBadEvent( "src/test/resources/badly-formed-events/topId.json",
+//                "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-002");
+//        testBadEvent( "src/test/resources/badly-formed-events/ValidInputNoOutput.json",
+//                "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-003");
+//        testBadEvent( "src/test/resources/badly-formed-events/ValidInputEmptyOutput.json",
+//                "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-003");
+//        testBadEvent( "src/test/resources/badly-formed-events/ValidInputOutputEmptyAsset.json",
+//                "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-005");
+//        testBadEvent( "src/test/resources/badly-formed-events/ValidOutputNoInput.json",
+//                "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-002");
+//        testBadEvent( "src/test/resources/badly-formed-events/ValidOutputEmptyInput.json",
+//                "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-002");
+//        testBadEvent( "src/test/resources/badly-formed-events/ValidOutputInputHasOneEmptyObject.json",
+//                "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-005");
+//
+//
+//    }
+
+
+//    void testBadEvent(String textPath, String expectedMsg) throws IOException {
+//        Path path = Paths.get(textPath);
+//        String content = Files.readString(path);
+//        try {
+//            new LineageEventContentforSample(content, "unit test" );
+//            throw new RuntimeException("Test failed");
+//        } catch (ConnectorCheckedException e) {
+//            assertTrue(e.getMessage().contains(expectedMsg), "File " + textPath + ". Got " + e.getMessage() + ", expected " + expectedMsg);
+//
+//        }
+//
+//    }
+
+    private static LineageEventContentforSample getLineageEventContentforSample(String textPath) throws IOException, ConnectorCheckedException {
+        Path path = Paths.get(textPath);
+        String content = Files.readString(path);
+        return new LineageEventContentforSample(content, "" );
+    }
+
 }
 
 
