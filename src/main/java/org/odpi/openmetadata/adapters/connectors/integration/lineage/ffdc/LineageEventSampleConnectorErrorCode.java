@@ -70,6 +70,7 @@ public enum LineageEventSampleConnectorErrorCode implements ExceptionMessageSet 
 
 
 
+
     private final ExceptionMessageDefinition messageDefinition;
 
 
