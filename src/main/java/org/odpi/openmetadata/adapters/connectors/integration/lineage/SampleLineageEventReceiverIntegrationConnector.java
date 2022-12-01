@@ -3,6 +3,7 @@
 
 package org.odpi.openmetadata.adapters.connectors.integration.lineage;
 
+import org.odpi.openmetadata.adapters.connectors.integration.lineage.ffdc.LineageEventSampleEventConnectorAuditCode;
 import org.odpi.openmetadata.adapters.connectors.integration.openlineage.OpenLineageEventReceiverIntegrationConnector;
 import org.odpi.openmetadata.adapters.connectors.integration.openlineage.ffdc.OpenLineageIntegrationConnectorAuditCode;
 import org.odpi.openmetadata.frameworks.connectors.Connector;
@@ -85,11 +86,23 @@ public class SampleLineageEventReceiverIntegrationConnector extends OpenLineageE
     @Override
     synchronized public void processEvent(String event)
     {
+        String methodName = "processEvent";
         if (myContext != null)
         {
-             SampleLineageEventProcessor eventProcessor = new SampleLineageEventProcessor(myContext, auditLog);
-             LineageEventContentforSample eventContent = new LineageEventContentforSample(event);
-             eventProcessor.processEvent(eventContent);
+            try {
+                LineageEventContentforSample eventContent = new LineageEventContentforSample(event, connectorName);
+                SampleLineageEventProcessor eventProcessor = new SampleLineageEventProcessor(myContext, auditLog,connectorName );
+                eventProcessor.processEvent(eventContent);
+            } catch (ConnectorCheckedException error) {
+                if (auditLog != null) {
+                    auditLog.logException(methodName,
+                    LineageEventSampleEventConnectorAuditCode.UNABLE_TO_PROCESS_EVENT.getMessageDefinition(
+                            error.getClass().getName(),
+                            connectorName,
+                            error.getMessage()),error);
+                }
+            }
+
         }
     }
 }

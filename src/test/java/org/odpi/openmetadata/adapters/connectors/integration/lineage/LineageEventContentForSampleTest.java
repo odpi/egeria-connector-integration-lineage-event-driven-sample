@@ -27,7 +27,7 @@ public class LineageEventContentForSampleTest
         String textPath = "src/test/resources/Sample1.json";
         Path path = Paths.get(textPath);
         String content = Files.readString(path);
-        LineageEventContentforSample eventContent = new LineageEventContentforSample(content);
+        LineageEventContentforSample eventContent = new LineageEventContentforSample(content, "" );
 
         assertTrue("TestRes".equals(eventContent.getProcessDisplayName()));
         assertTrue("1234567890".equals(eventContent.getProcessQualifiedName()));
