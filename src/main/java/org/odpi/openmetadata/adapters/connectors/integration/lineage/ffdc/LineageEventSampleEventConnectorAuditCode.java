@@ -21,7 +21,7 @@ import org.odpi.openmetadata.repositoryservices.auditlog.OMRSAuditLogRecordSever
  * </ul>
  */
 public enum LineageEventSampleEventConnectorAuditCode implements AuditLogMessageSet {
-     UNABLE_TO_PROCESS_EVENT("LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-0001",
+    UNABLE_TO_PROCESS_EVENT("LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-0001",
             OMRSAuditLogRecordSeverity.EXCEPTION,
             "Exception {0} occurred in Integration connector {1} - the error message was {2}.",
             "The event is not processed. The connector continues to process events.",
@@ -45,7 +45,20 @@ public enum LineageEventSampleEventConnectorAuditCode implements AuditLogMessage
             OMRSAuditLogRecordSeverity.EXCEPTION,
             "Unexpected Exception {0} occurred in Integration connector {1} - the error message was {2}.",
             "The system stops processing the event at the point of this exception. The connector continues to process events.",
-            "Look into the cause of the Exception. Raise an issue against Egeria if you suspect Egeria might be at fault.")
+            "Look into the cause of the Exception. Raise an issue against Egeria if you suspect Egeria might be at fault."),
+
+    PROCESSING_EVENT("LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-0006",
+            OMRSAuditLogRecordSeverity.INFO,
+            "Event to be processed  {0}.",
+            "The system is about to process the event",
+            "Nothing - this is for awareness that an event is being processed."),
+
+    PROCESSED_EVENT_SUCCESSFULLY("LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-0007",
+            OMRSAuditLogRecordSeverity.INFO,
+            "Event successfully processed",
+            "The system has successfully processed the event",
+            "Nothing - this is for awareness that an event has been processed.")
+
     ;
 
 

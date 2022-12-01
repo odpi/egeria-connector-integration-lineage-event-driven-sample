@@ -87,12 +87,18 @@ public class SampleLineageEventReceiverIntegrationConnector extends OpenLineageE
     synchronized public void processEvent(String event)
     {
         String methodName = "processEvent";
+        if (auditLog != null) {
+            auditLog.logMessage(methodName, LineageEventSampleEventConnectorAuditCode.PROCESSING_EVENT.getMessageDefinition(event));
+        }
         if (myContext != null)
         {
             try {
                 LineageEventContentforSample eventContent = new LineageEventContentforSample(event, connectorName);
                 SampleLineageEventProcessor eventProcessor = new SampleLineageEventProcessor(myContext, auditLog,connectorName );
                 eventProcessor.processEvent(eventContent);
+                if (auditLog != null) {
+                    auditLog.logMessage(methodName, LineageEventSampleEventConnectorAuditCode.PROCESSED_EVENT_SUCCESSFULLY.getMessageDefinition());
+                }
             } catch (ConnectorCheckedException error) {
                 if (auditLog != null) {
                     auditLog.logException(methodName,

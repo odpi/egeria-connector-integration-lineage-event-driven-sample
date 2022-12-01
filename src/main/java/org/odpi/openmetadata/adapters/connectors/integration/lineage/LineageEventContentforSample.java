@@ -103,14 +103,9 @@ public class LineageEventContentforSample {
                             methodName);
                 }
             }
-        } else {
-            throw new ConnectorCheckedException(LineageEventSampleConnectorErrorCode.INVALID_EVENT_NO_INPUT_ASSET_ARRAY.getMessageDefinition(connectorName,
-                    jsonString),
-                    this.getClass().getName(),
-                    methodName);
         }
+        //else not required if it is an empty array ot comes though as if there is no element
         if (outputNodes.isArray()) {
-            outputNodes.size();
             for (int i = 0; i < outputNodes.size(); i++) {
                 JsonNode outputNode = outputNodes.get(i);
                 if (outputNode.isObject()) {
@@ -160,12 +155,9 @@ public class LineageEventContentforSample {
                             methodName);
                 }
             }
-        } else {
-            throw new ConnectorCheckedException(LineageEventSampleConnectorErrorCode.INVALID_EVENT_NO_OUTPUT_ASSET_ARRAY.getMessageDefinition(connectorName,
-                    jsonString),
-                    this.getClass().getName(),
-                    methodName);
         }
+        //else not required if it is an empty array ot comes though as if there is no element
+
     }
      //getters and setters
     public String getProcessDisplayName() {
