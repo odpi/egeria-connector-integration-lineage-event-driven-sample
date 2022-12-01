@@ -70,7 +70,7 @@ public enum LineageEventSampleConnectorErrorCode implements ExceptionMessageSet 
 
 
 
-
+    @SuppressWarnings("ImmutableEnumChecker")
     private final ExceptionMessageDefinition messageDefinition;
 
 
