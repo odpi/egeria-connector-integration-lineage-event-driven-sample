@@ -63,14 +63,14 @@ public class LineageEventContentforSample {
         }
 
         this.processQualifiedName = root.path("Id").textValue();
-        if (this.processQualifiedName == null || this.processQualifiedName == "") {
+        if (this.processQualifiedName == null || this.processQualifiedName.equals("")) {
             throw new ConnectorCheckedException(LineageEventSampleConnectorErrorCode.INVALID_EVENT_NO_PROCESS_ID.getMessageDefinition(connectorName,
                     jsonString),
                     this.getClass().getName(),
                     methodName);
         }
         this.processDisplayName = root.path("Name").textValue();
-        if (this.processDisplayName == null || this.processDisplayName == "") {
+        if (this.processDisplayName == null || this.processDisplayName.equals("")) {
             this.processDisplayName =this.processQualifiedName;
         }
         this.processDescription = root.path("Description").textValue();
@@ -81,7 +81,7 @@ public class LineageEventContentforSample {
                 JsonNode inputNode = inputNodes.get(i);
                 if (inputNode.isObject()) {
                     String qualifiedName = inputNode.path("Id").textValue();
-                    if (qualifiedName == null || qualifiedName == "") {
+                    if (qualifiedName == null || qualifiedName.equals("")) {
                         throw new ConnectorCheckedException(LineageEventSampleConnectorErrorCode.INVALID_EVENT_INPUT_ASSET_HAS_NO_ID.getMessageDefinition(connectorName,
                                 jsonString),
                                 this.getClass().getName(),
@@ -110,14 +110,14 @@ public class LineageEventContentforSample {
                 JsonNode outputNode = outputNodes.get(i);
                 if (outputNode.isObject()) {
                     String assetQualifiedName = outputNode.path("Id").textValue();
-                    if (assetQualifiedName == null || assetQualifiedName == "") {
+                    if (assetQualifiedName == null || assetQualifiedName.equals("")) {
                         throw new ConnectorCheckedException(LineageEventSampleConnectorErrorCode.INVALID_EVENT_INPUT_ASSET_HAS_NO_ID.getMessageDefinition(connectorName,
                                 jsonString),
                                 this.getClass().getName(),
                                 methodName);
                     }
                     String assetDisplayName = outputNode.path("Name").textValue();
-                    if (assetDisplayName == null || assetDisplayName == "") {
+                    if (assetDisplayName == null || assetDisplayName.equals("")) {
                         assetDisplayName =assetQualifiedName;
                     }
                     JsonNode schemaNode = outputNode.path("Schema");
