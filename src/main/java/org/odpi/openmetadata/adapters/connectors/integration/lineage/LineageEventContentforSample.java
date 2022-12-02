@@ -66,7 +66,12 @@ public class LineageEventContentforSample {
         this.processDescription = eventBean.getDescription();
         this.teamName = eventBean.getTeam();
         List<AssetBean> inputAssetBeans =  eventBean.getInput();
-
+        if (inputAssetBeans == null || inputAssetBeans.size() ==0) {
+            throw new ConnectorCheckedException(LineageEventSampleConnectorErrorCode.INVALID_EVENT_NO_INPUT.getMessageDefinition(connectorName,
+                    jsonString),
+                    this.getClass().getName(),
+                    methodName);
+        }
         for (AssetBean inputAssetBean:inputAssetBeans) {
             String qualifiedName = inputAssetBean.getQualifiedName();
             if (qualifiedName == null || qualifiedName.length() == 0) {
@@ -87,6 +92,12 @@ public class LineageEventContentforSample {
         }
 
         List<AssetBean> outputAssetBeans =  eventBean.getOutput();
+        if (outputAssetBeans == null || outputAssetBeans.size() ==0) {
+            throw new ConnectorCheckedException(LineageEventSampleConnectorErrorCode.INVALID_EVENT_NO_OUTPUT.getMessageDefinition(connectorName,
+                    jsonString),
+                    this.getClass().getName(),
+                    methodName);
+        }
         for (AssetBean outputAssetBean:outputAssetBeans) {
             String qualifiedName = outputAssetBean.getQualifiedName();
             if (qualifiedName == null || qualifiedName.length() == 0) {
@@ -106,8 +117,9 @@ public class LineageEventContentforSample {
             List<Attribute> outputAttributes = new ArrayList<>();
             while (iter.hasNext()) {
                 Map.Entry<String, Map<String, Object>> entry = iter.next();
-                String attributedisplayName = entry.getKey();
-                String attributeQualifiedName = outputEventTypeQualifiedName + SEPARATOR + attributedisplayName;
+                String attributeDisplayName = entry.getKey();
+                //assume key can't be null.
+                String attributeQualifiedName = outputEventTypeQualifiedName + SEPARATOR + attributeDisplayName;
                 Map attrMap = (Map) entry.getValue();
                 Object attributeTypeObject =  attrMap.get("type");
                 String attributeType = null;
@@ -119,7 +131,7 @@ public class LineageEventContentforSample {
                 if (attributeDescriptionObject != null) {
                     attributeDescription = (String)attributeDescriptionObject;
                 }
-                Attribute attribute = new Attribute(attributedisplayName,attributeQualifiedName,attributeType, attributeDescription);
+                Attribute attribute = new Attribute(attributeDisplayName,attributeQualifiedName,attributeType, attributeDescription);
                 outputAttributes.add(attribute);
 
             }
