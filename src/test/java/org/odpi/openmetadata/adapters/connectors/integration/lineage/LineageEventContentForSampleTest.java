@@ -76,7 +76,7 @@ public class LineageEventContentForSampleTest
 
 
     @Test
-    void testBadlyFormedEventContent() throws IOException {
+    void testBadlyFormedEventContent()  {
         testBadEvent( "src/test/resources/badly-formed-events/notjson.txt",
                 "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-001");
         testBadEvent( "src/test/resources/badly-formed-events/empty.json",
@@ -104,10 +104,16 @@ public class LineageEventContentForSampleTest
     }
 
 
-    void testBadEvent(String textPath, String expectedMsg) throws IOException {
-        System.out.println("file to test is " + textPath);
+    void testBadEvent(String textPath, String expectedMsg)  {
         Path path = Paths.get(textPath);
-        String content = Files.readString(path);
+
+        String content = null;
+        try {
+            content = Files.readString(path);
+        } catch (IOException e) {
+            throw new RuntimeException("File name is " + textPath,e);
+        }
+
         try {
             new LineageEventContentforSample(content, "unit test" );
             throw new RuntimeException("Test failed");
