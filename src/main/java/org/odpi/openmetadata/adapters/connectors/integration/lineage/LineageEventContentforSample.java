@@ -66,7 +66,12 @@ public class LineageEventContentforSample {
         this.processDescription = eventBean.getDescription();
         this.teamName = eventBean.getTeam();
         List<AssetBean> inputAssetBeans =  eventBean.getInput();
-
+        if (inputAssetBeans == null || inputAssetBeans.size() ==0) {
+            throw new ConnectorCheckedException(LineageEventSampleConnectorErrorCode.INVALID_EVENT_NO_INPUT.getMessageDefinition(connectorName,
+                    jsonString),
+                    this.getClass().getName(),
+                    methodName);
+        }
         for (AssetBean inputAssetBean:inputAssetBeans) {
             String qualifiedName = inputAssetBean.getQualifiedName();
             if (qualifiedName == null || qualifiedName.length() == 0) {
@@ -87,6 +92,12 @@ public class LineageEventContentforSample {
         }
 
         List<AssetBean> outputAssetBeans =  eventBean.getOutput();
+        if (outputAssetBeans == null || outputAssetBeans.size() ==0) {
+            throw new ConnectorCheckedException(LineageEventSampleConnectorErrorCode.INVALID_EVENT_NO_OUTPUT.getMessageDefinition(connectorName,
+                    jsonString),
+                    this.getClass().getName(),
+                    methodName);
+        }
         for (AssetBean outputAssetBean:outputAssetBeans) {
             String qualifiedName = outputAssetBean.getQualifiedName();
             if (qualifiedName == null || qualifiedName.length() == 0) {
@@ -107,6 +118,12 @@ public class LineageEventContentforSample {
             while (iter.hasNext()) {
                 Map.Entry<String, Map<String, Object>> entry = iter.next();
                 String attributedisplayName = entry.getKey();
+//                if (attributedisplayName == null || attributedisplayName.length() == 0) {
+//                    throw new ConnectorCheckedException(LineageEventSampleConnectorErrorCode.INVALID_EVENT_INPUT_NO_NAME.getMessageDefinition(connectorName,
+//                            jsonString),
+//                            this.getClass().getName(),
+//                            methodName);
+//                }
                 String attributeQualifiedName = outputEventTypeQualifiedName + SEPARATOR + attributedisplayName;
                 Map attrMap = (Map) entry.getValue();
                 Object attributeTypeObject =  attrMap.get("type");

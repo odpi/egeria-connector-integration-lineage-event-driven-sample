@@ -46,27 +46,8 @@ public enum LineageEventSampleConnectorErrorCode implements ExceptionMessageSet 
     INVALID_EVENT_INPUT_ASSET_HAS_NO_ID(400, "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-005",
             "The {0} integration connector has been sent an event with an input asset without an Id element. The badly formed event is:  {1}",
             "The connector requires input assets in events to have an Id.",
-            "Supply a json event with input assets that have an Id."),
-    INVALID_EVENT_OUTPUT_ASSET_HAS_NO_ID(400, "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-006",
-            "The {0} integration connector has been sent an event with an output asset without an Id element. The badly formed event is:  {1}",
-            "The connector requires output assets in events to have an Id.",
-            "Supply a json event with output assets that have an Id."),
-    INVALID_EVENT_NO_INPUT_ASSET_ARRAY(400, "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-007",
-            "The {0} integration connector has been sent an event with an Input that is not an array. The badly formed event is:  {1}",
-            "The connector requires an array of Input  assets.",
-            "Supply a json event with an array of Input assets."),
-    INVALID_EVENT_NO_OUTPUT_ASSET_ARRAY(400, "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-008",
-            "The {0} integration connector has been sent an event with an Output that is not an array. The badly formed event is:  {1}",
-            "The connector requires an array of Output  assets.",
-            "Supply a json event with an array of Output assets."),
-    INVALID_EVENT_INPUT_NOT_OBJECT(400, "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-009",
-            "The {0} integration connector has been sent an event with an Input element that is not an object. The badly formed event is:  {1}",
-            "The connector requires Input array content to be Objects.",
-            "Supply a json event with an array of Input Objects."),
-    INVALID_EVENT_OUTPUT_NOT_OBJECT(400, "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-010",
-            "The {0} integration connector has been sent an event with an Output element that is not an object. The badly formed event is:  {1}",
-            "The connector requires Output array content to be Objects.",
-            "Supply a json event with an array of Output Objects.");
+            "Supply a json event with input assets that have an Id.")
+    ;
 
 
 
