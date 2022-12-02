@@ -115,7 +115,15 @@ public class LineageEventContentForSampleTest
 
     }
 
-
+    /**
+     * this method is coded this way, because the build machine is sensitive to case wirh the file names, but local
+     * testing on the Mac is insensitive to case. If it fails on the build machine we only get the line number where the assert fails
+     * so the asserts are done in the calling code, so it is possible to determine which file is incorrect from the build
+     * machine pr output.
+     * @param textPath path to file
+     * @param expectedMsg expected message
+     * @return return which it passed.
+     */
     boolean testBadEvent(String textPath, String expectedMsg)  {
         boolean passed = true;
         Path path = Paths.get(textPath);
