@@ -3,7 +3,6 @@
 package org.odpi.openmetadata.adapters.connectors.integration.lineage;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.odpi.openmetadata.adapters.connectors.integration.lineage.beans.AssetBean;
 import org.odpi.openmetadata.adapters.connectors.integration.lineage.beans.EventBean;
@@ -28,7 +27,7 @@ public class LineageEventContentforSample {
 
     private List<AssetFromJSON> outputAssets = new ArrayList<>();
 
-    private Map<String, String> inputAssetSQLMap = new HashMap<>();
+    private Map<String, String> inputAssetFormulaMap = new HashMap<>();
 
     static final String SEPARATOR = "~";
 
@@ -77,9 +76,9 @@ public class LineageEventContentforSample {
             }
             String displayName = inputAssetBean.getDisplayName();
 
-            String sql = inputAssetBean.getFormula();
-            if (sql != null) {
-                inputAssetSQLMap.put(qualifiedName,sql);
+            String formula = inputAssetBean.getFormula();
+            if (formula != null) {
+                inputAssetFormulaMap.put(qualifiedName,formula);
             }
             AssetFromJSON assetFromJSON = new AssetFromJSON(displayName, qualifiedName, "DataSet");
 
@@ -159,8 +158,8 @@ public class LineageEventContentforSample {
         return outputAssets;
     }
 
-    public String getSQLForInputAsset(String qualifiedName) {
-        return inputAssetSQLMap.get(qualifiedName);
+    public String getFormulaForInputAsset(String qualifiedName) {
+        return inputAssetFormulaMap.get(qualifiedName);
     }
 
     static class AssetFromJSON {
