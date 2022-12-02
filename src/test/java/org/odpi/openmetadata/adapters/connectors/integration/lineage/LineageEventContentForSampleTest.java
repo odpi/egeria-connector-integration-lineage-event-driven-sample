@@ -40,7 +40,7 @@ public class LineageEventContentForSampleTest
         assertTrue(inputAsset.getTypeName().equals("DataSet"));
         assertTrue(inputAsset.getDisplayName().equals("Foo"));
         assertTrue(inputAsset.getQualifiedName().equals("C6B7B1B717C840F686EE2426241ED18CE1D053019534F03495E8CD644976FA37"));
-        assertTrue(eventContent.getSQLForInputAsset(inputAsset.getQualifiedName()).equals("select * from foo;"));
+        assertTrue(eventContent.getFormulaForInputAsset(inputAsset.getQualifiedName()).equals("select * from foo;"));
         LineageEventContentforSample.AssetFromJSON outputAsset =outputAssets.get(0);
         assertTrue(outputAsset.getTypeName().equals("KafkaTopic"));
         assertTrue(outputAsset.getDisplayName().equals("Kundendaten"));

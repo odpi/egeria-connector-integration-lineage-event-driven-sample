@@ -341,7 +341,7 @@ public class SampleLineageEventProcessor {
             DataFlowProperties properties = new DataFlowProperties();
             DataAssetElement dataAssetElement = myContext.getDataAssetByGUID(assetGUID, new Date());
 
-            String sql = eventContent.getSQLForInputAsset(dataAssetElement.getDataAssetProperties().getQualifiedName());
+            String sql = eventContent.getFormulaForInputAsset(dataAssetElement.getDataAssetProperties().getQualifiedName());
             if (sql != null) {
                 properties.setFormula(sql);
             }

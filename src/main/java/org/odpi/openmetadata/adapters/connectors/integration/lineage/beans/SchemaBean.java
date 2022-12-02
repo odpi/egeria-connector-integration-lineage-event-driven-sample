@@ -4,19 +4,18 @@ package org.odpi.openmetadata.adapters.connectors.integration.lineage.beans;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonRawValue;
 
 import java.util.Map;
+/**
+ * SchemaBean is the Bean that is used to represent the schema part of the event json
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SchemaBean {
     @JsonProperty("title")
     private String displayName;
     @JsonProperty("type")
     private String type;
-//    Map<String,Object> properties;
-//    Map<String,String> properties;  - does not desserialise
-//    Map<String,Map<String, Map>> properties;
-//    Map<String,Map<String,AttributeBean>> properties;
+
     Map<String,Map<String,Object>> properties;
 
     public String getDisplayName() {

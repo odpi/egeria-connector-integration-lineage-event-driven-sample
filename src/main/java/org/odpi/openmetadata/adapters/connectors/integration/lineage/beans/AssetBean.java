@@ -8,6 +8,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+/**
+ * AssetBean is the Bean that is used to represent the asset part of the event json
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AssetBean {
 
@@ -17,6 +21,7 @@ public class AssetBean {
     private String displayName;
     @JsonProperty("SQL")
     private String formula;
+    // TODO change this to an array when we want to support multiple top level EventTypes
     @JsonProperty("Schema")
     private SchemaBean schema;
 
