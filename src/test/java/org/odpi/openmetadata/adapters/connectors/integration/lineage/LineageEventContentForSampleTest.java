@@ -87,30 +87,30 @@ public class LineageEventContentForSampleTest
         passed = testBadEvent( "src/test/resources/badly-formed-events/EmptyInput.json",
                 "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-002");
         assertTrue(passed);
-//        passed = testBadEvent( "src/test/resources/badly-formed-events/InputWithEmptyObject.json",
-//                "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-005");
-//        assertTrue(passed);
-//        passed = testBadEvent( "src/test/resources/badly-formed-events/topId.json",
-//                "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-002");
-//        assertTrue(passed);
-//        passed = testBadEvent( "src/test/resources/badly-formed-events/ValidInputNoOutput.json",
-//                "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-003");
-//        assertTrue(passed);
-//        passed = testBadEvent( "src/test/resources/badly-formed-events/ValidInputEmptyOutput.json",
-//                "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-003");
-//        assertTrue(passed);
-//        passed = testBadEvent( "src/test/resources/badly-formed-events/ValidInputOutputEmptyAsset.json",
-//                "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-005");
-//        assertTrue(passed);
-//        passed = testBadEvent( "src/test/resources/badly-formed-events/ValidOutputNoInput.json",
-//                "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-002");
-//        assertTrue(passed);
-//        passed = testBadEvent( "src/test/resources/badly-formed-events/ValidOutputEmptyInput.json",
-//                "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-002");
-//        assertTrue(passed);
-//        passed = testBadEvent( "src/test/resources/badly-formed-events/ValidOutputInputHasOneEmptyObject.json",
-//                "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-005");
-//        assertTrue(passed);
+        passed = testBadEvent( "src/test/resources/badly-formed-events/InputWithEmptyObject.json",
+                "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-005");
+        assertTrue(passed);
+        passed = testBadEvent( "src/test/resources/badly-formed-events/topid.json",
+                "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-002");
+        assertTrue(passed);
+        passed = testBadEvent( "src/test/resources/badly-formed-events/ValidInputNoOutput.json",
+                "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-003");
+        assertTrue(passed);
+        passed = testBadEvent( "src/test/resources/badly-formed-events/ValidInputEmptyOutput.json",
+                "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-003");
+        assertTrue(passed);
+        passed = testBadEvent( "src/test/resources/badly-formed-events/ValidInputOutputEmptyAsset.json",
+                "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-005");
+        assertTrue(passed);
+        passed = testBadEvent( "src/test/resources/badly-formed-events/ValidOutputNoInput.json",
+                "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-002");
+        assertTrue(passed);
+        passed = testBadEvent( "src/test/resources/badly-formed-events/ValidOutputEmptyInput.json",
+                "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-002");
+        assertTrue(passed);
+        passed = testBadEvent( "src/test/resources/badly-formed-events/ValidOutputInputHasOneEmptyObject.json",
+                "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-005");
+        assertTrue(passed);
 
 
     }
