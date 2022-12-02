@@ -105,6 +105,7 @@ public class LineageEventContentForSampleTest
 
 
     void testBadEvent(String textPath, String expectedMsg) throws IOException {
+        System.out.println("file to test is " + textPath);
         Path path = Paths.get(textPath);
         String content = Files.readString(path);
         try {
