@@ -117,14 +117,9 @@ public class LineageEventContentforSample {
             List<Attribute> outputAttributes = new ArrayList<>();
             while (iter.hasNext()) {
                 Map.Entry<String, Map<String, Object>> entry = iter.next();
-                String attributedisplayName = entry.getKey();
-//                if (attributedisplayName == null || attributedisplayName.length() == 0) {
-//                    throw new ConnectorCheckedException(LineageEventSampleConnectorErrorCode.INVALID_EVENT_INPUT_NO_NAME.getMessageDefinition(connectorName,
-//                            jsonString),
-//                            this.getClass().getName(),
-//                            methodName);
-//                }
-                String attributeQualifiedName = outputEventTypeQualifiedName + SEPARATOR + attributedisplayName;
+                String attributeDisplayName = entry.getKey();
+                //assume key can't be null.
+                String attributeQualifiedName = outputEventTypeQualifiedName + SEPARATOR + attributeDisplayName;
                 Map attrMap = (Map) entry.getValue();
                 Object attributeTypeObject =  attrMap.get("type");
                 String attributeType = null;
@@ -136,7 +131,7 @@ public class LineageEventContentforSample {
                 if (attributeDescriptionObject != null) {
                     attributeDescription = (String)attributeDescriptionObject;
                 }
-                Attribute attribute = new Attribute(attributedisplayName,attributeQualifiedName,attributeType, attributeDescription);
+                Attribute attribute = new Attribute(attributeDisplayName,attributeQualifiedName,attributeType, attributeDescription);
                 outputAttributes.add(attribute);
 
             }
