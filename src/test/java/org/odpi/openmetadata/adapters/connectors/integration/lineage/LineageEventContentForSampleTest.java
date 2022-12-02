@@ -77,50 +77,65 @@ public class LineageEventContentForSampleTest
 
     @Test
     void testBadlyFormedEventContent()  {
-        testBadEvent( "src/test/resources/badly-formed-events/notjson.txt",
+        //  assertTrue(false,"Bad File name is " + textPath);
+        boolean passed = testBadEvent( "src/test/resources/badly-formed-events/notjson.txt",
                 "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-001");
-        testBadEvent( "src/test/resources/badly-formed-events/empty.json",
+        assertTrue(passed);
+        passed = testBadEvent( "src/test/resources/badly-formed-events/empty.json",
                 "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-001");
-        testBadEvent( "src/test/resources/badly-formed-events/EmptyInput.json",
+        assertTrue(passed);
+        passed = testBadEvent( "src/test/resources/badly-formed-events/EmptyInput.json",
                 "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-002");
-        testBadEvent( "src/test/resources/badly-formed-events/InputWithEmptyObject.json",
+        assertTrue(passed);
+        passed = testBadEvent( "src/test/resources/badly-formed-events/InputWithEmptyObject.json",
                 "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-005");
-        testBadEvent( "src/test/resources/badly-formed-events/topId.json",
+        assertTrue(passed);
+        passed = testBadEvent( "src/test/resources/badly-formed-events/topId.json",
                 "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-002");
-        testBadEvent( "src/test/resources/badly-formed-events/ValidInputNoOutput.json",
+        assertTrue(passed);
+        passed = testBadEvent( "src/test/resources/badly-formed-events/ValidInputNoOutput.json",
                 "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-003");
-        testBadEvent( "src/test/resources/badly-formed-events/ValidInputEmptyOutput.json",
+        assertTrue(passed);
+        passed = testBadEvent( "src/test/resources/badly-formed-events/ValidInputEmptyOutput.json",
                 "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-003");
-        testBadEvent( "src/test/resources/badly-formed-events/ValidInputOutputEmptyAsset.json",
+        assertTrue(passed);
+        passed = testBadEvent( "src/test/resources/badly-formed-events/ValidInputOutputEmptyAsset.json",
                 "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-005");
-        testBadEvent( "src/test/resources/badly-formed-events/ValidOutputNoInput.json",
+        assertTrue(passed);
+        passed = testBadEvent( "src/test/resources/badly-formed-events/ValidOutputNoInput.json",
                 "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-002");
-        testBadEvent( "src/test/resources/badly-formed-events/ValidOutputEmptyInput.json",
+        assertTrue(passed);
+        passed = testBadEvent( "src/test/resources/badly-formed-events/ValidOutputEmptyInput.json",
                 "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-002");
-        testBadEvent( "src/test/resources/badly-formed-events/ValidOutputInputHasOneEmptyObject.json",
+        assertTrue(passed);
+        passed = testBadEvent( "src/test/resources/badly-formed-events/ValidOutputInputHasOneEmptyObject.json",
                 "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-005");
+        assertTrue(passed);
 
 
     }
 
 
-    void testBadEvent(String textPath, String expectedMsg)  {
+    boolean testBadEvent(String textPath, String expectedMsg)  {
+        boolean passed = true;
         Path path = Paths.get(textPath);
 
         String content = null;
         try {
             content = Files.readString(path);
         } catch (IOException e) {
-            assertTrue(false,"Bad File name is " + textPath);
+            passed =false;
+
         }
 
         try {
             new LineageEventContentforSample(content, "unit test" );
-            throw new RuntimeException("Test failed");
+            passed = false;
         } catch (ConnectorCheckedException e) {
             assertTrue(e.getMessage().contains(expectedMsg), "File " + textPath + ". Got " + e.getMessage() + ", expected " + expectedMsg);
 
         }
+        return passed;
 
     }
 
