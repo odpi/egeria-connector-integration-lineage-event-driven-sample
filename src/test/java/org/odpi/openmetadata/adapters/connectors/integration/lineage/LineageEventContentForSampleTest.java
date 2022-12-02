@@ -127,13 +127,14 @@ public class LineageEventContentForSampleTest
             passed =false;
 
         }
+        if (content !=null) {
+            try {
+                new LineageEventContentforSample(content, "unit test badly formed");
+                passed = false;
+            } catch (ConnectorCheckedException e) {
+                assertTrue(e.getMessage().contains(expectedMsg), "File " + textPath + ". Got " + e.getMessage() + ", expected " + expectedMsg);
 
-        try {
-            new LineageEventContentforSample(content, "unit test badly formed" );
-            passed = false;
-        } catch (ConnectorCheckedException e) {
-            assertTrue(e.getMessage().contains(expectedMsg), "File " + textPath + ". Got " + e.getMessage() + ", expected " + expectedMsg);
-
+            }
         }
         return passed;
 
