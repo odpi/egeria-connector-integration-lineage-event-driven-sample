@@ -111,7 +111,7 @@ public class LineageEventContentForSampleTest
         try {
             content = Files.readString(path);
         } catch (IOException e) {
-            throw new RuntimeException("File name is " + textPath,e);
+            assertTrue(false,"Bad File name is " + textPath);
         }
 
         try {
