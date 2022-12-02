@@ -81,7 +81,7 @@ public class LineageEventContentForSampleTest
                 "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-001");
         testBadEvent( "src/test/resources/badly-formed-events/empty.json",
                 "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-001");
-        testBadEvent( "src/test/resources/badly-formed-events/emptyInput.json",
+        testBadEvent( "src/test/resources/badly-formed-events/EmptyInput.json",
                 "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-002");
         testBadEvent( "src/test/resources/badly-formed-events/InputWithEmptyObject.json",
                 "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-005");
