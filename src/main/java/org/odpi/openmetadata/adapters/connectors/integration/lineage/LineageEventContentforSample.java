@@ -13,7 +13,8 @@ import java.util.*;
 
 /**
  * The EventContent is a java representation of the event json. It means that the connector can
- * retrieve elements like assets without needing to parse the json.
+ * retrieve elements like assets without needing to handle the json. It uses the beans to deserialise
+ * the json.
  */
 public class LineageEventContentforSample {
 
@@ -130,8 +131,6 @@ public class LineageEventContentforSample {
         }
 
     }
-    //else not required if it is an empty array ot comes though as if there is no element
-
 
     //getters and setters
     public String getProcessDisplayName() {

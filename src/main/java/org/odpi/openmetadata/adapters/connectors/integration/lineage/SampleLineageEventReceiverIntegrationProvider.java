@@ -21,7 +21,7 @@ public class SampleLineageEventReceiverIntegrationProvider extends ConnectorProv
 
     /**
      * Constructor used to initialize the ConnectorProvider with the Java class name of the specific
-     * store implementation.
+     * implementation.
      */
     public SampleLineageEventReceiverIntegrationProvider()
     {
