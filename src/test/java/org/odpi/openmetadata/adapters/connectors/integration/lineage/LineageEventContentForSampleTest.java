@@ -81,12 +81,12 @@ public class LineageEventContentForSampleTest
         boolean passed = testBadEvent( "src/test/resources/badly-formed-events/notjson.txt",
                 "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-001");
         assertTrue(passed);
-//        passed = testBadEvent( "src/test/resources/badly-formed-events/empty.json",
-//                "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-001");
-//        assertTrue(passed);
-//        passed = testBadEvent( "src/test/resources/badly-formed-events/EmptyInput.json",
-//                "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-002");
-//        assertTrue(passed);
+        passed = testBadEvent( "src/test/resources/badly-formed-events/empty.json",
+                "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-001");
+        assertTrue(passed);
+        passed = testBadEvent( "src/test/resources/badly-formed-events/EmptyInput.json",
+                "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-002");
+        assertTrue(passed);
 //        passed = testBadEvent( "src/test/resources/badly-formed-events/InputWithEmptyObject.json",
 //                "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-005");
 //        assertTrue(passed);
