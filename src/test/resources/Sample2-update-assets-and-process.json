@@ -13,7 +13,7 @@
     "Id": "vertriebskunde-services.agree-kundendaten",
     "Name": "Kundendaten-2",
     "Schema-type": "json-schema",
-    "Schema": {
+    "Schemas": [{
       "$id": "https://example.com/person.schema.json",
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "title": "Person",
@@ -31,8 +31,13 @@
           "description": "Age in years which must be equal to or greater than zero.",
           "type": "integer",
           "minimum": 0
+        },
+        "derivedAge": {
+          "description": "Derived Age.",
+          "type": "integer",
+          "formula": "test-formula1-amended"
         }
       }
-    }
+    }]
   }]
 }

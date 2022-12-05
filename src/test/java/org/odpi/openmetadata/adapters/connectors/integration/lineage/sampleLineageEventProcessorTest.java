@@ -92,10 +92,12 @@ public class sampleLineageEventProcessorTest
         List<SchemaAttributeElement>  attributes = mockContext.getNestedSchemaAttributes(schemaTypeElementGUID, 0, 1000, new Date());
 
         assertTrue(attributes != null);
-        assertTrue(attributes.size() == 3);
+        assertTrue(attributes.size() == 5);
         boolean firstNameFound = false;
         boolean lastNameFound = false;
         boolean ageFound = false;
+        boolean derivedAgeFound = false;
+        boolean derivedAge2Found = false;
         for (SchemaAttributeElement attribute: attributes) {
             SchemaAttributeProperties properties = attribute.getSchemaAttributeProperties();
             if (properties.getDisplayName().equals("firstName")) {
@@ -119,11 +121,29 @@ public class sampleLineageEventProcessorTest
                 PrimitiveSchemaTypeProperties primitiveSchemaTypeProperties = (PrimitiveSchemaTypeProperties)properties.getSchemaType();
                 assertTrue(primitiveSchemaTypeProperties.getDataType().equals("integer"));
                 ageFound = true;
+            } else   if (properties.getDisplayName().equals("derivedAge")) {
+                assertTrue(properties.getDescription().equals("Derived Age."));
+                assertTrue(properties.getQualifiedName().equals("vertriebskunde-services.agree-kundendaten~Person~derivedAge"));
+                assertTrue(properties.getTypeName().equals("EventSchemaAttribute"));
+                PrimitiveSchemaTypeProperties primitiveSchemaTypeProperties = (PrimitiveSchemaTypeProperties)properties.getSchemaType();
+                assertTrue(primitiveSchemaTypeProperties.getDataType().equals("integer"));
+                assertTrue(primitiveSchemaTypeProperties.getFormula().equals("test-formula"));
+                derivedAgeFound = true;
+            } else   if (properties.getDisplayName().equals("derivedAge2")) {
+                assertTrue(properties.getDescription().equals("Derived Age."));
+                assertTrue(properties.getQualifiedName().equals("vertriebskunde-services.agree-kundendaten~Person~derivedAge2"));
+                assertTrue(properties.getTypeName().equals("EventSchemaAttribute"));
+                PrimitiveSchemaTypeProperties primitiveSchemaTypeProperties = (PrimitiveSchemaTypeProperties)properties.getSchemaType();
+                assertTrue(primitiveSchemaTypeProperties.getDataType().equals("integer"));
+                assertTrue(primitiveSchemaTypeProperties.getFormula().equals("test-formula2"));
+                derivedAge2Found = true;
             }
         }
         assertTrue(firstNameFound);
         assertTrue(lastNameFound);
         assertTrue(ageFound);
+        assertTrue(derivedAgeFound);
+        assertTrue(derivedAge2Found);
 
         // test update assets and processes
 
@@ -235,10 +255,11 @@ public class sampleLineageEventProcessorTest
         attributes = mockContext.getNestedSchemaAttributes(schemaTypeElementGUID, 0, 1000, new Date());
 
         assertTrue(attributes != null);
-        assertTrue(attributes.size() == 3);
+        assertTrue(attributes.size() == 4);
         firstNameFound = false;
         boolean middleNameFound = false;
         ageFound = false;
+        derivedAgeFound =false;
         for (SchemaAttributeElement attribute: attributes) {
             SchemaAttributeProperties properties = attribute.getSchemaAttributeProperties();
             if (properties.getDisplayName().equals("firstName")) {
@@ -255,6 +276,14 @@ public class sampleLineageEventProcessorTest
                 PrimitiveSchemaTypeProperties primitiveSchemaTypeProperties = (PrimitiveSchemaTypeProperties)properties.getSchemaType();
                 assertTrue(primitiveSchemaTypeProperties.getDataType().equals("string"));
                 middleNameFound = true;
+            } else   if (properties.getDisplayName().equals("derivedAge")) {
+                assertTrue(properties.getDescription().equals("Derived Age."));
+                assertTrue(properties.getQualifiedName().equals("vertriebskunde-services.agree-kundendaten-3~Person~derivedAge"));
+                assertTrue(properties.getTypeName().equals("EventSchemaAttribute"));
+                PrimitiveSchemaTypeProperties primitiveSchemaTypeProperties = (PrimitiveSchemaTypeProperties)properties.getSchemaType();
+                assertTrue(primitiveSchemaTypeProperties.getDataType().equals("integer"));
+                assertTrue(primitiveSchemaTypeProperties.getFormula().equals("test-formula-changed"));
+                derivedAgeFound = true;
             } else   if (properties.getDisplayName().equals("age")) {
                 assertTrue(properties.getDescription().equals("Age as a string to test type change."));
                 assertTrue(properties.getQualifiedName().equals("vertriebskunde-services.agree-kundendaten-3~Person~age"));
@@ -267,6 +296,7 @@ public class sampleLineageEventProcessorTest
         assertTrue(firstNameFound);
         assertTrue(middleNameFound);
         assertTrue(ageFound);
+        assertTrue(derivedAgeFound);
 
 
 
@@ -403,6 +433,7 @@ public class sampleLineageEventProcessorTest
         firstNameFound = false;
         middleNameFound = false;
         ageFound = false;
+
         for (SchemaAttributeElement attribute: attributes) {
             SchemaAttributeProperties properties = attribute.getSchemaAttributeProperties();
             if (properties.getDisplayName().equals("firstName")) {

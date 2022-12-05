@@ -128,7 +128,8 @@ public class SampleLineageEventProcessor {
             }
             if (assetGUID != null) {
                 assetGUIDs.add(assetGUID);
-                if (jsonAsset.getEventType() != null) {
+                List<LineageEventContentforSample.EventTypeFromJSON> eventTypes = jsonAsset.getEventTypes();
+                if (eventTypes != null && eventTypes.size() > 0) {
                    ensureSchemaIsCatalogued(jsonAsset, assetGUID);
                 }
             } else {
@@ -155,7 +156,7 @@ public class SampleLineageEventProcessor {
      */
 
     private void ensureSchemaIsCatalogued(LineageEventContentforSample.AssetFromJSON assetFromJSON, String assetGUID) throws InvalidParameterException, PropertyServerException, UserNotAuthorizedException {
-        LineageEventContentforSample.EventTypeFromJSON eventTypeFromJson = assetFromJSON.getEventType();
+        LineageEventContentforSample.EventTypeFromJSON eventTypeFromJSON = assetFromJSON.getEventTypes().get(0);
 
 
         SchemaTypeElement childSchemaType = myContext.getSchemaTypeForElement(
@@ -165,10 +166,9 @@ public class SampleLineageEventProcessor {
 
         SchemaTypeProperties schemaTypeProperties = new SchemaTypeProperties();
         schemaTypeProperties.setTypeName("EventType");
-        LineageEventContentforSample.EventTypeFromJSON eventTypeFromJSON = assetFromJSON.getEventType();
         schemaTypeProperties.setQualifiedName(eventTypeFromJSON.getQualifiedName());
         schemaTypeProperties.setDisplayName(eventTypeFromJSON.getDisplayName());
-        String jsonEventTypeQualifiedName = eventTypeFromJson.getQualifiedName();
+        String jsonEventTypeQualifiedName = eventTypeFromJSON.getQualifiedName();
         String schemaTypeGUID =null;
 
         if (childSchemaType ==null) {
@@ -202,7 +202,7 @@ public class SampleLineageEventProcessor {
                         existingSchemaAttributesMap.put(schemaAttributeElement.getSchemaAttributeProperties().getQualifiedName(), schemaAttributeElement);
                     }
 
-                for (LineageEventContentforSample.Attribute attribute : eventTypeFromJson.getAttributes()) {
+                for (LineageEventContentforSample.Attribute attribute : eventTypeFromJSON.getAttributes()) {
                     jsonAttributeMap.put(attribute.getQualifiedName(), attribute);
                 }
 
@@ -289,6 +289,7 @@ public class SampleLineageEventProcessor {
         primitiveSchemaTypeProperties.setQualifiedName(attributeQualifiedName);
         primitiveSchemaTypeProperties.setDisplayName(attributeDisplayName);
         primitiveSchemaTypeProperties.setDataType(attribute.getType());
+        primitiveSchemaTypeProperties.setFormula(attribute.getFormula());
         primitiveSchemaTypeProperties.setTypeName(PRIMITIVE_SCHEMA_TYPE);
         schemaAttributeProperties.setSchemaType(primitiveSchemaTypeProperties);
         return schemaAttributeProperties;
