@@ -45,13 +45,12 @@ public class LineageEventContentForSampleTest
         assertTrue(outputAsset.getTypeName().equals("KafkaTopic"));
         assertTrue(outputAsset.getDisplayName().equals("Kundendaten"));
         assertTrue(outputAsset.getQualifiedName().equals("vertriebskunde-services.agree-kundendaten"));
-        LineageEventContentforSample.EventTypeFromJSON eventType =outputAsset.getEventType();
-        assertTrue(eventType!=null);
+        LineageEventContentforSample.EventTypeFromJSON eventType =outputAsset.getEventTypes().get(0);
         assertTrue(eventType.getDisplayName().equals("Person"));
         assertTrue(eventType.getQualifiedName().equals("vertriebskunde-services.agree-kundendaten~Person"));
         List<LineageEventContentforSample.Attribute> attributes = eventType.getAttributes();
         assertTrue(attributes != null);
-        assertTrue(attributes.size() == 3);
+        assertTrue(attributes.size() == 5);
 
         LineageEventContentforSample.Attribute firstNameAttr = attributes.get(0);
         assertTrue(firstNameAttr.getName().equals("firstName"));
@@ -70,6 +69,20 @@ public class LineageEventContentForSampleTest
         assertTrue(ageAttr.getDescription().equals("Age in years which must be equal to or greater than zero."));
         assertTrue(ageAttr.getType().equals("integer"));
         assertTrue(ageAttr.getQualifiedName().equals("vertriebskunde-services.agree-kundendaten~Person~age"));
+
+        LineageEventContentforSample.Attribute derivedAgeAttr = attributes.get(3);
+        assertTrue(derivedAgeAttr.getName().equals("derivedAge"));
+        assertTrue(derivedAgeAttr.getDescription().equals("Derived Age."));
+        assertTrue(derivedAgeAttr.getType().equals("integer"));
+        assertTrue(derivedAgeAttr.getFormula().equals("test-formula"));
+        assertTrue(derivedAgeAttr.getQualifiedName().equals("vertriebskunde-services.agree-kundendaten~Person~derivedAge"));
+
+        LineageEventContentforSample.Attribute derivedAgeAttr2 = attributes.get(4);
+        assertTrue(derivedAgeAttr2.getName().equals("derivedAge2"));
+        assertTrue(derivedAgeAttr2.getDescription().equals("Derived Age."));
+        assertTrue(derivedAgeAttr2.getType().equals("integer"));
+        assertTrue(derivedAgeAttr2.getFormula().equals("test-formula2"));
+        assertTrue(derivedAgeAttr2.getQualifiedName().equals("vertriebskunde-services.agree-kundendaten~Person~derivedAge2"));
 
     }
 

@@ -22,8 +22,8 @@ public class AssetBean {
     @JsonProperty("SQL")
     private String formula;
     // TODO change this to an array when we want to support multiple top level EventTypes
-    @JsonProperty("Schema")
-    private SchemaBean schema;
+    @JsonProperty("Schemas")
+    private List<SchemaBean> schemas;
 
     public String getQualifiedName() {
         return qualifiedName;
@@ -49,11 +49,11 @@ public class AssetBean {
         this.formula = formula;
     }
 
-    public SchemaBean getSchema() {
-        return schema;
+    public List<SchemaBean> getSchemas() {
+        return schemas;
     }
 
-    public void setSchema(SchemaBean schema) {
-        this.schema = schema;
+    public void setSchemas(List<SchemaBean> schemas) {
+        this.schemas = schemas;
     }
 }

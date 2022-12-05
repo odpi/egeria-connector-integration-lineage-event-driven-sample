@@ -107,7 +107,13 @@ public class LineageEventContentforSample {
                         methodName);
             }
             String displayName = outputAssetBean.getDisplayName();
-            SchemaBean schemaBean = outputAssetBean.getSchema();
+            List<SchemaBean> schemaBeans = outputAssetBean.getSchemas();
+
+            SchemaBean schemaBean = null;
+            if (schemaBeans != null && schemaBeans.size() > 0) {
+                // TODO hard coding to only 1 EventType - until support for EventTypeLists is present in the context API
+                schemaBean = schemaBeans.get(0);
+            }
             String outputEventTypeDisplayName =  schemaBean.getDisplayName();
             String outputEventTypeQualifiedName = qualifiedName + SEPARATOR + outputEventTypeDisplayName;
 
@@ -131,13 +137,20 @@ public class LineageEventContentforSample {
                 if (attributeDescriptionObject != null) {
                     attributeDescription = (String)attributeDescriptionObject;
                 }
-                Attribute attribute = new Attribute(attributeDisplayName,attributeQualifiedName,attributeType, attributeDescription);
-                outputAttributes.add(attribute);
+                Object attributeFormulaObject = attrMap.get("formula");
+                String attributeFormula = null;
+                if (attributeFormulaObject != null) {
+                    attributeFormula = (String)attributeFormulaObject;
+                }
+                Attribute outputAttribute = new Attribute(attributeDisplayName,attributeQualifiedName, attributeType, attributeDescription, attributeFormula);
+                outputAttributes.add(outputAttribute);
 
             }
             EventTypeFromJSON eventTypeFromJSON = new EventTypeFromJSON(outputEventTypeDisplayName,outputEventTypeQualifiedName,outputAttributes);
+            List< EventTypeFromJSON> eventTypesFromJSON = new ArrayList<>();
+            eventTypesFromJSON.add(eventTypeFromJSON);
 
-            AssetFromJSON assetFromJSON = new AssetFromJSON(displayName, qualifiedName, "KafkaTopic", eventTypeFromJSON);
+            AssetFromJSON assetFromJSON = new AssetFromJSON(displayName, qualifiedName, "KafkaTopic", eventTypesFromJSON);
 
             outputAssets.add(assetFromJSON);
         }
@@ -178,16 +191,16 @@ public class LineageEventContentforSample {
         private String qualifiedName;
         private String typeName;
 
-        private EventTypeFromJSON eventType;
+        private List<EventTypeFromJSON> eventTypes;
 
         protected AssetFromJSON(String displayName, String qualifiedName, String typeName) {
             this.displayName = displayName;
             this.qualifiedName = qualifiedName;
             this.typeName = typeName;
         }
-        protected AssetFromJSON(String displayName, String qualifiedName, String typeName, EventTypeFromJSON eventType) {
+        protected AssetFromJSON(String displayName, String qualifiedName, String typeName, List<EventTypeFromJSON> eventTypes) {
             this(displayName, qualifiedName, typeName);
-            this.eventType = eventType;
+            this.eventTypes = eventTypes;
         }
 
 
@@ -203,8 +216,8 @@ public class LineageEventContentforSample {
             return typeName;
         }
 
-        public EventTypeFromJSON getEventType() {
-            return eventType;
+        public List<EventTypeFromJSON> getEventTypes() {
+            return eventTypes;
         }
     }
 
@@ -215,11 +228,17 @@ public class LineageEventContentforSample {
         private String type;
         private String description;
 
+        private String formula;
+
         protected Attribute(String name, String qualifiedName, String type, String description) {
+            this(name, qualifiedName, type,description,null);
+        }
+        protected Attribute(String name, String qualifiedName, String type, String description, String formula) {
             this.name = name;
             this.description =description;
             this.type = type;
             this.qualifiedName = qualifiedName;
+            this.formula = formula;
         }
 
 
@@ -239,6 +258,9 @@ public class LineageEventContentforSample {
             return description;
         }
 
+        public String getFormula() {
+            return formula;
+        }
     }
 
     static class EventTypeFromJSON {
@@ -261,7 +283,6 @@ public class LineageEventContentforSample {
         public String getQualifiedName () {
             return qualifiedName;
         }
-
         public List<Attribute> getAttributes() {
             return attributes;
         }

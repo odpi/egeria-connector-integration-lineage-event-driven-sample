@@ -13,7 +13,7 @@
     "Id": "vertriebskunde-services.agree-kundendaten-3",
     "Name": "Kundendaten-3",
     "Schema-type": "json-schema",
-    "Schema": {
+    "Schemas": [{
       "$id": "https://example.com/person.schema.json",
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "title": "Person-2",
@@ -32,6 +32,6 @@
           "type": "string"
         }
       }
-    }
+    }]
   }]
 }
