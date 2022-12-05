@@ -110,7 +110,7 @@ public class LineageEventContentforSample {
             List<SchemaBean> schemaBeans = outputAssetBean.getSchemas();
 
             SchemaBean schemaBean = null;
-            if (schemaBeans != null || schemaBeans.size() > 0) {
+            if (schemaBeans != null && schemaBeans.size() > 0) {
                 // TODO hard coding to only 1 EventType - until support for EventTypeLists is present in the context API
                 schemaBean = schemaBeans.get(0);
             }
