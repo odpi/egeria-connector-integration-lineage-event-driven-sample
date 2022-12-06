@@ -35,6 +35,10 @@
           "description": "Derived Age.",
           "type": "integer",
           "formula": "test-formula-changed"
+        },
+        "derivedAge2": {
+          "description": "Derived Age 2 without formula.",
+          "type": "integer"
         }
       }
     }]

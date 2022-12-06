@@ -22,6 +22,7 @@ import java.nio.file.Paths;
 import java.util.Date;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
@@ -255,11 +256,12 @@ public class sampleLineageEventProcessorTest
         attributes = mockContext.getNestedSchemaAttributes(schemaTypeElementGUID, 0, 1000, new Date());
 
         assertTrue(attributes != null);
-        assertTrue(attributes.size() == 4);
+        assertTrue(attributes.size() == 5);
         firstNameFound = false;
         boolean middleNameFound = false;
         ageFound = false;
         derivedAgeFound =false;
+        derivedAge2Found =false;
         for (SchemaAttributeElement attribute: attributes) {
             SchemaAttributeProperties properties = attribute.getSchemaAttributeProperties();
             if (properties.getDisplayName().equals("firstName")) {
@@ -284,6 +286,14 @@ public class sampleLineageEventProcessorTest
                 assertTrue(primitiveSchemaTypeProperties.getDataType().equals("integer"));
                 assertTrue(primitiveSchemaTypeProperties.getFormula().equals("test-formula-changed"));
                 derivedAgeFound = true;
+            } else   if (properties.getDisplayName().equals("derivedAge2")) {
+                assertTrue(properties.getDescription().equals("Derived Age 2 without formula."));
+                assertTrue(properties.getQualifiedName().equals("vertriebskunde-services.agree-kundendaten-3~Person~derivedAge2"));
+                assertTrue(properties.getTypeName().equals("EventSchemaAttribute"));
+                PrimitiveSchemaTypeProperties primitiveSchemaTypeProperties = (PrimitiveSchemaTypeProperties)properties.getSchemaType();
+                assertTrue(primitiveSchemaTypeProperties.getDataType().equals("integer"));
+                assertEquals(primitiveSchemaTypeProperties.getFormula(), null);
+                derivedAge2Found = true;
             } else   if (properties.getDisplayName().equals("age")) {
                 assertTrue(properties.getDescription().equals("Age as a string to test type change."));
                 assertTrue(properties.getQualifiedName().equals("vertriebskunde-services.agree-kundendaten-3~Person~age"));
@@ -297,7 +307,7 @@ public class sampleLineageEventProcessorTest
         assertTrue(middleNameFound);
         assertTrue(ageFound);
         assertTrue(derivedAgeFound);
-
+        assertTrue(derivedAge2Found);
 
 
         // Replace the event type
