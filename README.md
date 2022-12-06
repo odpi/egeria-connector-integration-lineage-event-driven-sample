@@ -3,8 +3,6 @@
 
 # Egeria Open Lineage Event Receiver Integration Connector
 
-# Still being developed - not fully functional.
-
 See https://egeria-project.org for the main Egeria Documentation.
 
 This repo holds one sample [integration connector](https://egeria-project.org/concepts/integration-connector/?h=integration+conne) that shows how 
@@ -32,7 +30,7 @@ The Output also describes an event schema.
 ### Assumptions
 - No deletion of assets or processes. Lineage is always adding these
 - Where effectivity dates are specified - the current time is used
-- Only doing asset design lineage, no column lineage
+- Only doing asset design lineage, no column lineage or operwtional lineage.
 - All finds are done by qualifiedName - if more than one element is returned - we use the first. 
 - Catalog the assets, schema and process if required. This can result in 
   - deletion, creation and / or updates of schemaAttributes
