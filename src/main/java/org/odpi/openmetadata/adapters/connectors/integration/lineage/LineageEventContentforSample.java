@@ -223,7 +223,6 @@ public class LineageEventContentforSample {
 
     static class Attribute {
         private String name;
-
         private String qualifiedName;
         private String type;
         private String description;
@@ -266,7 +265,6 @@ public class LineageEventContentforSample {
     static class EventTypeFromJSON {
         private String displayName;
         private String qualifiedName;
-
         private List<Attribute> attributes = null;
 
         protected EventTypeFromJSON(String displayName, String qualifiedName, List<Attribute> attributes) {
@@ -274,12 +272,9 @@ public class LineageEventContentforSample {
             this.qualifiedName = qualifiedName;
             this.attributes = attributes;
         }
-
-
         public String getDisplayName () {
             return displayName;
         }
-
         public String getQualifiedName () {
             return qualifiedName;
         }

@@ -28,6 +28,8 @@ public class SampleLineageEventProcessor {
     private  List<String> inAssetGUIDs = null;
     private  List<String> outAssetGUIDs = null;
 
+    private boolean assetManagerIsHome =  false;
+
 
     /**
      * Constructor for SampleLineageEventProcessor
@@ -117,27 +119,22 @@ public class SampleLineageEventProcessor {
             assetProperties.setDisplayName(jsonAsset.getDisplayName());
             if (dataAssetElements == null || dataAssetElements.isEmpty()) {
                 // create asset
-                assetGUID = myContext.createDataAsset(false, assetProperties);
+                assetGUID = myContext.createDataAsset(assetManagerIsHome, assetProperties);
             } else {
                 // asset already exists - update it
                 DataAssetElement  dataAssetElement = dataAssetElements.get(0);
                 if ( dataAssetElement.getElementHeader() != null) {
                     assetGUID = dataAssetElement.getElementHeader().getGUID();
-                    myContext.updateDataAsset(assetGUID, false, assetProperties, new Date());
+                    myContext.updateDataAsset(assetGUID, assetManagerIsHome, assetProperties, new Date());
                 }
             }
-            if (assetGUID != null) {
-                assetGUIDs.add(assetGUID);
-                List<LineageEventContentforSample.EventTypeFromJSON> eventTypes = jsonAsset.getEventTypes();
-                if (eventTypes != null && eventTypes.size() > 0) {
-                   ensureSchemaIsCatalogued(jsonAsset, assetGUID);
-                }
-            } else {
-                //error
+            assetGUIDs.add(assetGUID);
+            List<LineageEventContentforSample.EventTypeFromJSON> eventTypes = jsonAsset.getEventTypes();
+            if (eventTypes != null && eventTypes.size() > 0) {
+                ensureSchemaIsCatalogued(jsonAsset, assetGUID);
             }
 
         }
-        // remember asset
         return assetGUIDs;
     }
 
@@ -175,7 +172,7 @@ public class SampleLineageEventProcessor {
             // create schema type as there is no child schema type
             schemaTypeGUID = myContext.createSchemaType( false, schemaTypeProperties);
             //link to asset
-            myContext.setupSchemaTypeParent(false,schemaTypeGUID,assetGUID,"KafkaTopic",null, new Date());
+            myContext.setupSchemaTypeParent(assetManagerIsHome, schemaTypeGUID,assetGUID,"KafkaTopic",null, new Date());
 
             // For each schema attribute create it
             for (LineageEventContentforSample.Attribute attribute:eventTypeFromJSON.getAttributes()) {
@@ -248,7 +245,7 @@ public class SampleLineageEventProcessor {
                 // add the new one
                 schemaTypeGUID = myContext.createSchemaType( false, schemaTypeProperties);
                 //link to asset
-                myContext.setupSchemaTypeParent(false, schemaTypeGUID, assetGUID,"KafkaTopic",null, new Date());
+                myContext.setupSchemaTypeParent(assetManagerIsHome, schemaTypeGUID, assetGUID,"KafkaTopic",null, new Date());
                 // For each schema attribute create it
                 for (LineageEventContentforSample.Attribute attribute:eventTypeFromJSON.getAttributes()) {
                     createPrimitiveSchemaAttribute(schemaTypeGUID, attribute);
@@ -270,7 +267,7 @@ public class SampleLineageEventProcessor {
      */
     private void createPrimitiveSchemaAttribute(String schemaTypeGUID, LineageEventContentforSample.Attribute attribute) throws InvalidParameterException, UserNotAuthorizedException, PropertyServerException {
         SchemaAttributeProperties schemaAttributeProperties = getSchemaAttributeProperties(attribute);
-        myContext.createSchemaAttribute(false, schemaTypeGUID,schemaAttributeProperties,new Date());
+        myContext.createSchemaAttribute(assetManagerIsHome, schemaTypeGUID,schemaAttributeProperties,new Date());
     }
     private void updatePrimitiveSchemaAttribute(String schemaAttributeGUID, LineageEventContentforSample.Attribute attribute) throws InvalidParameterException, UserNotAuthorizedException, PropertyServerException {
         SchemaAttributeProperties schemaAttributeProperties = getSchemaAttributeProperties(attribute);
@@ -325,7 +322,7 @@ public class SampleLineageEventProcessor {
         // does this process already exist?
         if(processElementList == null || processElementList.isEmpty()) {
             // process does not exist
-            processGUID = myContext.createProcess(false, ProcessStatus.ACTIVE, processProperties);
+            processGUID = myContext.createProcess(assetManagerIsHome, ProcessStatus.ACTIVE, processProperties);
         } else {
             // process exists update it
             ProcessElement processElement = processElementList.get(0);
@@ -334,10 +331,6 @@ public class SampleLineageEventProcessor {
 
 
         }
-        // now grab all the calling and called relationships.
-//        List<ProcessCallElement> processCallElements = myContext.getProcessCallers(processGUID, 0, 1000, new Date());
-//        List<ProcessCallElement> processCalledElements = myContext.getProcessCalled(processGUID,0, 1000, new Date());
-
         for (String assetGUID : inAssetGUIDs) {
             DataFlowProperties properties = new DataFlowProperties();
             DataAssetElement dataAssetElement = myContext.getDataAssetByGUID(assetGUID, new Date());
@@ -349,7 +342,7 @@ public class SampleLineageEventProcessor {
             // if there is already a dataflow - update it, if not create it
             DataFlowElement  existingDataflow = myContext.getDataFlow(assetGUID, processGUID, null, new Date());
             if (existingDataflow == null) {
-                myContext.setupDataFlow(false, assetGUID, processGUID, properties, new Date());
+                myContext.setupDataFlow(assetManagerIsHome, assetGUID, processGUID, properties, new Date());
 
             } else {
                 myContext.updateDataFlow(existingDataflow.getDataFlowHeader().getGUID(), properties, new Date());
@@ -359,11 +352,10 @@ public class SampleLineageEventProcessor {
             DataFlowProperties properties = new DataFlowProperties();
             DataFlowElement  existingDataflow = myContext.getDataFlow( processGUID,assetGUID, null, new Date());
             if (existingDataflow == null) {
-                myContext.setupDataFlow(false, processGUID, assetGUID, properties, new Date());
+                myContext.setupDataFlow(assetManagerIsHome, processGUID, assetGUID, properties, new Date());
             } else {
                 myContext.updateDataFlow(existingDataflow.getDataFlowHeader().getGUID(), properties, new Date());
             }
         }
-
     }
 }
