@@ -1,14 +1,15 @@
 <!-- SPDX-License-Identifier: CC-BY-4.0 -->
 <!-- Copyright Contributors to the Egeria project. -->
 
-# Egeria Open Lineage Event Receiver Integration Connector
+# Sample Egeria Lineage Event Receiver Integration Connector
 
 See https://egeria-project.org for the main Egeria Documentation.
 
 This repo holds one sample [integration connector](https://egeria-project.org/concepts/integration-connector/?h=integration+conne) that shows how 
 to listen to a topic for json payloads. For an example of the json, see the bottom of this README. This integration connector is an extension of the 
-[Open Lineage Event Receiver Integration Connector](https://egeria-project.org/connectors/integration/open-lineage-event-receiver-integration-connector/).
-It does not process open lineage events, instead it processes json events. See [here](https://github.com/odpi/egeria-connector-integration-lineage-event-driven-sample/tree/main/src/test/resources)
+[Lineage Integrator Open Metadata Integration Service (OMIS)](https://egeria-project.org/services/omis/lineage-integrator/overview/), where it
+catalogues lineage information from a third party technology, including process,
+schemas and the data assets they are working with. See [here](https://github.com/odpi/egeria-connector-integration-lineage-event-driven-sample/tree/main/src/test/resources)
 for some sample json events.
 
 ## Postman
@@ -18,7 +19,6 @@ configure and start this connector.
 ## Test Utility
 This is a java application that produces events for testing [here](https://github.com/odpi/egeria-connector-integration-lineage-event-driven-sample/blob/main/src/test/java/org/odpi/openmetadata/adapters/connectors/integration/lineage/utils/EventProducerUtility.java). It allows the user to easily submit any of the json files used in the junit.
 It is built with the junit tests using the top level gradle file.
-
 
 ## Event json 
 
