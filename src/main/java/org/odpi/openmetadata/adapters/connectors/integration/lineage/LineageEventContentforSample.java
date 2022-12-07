@@ -19,7 +19,7 @@ import java.util.*;
 public class LineageEventContentforSample {
 
     private String teamName;
-    private String processDisplayName = null;
+    private String processTechnicalName = null;
     private String processQualifiedName = null;
 
     private String processDescription = null;
@@ -59,9 +59,9 @@ public class LineageEventContentforSample {
                     this.getClass().getName(),
                     methodName);
         }
-        this.processDisplayName = eventBean.getDisplayName();
-        if (this.processDisplayName == null || this.processDisplayName.length() == 0) {
-            this.processDisplayName =this.processQualifiedName;
+        this.processTechnicalName = eventBean.getTechnicalName();
+        if (this.processTechnicalName == null || this.processTechnicalName.length() == 0) {
+            this.processTechnicalName =this.processQualifiedName;
         }
         this.processDescription = eventBean.getDescription();
         this.teamName = eventBean.getTeam();
@@ -158,8 +158,8 @@ public class LineageEventContentforSample {
     }
 
     //getters and setters
-    public String getProcessDisplayName() {
-        return processDisplayName;
+    public String getProcessTechnicalName() {
+        return processTechnicalName;
     }
 
     public String getProcessDescription() {
@@ -222,27 +222,27 @@ public class LineageEventContentforSample {
     }
 
     static class Attribute {
-        private String name;
+        private String displayName;
         private String qualifiedName;
         private String type;
         private String description;
 
         private String formula;
 
-        protected Attribute(String name, String qualifiedName, String type, String description) {
-            this(name, qualifiedName, type,description,null);
+        protected Attribute(String displayName, String qualifiedName, String type, String description) {
+            this(displayName, qualifiedName, type, description,null);
         }
-        protected Attribute(String name, String qualifiedName, String type, String description, String formula) {
-            this.name = name;
-            this.description =description;
+        protected Attribute(String displayName, String qualifiedName, String type, String description, String formula) {
+            this.displayName = displayName;
+            this.description = description;
             this.type = type;
             this.qualifiedName = qualifiedName;
             this.formula = formula;
         }
 
 
-        protected String getName() {
-            return name;
+        protected String getDisplayName() {
+            return displayName;
         }
 
         public String getQualifiedName() {
@@ -263,17 +263,17 @@ public class LineageEventContentforSample {
     }
 
     static class EventTypeFromJSON {
-        private String displayName;
+        private String technicalName;
         private String qualifiedName;
         private List<Attribute> attributes = null;
 
-        protected EventTypeFromJSON(String displayName, String qualifiedName, List<Attribute> attributes) {
-            this.displayName = displayName;
+        protected EventTypeFromJSON(String technicalName, String qualifiedName, List<Attribute> attributes) {
+            this.technicalName = technicalName;
             this.qualifiedName = qualifiedName;
             this.attributes = attributes;
         }
-        public String getDisplayName () {
-            return displayName;
+        public String getTechnicalName() {
+            return technicalName;
         }
         public String getQualifiedName () {
             return qualifiedName;

@@ -24,11 +24,11 @@ public class SampleLineageEventProcessor {
     public static final String PRIMITIVE_SCHEMA_TYPE = "PrimitiveSchemaType";
     private final AuditLog auditLog;
     private final String connectorName;
-    private LineageIntegratorContext                myContext;
+    private LineageIntegratorContext   myContext;
     private  List<String> inAssetGUIDs = null;
     private  List<String> outAssetGUIDs = null;
 
-    private boolean assetManagerIsHome =  false;
+    private boolean assetManagerIsHome =  true;
 
 
     /**
@@ -116,7 +116,7 @@ public class SampleLineageEventProcessor {
             DataAssetProperties assetProperties = new DataAssetProperties();
             assetProperties.setTypeName(jsonAsset.getTypeName());
             assetProperties.setQualifiedName(assetQualifiedName);
-            assetProperties.setDisplayName(jsonAsset.getDisplayName());
+            assetProperties.setTechnicalName(jsonAsset.getDisplayName());
             if (dataAssetElements == null || dataAssetElements.isEmpty()) {
                 // create asset
                 assetGUID = myContext.createDataAsset(assetManagerIsHome, assetProperties);
@@ -164,13 +164,13 @@ public class SampleLineageEventProcessor {
         SchemaTypeProperties schemaTypeProperties = new SchemaTypeProperties();
         schemaTypeProperties.setTypeName("EventType");
         schemaTypeProperties.setQualifiedName(eventTypeFromJSON.getQualifiedName());
-        schemaTypeProperties.setDisplayName(eventTypeFromJSON.getDisplayName());
+        schemaTypeProperties.setDisplayName(eventTypeFromJSON.getTechnicalName());
         String jsonEventTypeQualifiedName = eventTypeFromJSON.getQualifiedName();
         String schemaTypeGUID =null;
 
         if (childSchemaType ==null) {
             // create schema type as there is no child schema type
-            schemaTypeGUID = myContext.createSchemaType( false, schemaTypeProperties);
+            schemaTypeGUID = myContext.createSchemaType( assetManagerIsHome, schemaTypeProperties);
             //link to asset
             myContext.setupSchemaTypeParent(assetManagerIsHome, schemaTypeGUID,assetGUID,"KafkaTopic",null, new Date());
 
@@ -243,7 +243,7 @@ public class SampleLineageEventProcessor {
                 // delete - this should cascade and delete any children.
                 myContext.removeSchemaType(schemaTypeGUID, new Date());
                 // add the new one
-                schemaTypeGUID = myContext.createSchemaType( false, schemaTypeProperties);
+                schemaTypeGUID = myContext.createSchemaType( assetManagerIsHome, schemaTypeProperties);
                 //link to asset
                 myContext.setupSchemaTypeParent(assetManagerIsHome, schemaTypeGUID, assetGUID,"KafkaTopic",null, new Date());
                 // For each schema attribute create it
@@ -276,7 +276,7 @@ public class SampleLineageEventProcessor {
 
     private static SchemaAttributeProperties getSchemaAttributeProperties(LineageEventContentforSample.Attribute attribute) {
         String attributeQualifiedName = attribute.getQualifiedName();
-        String attributeDisplayName = attribute.getName();
+        String attributeDisplayName = attribute.getDisplayName();
         SchemaAttributeProperties schemaAttributeProperties = new SchemaAttributeProperties();
         schemaAttributeProperties.setQualifiedName(attributeQualifiedName);
         schemaAttributeProperties.setDisplayName(attributeDisplayName);
@@ -317,8 +317,8 @@ public class SampleLineageEventProcessor {
 
         ProcessProperties processProperties = new ProcessProperties();
         processProperties.setQualifiedName(processQualifiedName);
-        processProperties.setDisplayName(eventContent.getProcessDisplayName());
-        processProperties.setDescription(eventContent.getProcessDescription());
+        processProperties.setTechnicalName(eventContent.getProcessTechnicalName());
+        processProperties.setTechnicalDescription(eventContent.getProcessDescription());
         // does this process already exist?
         if(processElementList == null || processElementList.isEmpty()) {
             // process does not exist
