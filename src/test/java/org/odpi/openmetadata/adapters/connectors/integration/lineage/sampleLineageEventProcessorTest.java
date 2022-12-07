@@ -46,7 +46,7 @@ public class sampleLineageEventProcessorTest
         assertTrue(assetList!= null);
         assertTrue(assetList.size() ==1);
         DataAssetElement inputDataAssetElement = assetList.get(0);
-        assertTrue(inputDataAssetElement.getDataAssetProperties().getDisplayName().equals("Foo"));
+        assertTrue(inputDataAssetElement.getDataAssetProperties().getTechnicalName().equals("Foo"));
         assertTrue(inputDataAssetElement.getElementHeader().getGUID() != null);
 
 
@@ -54,7 +54,7 @@ public class sampleLineageEventProcessorTest
         assertTrue(assetList!= null);
         assertTrue(assetList.size() ==1);
         DataAssetElement outputDataAssetElement = assetList.get(0);
-        assertTrue(outputDataAssetElement.getDataAssetProperties().getDisplayName().equals("Kundendaten"));
+        assertTrue(outputDataAssetElement.getDataAssetProperties().getTechnicalName().equals("Kundendaten"));
         assertTrue(outputDataAssetElement.getElementHeader().getGUID() != null);
 
         List<ProcessElement>  processElementList = mockContext.getProcessesByName("1234567890", 0 , 1000,new Date());
@@ -62,7 +62,7 @@ public class sampleLineageEventProcessorTest
         assertTrue(!processElementList.isEmpty());
         ProcessElement processElement = processElementList.get(0);
         assertTrue("1234567890".equals(processElement.getProcessProperties().getQualifiedName()));
-        assertTrue("TestRes".equals(processElement.getProcessProperties().getDisplayName()));
+        assertTrue("TestRes".equals(processElement.getProcessProperties().getTechnicalName()));
 
         List<DataFlowElement> dataFlowsIn= ((MockLineageIntegratorContext)mockContext).getDataflows(inputDataAssetElement.getElementHeader().getGUID(), processElement.getElementHeader().getGUID(), new Date());
         assertTrue(dataFlowsIn !=null);
@@ -159,7 +159,7 @@ public class sampleLineageEventProcessorTest
         assertTrue(assetList!= null);
         assertTrue(assetList.size() ==1);
         inputDataAssetElement = assetList.get(0);
-        assertTrue(inputDataAssetElement.getDataAssetProperties().getDisplayName().equals("Foo-2"));
+        assertTrue(inputDataAssetElement.getDataAssetProperties().getTechnicalName().equals("Foo-2"));
         assertTrue(inputDataAssetElement.getElementHeader().getGUID() != null);
 
 
@@ -167,7 +167,7 @@ public class sampleLineageEventProcessorTest
         assertTrue(assetList!= null);
         assertTrue(assetList.size() ==1);
         outputDataAssetElement = assetList.get(0);
-        assertTrue(outputDataAssetElement.getDataAssetProperties().getDisplayName().equals("Kundendaten-2"));
+        assertTrue(outputDataAssetElement.getDataAssetProperties().getTechnicalName().equals("Kundendaten-2"));
         assertTrue(outputDataAssetElement.getElementHeader().getGUID() != null);
 
 
@@ -176,8 +176,8 @@ public class sampleLineageEventProcessorTest
         assertTrue(!processElementList.isEmpty());
         processElement = processElementList.get(0);
         assertTrue("1234567890".equals(processElement.getProcessProperties().getQualifiedName()));
-        assertTrue("TestRes-2".equals(processElement.getProcessProperties().getDisplayName()));
-        assertTrue("TestResource-2".equals(processElement.getProcessProperties().getDescription()));
+        assertTrue("TestRes-2".equals(processElement.getProcessProperties().getTechnicalName()));
+        assertTrue("TestResource-2".equals(processElement.getProcessProperties().getTechnicalDescription()));
 
         // replace assets
 
@@ -192,7 +192,7 @@ public class sampleLineageEventProcessorTest
         assertTrue(assetList!= null);
         assertTrue(assetList.size() ==1);
         inputDataAssetElement = assetList.get(0);
-        assertTrue(inputDataAssetElement.getDataAssetProperties().getDisplayName().equals("Foo-3"));
+        assertTrue(inputDataAssetElement.getDataAssetProperties().getTechnicalName().equals("Foo-3"));
         assertTrue(inputDataAssetElement.getElementHeader().getGUID() != null);
 
 
@@ -200,7 +200,7 @@ public class sampleLineageEventProcessorTest
         assertTrue(assetList!= null);
         assertTrue(assetList.size() ==1);
         outputDataAssetElement = assetList.get(0);
-        assertTrue(outputDataAssetElement.getDataAssetProperties().getDisplayName().equals("Kundendaten-3"));
+        assertTrue(outputDataAssetElement.getDataAssetProperties().getTechnicalName().equals("Kundendaten-3"));
         assertTrue(outputDataAssetElement.getElementHeader().getGUID() != null);
 
 
@@ -209,8 +209,8 @@ public class sampleLineageEventProcessorTest
         assertTrue(!processElementList.isEmpty());
         processElement = processElementList.get(0);
         assertTrue("1234567890".equals(processElement.getProcessProperties().getQualifiedName()));
-        assertTrue("TestRes-3".equals(processElement.getProcessProperties().getDisplayName()));
-        assertTrue("TestResource-3".equals(processElement.getProcessProperties().getDescription()));
+        assertTrue("TestRes-3".equals(processElement.getProcessProperties().getTechnicalName()));
+        assertTrue("TestResource-3".equals(processElement.getProcessProperties().getTechnicalDescription()));
 
         // add delete and update attributes
 
@@ -225,7 +225,7 @@ public class sampleLineageEventProcessorTest
         assertTrue(assetList!= null);
         assertTrue(assetList.size() ==1);
         inputDataAssetElement = assetList.get(0);
-        assertTrue(inputDataAssetElement.getDataAssetProperties().getDisplayName().equals("Foo-3"));
+        assertTrue(inputDataAssetElement.getDataAssetProperties().getTechnicalName().equals("Foo-3"));
         assertTrue(inputDataAssetElement.getElementHeader().getGUID() != null);
 
 
@@ -233,7 +233,7 @@ public class sampleLineageEventProcessorTest
         assertTrue(assetList!= null);
         assertTrue(assetList.size() ==1);
         outputDataAssetElement = assetList.get(0);
-        assertTrue(outputDataAssetElement.getDataAssetProperties().getDisplayName().equals("Kundendaten-3"));
+        assertTrue(outputDataAssetElement.getDataAssetProperties().getTechnicalName().equals("Kundendaten-3"));
         assertTrue(outputDataAssetElement.getElementHeader().getGUID() != null);
 
 
@@ -242,8 +242,8 @@ public class sampleLineageEventProcessorTest
         assertTrue(!processElementList.isEmpty());
         processElement = processElementList.get(0);
         assertTrue("1234567890".equals(processElement.getProcessProperties().getQualifiedName()));
-        assertTrue("TestRes-3".equals(processElement.getProcessProperties().getDisplayName()));
-        assertTrue("TestResource-3".equals(processElement.getProcessProperties().getDescription()));
+        assertTrue("TestRes-3".equals(processElement.getProcessProperties().getTechnicalName()));
+        assertTrue("TestResource-3".equals(processElement.getProcessProperties().getTechnicalDescription()));
         schemaTypeElement = mockContext.getSchemaTypeForElement(outputDataAssetElement.getElementHeader().getGUID(), "KafkaTopic", new Date());
         schemaTypeProperties = schemaTypeElement.getSchemaTypeProperties();
 
@@ -326,7 +326,7 @@ public class sampleLineageEventProcessorTest
         assertTrue(assetList!= null);
         assertTrue(assetList.size() ==1);
         inputDataAssetElement = assetList.get(0);
-        assertTrue(inputDataAssetElement.getDataAssetProperties().getDisplayName().equals("Foo-3"));
+        assertTrue(inputDataAssetElement.getDataAssetProperties().getTechnicalName().equals("Foo-3"));
         assertTrue(inputDataAssetElement.getElementHeader().getGUID() != null);
 
 
@@ -334,7 +334,7 @@ public class sampleLineageEventProcessorTest
         assertTrue(assetList!= null);
         assertTrue(assetList.size() ==1);
         outputDataAssetElement = assetList.get(0);
-        assertTrue(outputDataAssetElement.getDataAssetProperties().getDisplayName().equals("Kundendaten-3"));
+        assertTrue(outputDataAssetElement.getDataAssetProperties().getTechnicalName().equals("Kundendaten-3"));
         assertTrue(outputDataAssetElement.getElementHeader().getGUID() != null);
 
 
@@ -343,8 +343,8 @@ public class sampleLineageEventProcessorTest
         assertTrue(!processElementList.isEmpty());
         processElement = processElementList.get(0);
         assertTrue("1234567890".equals(processElement.getProcessProperties().getQualifiedName()));
-        assertTrue("TestRes-3".equals(processElement.getProcessProperties().getDisplayName()));
-        assertTrue("TestResource-3".equals(processElement.getProcessProperties().getDescription()));
+        assertTrue("TestRes-3".equals(processElement.getProcessProperties().getTechnicalName()));
+        assertTrue("TestResource-3".equals(processElement.getProcessProperties().getTechnicalDescription()));
         schemaTypeElement = mockContext.getSchemaTypeForElement(outputDataAssetElement.getElementHeader().getGUID(), "KafkaTopic", new Date());
         schemaTypeProperties = schemaTypeElement.getSchemaTypeProperties();
         assertTrue(schemaTypeElement != null);
@@ -402,7 +402,7 @@ public class sampleLineageEventProcessorTest
         assertTrue(assetList!= null);
         assertTrue(assetList.size() ==1);
         inputDataAssetElement = assetList.get(0);
-        assertTrue(inputDataAssetElement.getDataAssetProperties().getDisplayName().equals("Foo-3"));
+        assertTrue(inputDataAssetElement.getDataAssetProperties().getTechnicalName().equals("Foo-3"));
         assertTrue(inputDataAssetElement.getElementHeader().getGUID() != null);
 
         dataFlowsIn= ((MockLineageIntegratorContext)mockContext).getDataflows(inputDataAssetElement.getElementHeader().getGUID(), processElement.getElementHeader().getGUID(), new Date());
@@ -417,7 +417,7 @@ public class sampleLineageEventProcessorTest
         assertTrue(assetList!= null);
         assertTrue(assetList.size() ==1);
         outputDataAssetElement = assetList.get(0);
-        assertTrue(outputDataAssetElement.getDataAssetProperties().getDisplayName().equals("Kundendaten-3"));
+        assertTrue(outputDataAssetElement.getDataAssetProperties().getTechnicalName().equals("Kundendaten-3"));
         assertTrue(outputDataAssetElement.getElementHeader().getGUID() != null);
 
 
@@ -426,8 +426,8 @@ public class sampleLineageEventProcessorTest
         assertTrue(!processElementList.isEmpty());
         processElement = processElementList.get(0);
         assertTrue("1234567890".equals(processElement.getProcessProperties().getQualifiedName()));
-        assertTrue("TestRes-3".equals(processElement.getProcessProperties().getDisplayName()));
-        assertTrue("TestResource-3".equals(processElement.getProcessProperties().getDescription()));
+        assertTrue("TestRes-3".equals(processElement.getProcessProperties().getTechnicalName()));
+        assertTrue("TestResource-3".equals(processElement.getProcessProperties().getTechnicalDescription()));
         schemaTypeElement = mockContext.getSchemaTypeForElement(outputDataAssetElement.getElementHeader().getGUID(), "KafkaTopic", new Date());
         schemaTypeProperties = schemaTypeElement.getSchemaTypeProperties();
         assertTrue(schemaTypeElement != null);

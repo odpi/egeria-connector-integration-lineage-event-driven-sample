@@ -15,7 +15,7 @@ public class EventBean {
     @JsonProperty("Id")
     private String qualifiedName;
     @JsonProperty("Name")
-    private String displayName;
+    private String technicalName;
     @JsonProperty("Description")
     private String description;
     @JsonProperty("Team")
@@ -33,12 +33,12 @@ public class EventBean {
         this.qualifiedName = qualifiedName;
     }
 
-    public String getDisplayName() {
-        return displayName;
+    public String getTechnicalName() {
+        return technicalName;
     }
 
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
+    public void setTechnicalName(String technicalName) {
+        this.technicalName = technicalName;
     }
 
     public String getDescription() {

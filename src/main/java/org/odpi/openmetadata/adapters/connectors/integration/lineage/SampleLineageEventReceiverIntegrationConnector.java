@@ -86,7 +86,7 @@ public class SampleLineageEventReceiverIntegrationConnector extends LineageInteg
      * No function needed in refresh()
      */
     @Override
-    public void refresh() throws ConnectorCheckedException {
+    public void refresh() {
     }
 
     @Override
