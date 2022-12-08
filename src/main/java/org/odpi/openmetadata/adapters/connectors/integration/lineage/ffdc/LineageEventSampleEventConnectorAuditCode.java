@@ -57,7 +57,12 @@ public enum LineageEventSampleEventConnectorAuditCode implements AuditLogMessage
             OMRSAuditLogRecordSeverity.INFO,
             "Event successfully processed",
             "The system has successfully processed the event",
-            "Nothing - this is for awareness that an event has been processed.")
+            "Nothing - this is for awareness that an event has been processed."),
+    CREATE_ASSET_ATTEMPTED_WITH_EXISTING_QUALIFIEDNAME("LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-0008",
+            OMRSAuditLogRecordSeverity.EXCEPTION,
+            "Attempt to create an asset failed as the qualified name {0} already exists and is not associated with an asset",
+            "The system stops processing this event, but carries on processing subsequent events.",
+            "Investigate the reason why there is an entity with the existing qualifiedName.")
 
     ;
 

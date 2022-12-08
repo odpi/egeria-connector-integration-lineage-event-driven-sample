@@ -11,13 +11,13 @@ import java.util.Properties;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 public class EventProducerUtility {
 
+    //public static final String TOPIC_NAME = "legacyLineage";
+    public static  String topicName = "legacyLineage";
     private KafkaProducer producer;
     private int messageNoCount = 0;
 
@@ -28,7 +28,13 @@ public class EventProducerUtility {
 
     private void run() throws IOException {
         producer = getKafkaProducer();
+        System.out.print("Input topic Name (default legacyLineage:\n ");
+        Scanner sc = new Scanner(System.in); //System.in is a standard input stream
 
+        String topicInput = sc.nextLine();
+        if ( topicInput !=null && topicInput.length() >0 ) {
+            topicName =  topicInput;
+        }
 
         String folderPathStr =  "src/test/resources/";
         File[] files = new File(folderPathStr).listFiles();
@@ -43,7 +49,6 @@ public class EventProducerUtility {
                 fileNamesSet.add(file.getName());
             }
             System.out.print("Copy and Paste the file name you want to send as an event or q to quit: ");
-            Scanner sc = new Scanner(System.in); //System.in is a standard input stream
 
             String str = sc.nextLine();              //reads string
             if (fileNamesSet.contains(str)) {
@@ -71,7 +76,7 @@ public class EventProducerUtility {
 
     private void sendMessage(String messageStr) {
         try {
-            producer.send(new ProducerRecord<>("legacyLineage",
+            producer.send(new ProducerRecord<>(topicName,
                     messageNoCount++,
                     messageStr)).get();
         } catch (InterruptedException | ExecutionException e) {
