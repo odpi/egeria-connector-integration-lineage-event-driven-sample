@@ -28,7 +28,7 @@ public class EventProducerUtility {
 
     private void run() throws IOException {
         producer = getKafkaProducer();
-        System.out.print("Input topic Name (default legacyLineage:\n ");
+        System.out.print("Input topic Name (default legacyLineage):\n ");
         Scanner sc = new Scanner(System.in); //System.in is a standard input stream
 
         String topicInput = sc.nextLine();
