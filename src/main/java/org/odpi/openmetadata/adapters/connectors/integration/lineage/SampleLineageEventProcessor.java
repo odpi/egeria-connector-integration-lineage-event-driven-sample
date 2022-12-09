@@ -142,8 +142,7 @@ public class SampleLineageEventProcessor {
                     try {
                         myContext.updateDataAsset(assetGUID, assetManagerIsHome, assetProperties, null);
                     } catch (UserNotAuthorizedException error) {
-                        if (error.getReportedErrorMessageId().equals("OMAG-REPOSITORY-HANDLER-400-007")
-                        ) {
+                        if (error.getReportedErrorMessageId().equals("OMAG-REPOSITORY-HANDLER-400-007")) {
                             // cannot update this asset as it is already owned by another metadata collection
                             // log and carry on processing
                             if (auditLog != null) {
