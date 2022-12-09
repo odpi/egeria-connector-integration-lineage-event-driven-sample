@@ -62,7 +62,13 @@ public enum LineageEventSampleEventConnectorAuditCode implements AuditLogMessage
             OMRSAuditLogRecordSeverity.EXCEPTION,
             "Attempt to create an asset failed as the qualified name {0} already exists and is not associated with an asset",
             "The system stops processing this event, but carries on processing subsequent events.",
-            "Investigate the reason why there is an entity with the existing qualifiedName.")
+            "Investigate the reason why there is an entity with the existing qualifiedName."),
+    UPDATE_ASSET_FAILED_OWNED_BY_DIFFERENT_EXTERNAL_SOURCE("LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-0009",
+            OMRSAuditLogRecordSeverity.EXCEPTION,
+            "Method {0} running on behalf of external source {1} ({2}) is unable to modify {3} instance {4} because " +
+            "it is has metadata provenance of {5} with an externalSourceGUID of {6} and an externalSourceName of {7}",
+            "The asset update does not occur and the system carries on processing the event.",
+            "Investigate the reason why there is an attempt to update an asset that is owned by a different external source."),
 
     ;
 

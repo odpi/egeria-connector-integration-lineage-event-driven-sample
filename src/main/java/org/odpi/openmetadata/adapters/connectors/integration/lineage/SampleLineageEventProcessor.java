@@ -139,7 +139,29 @@ public class SampleLineageEventProcessor {
                 DataAssetElement  dataAssetElement = dataAssetElements.get(0);
                 if ( dataAssetElement.getElementHeader() != null) {
                     assetGUID = dataAssetElement.getElementHeader().getGUID();
-                    myContext.updateDataAsset(assetGUID, assetManagerIsHome, assetProperties, null);
+                    try {
+                        myContext.updateDataAsset(assetGUID, assetManagerIsHome, assetProperties, null);
+                    } catch (UserNotAuthorizedException error) {
+                        if (error.getReportedErrorMessageId().equals("OMAG-REPOSITORY-HANDLER-400-007")
+                        ) {
+                            // cannot update this asset as it is already owned by another metadata collection
+                            // log and carry on processing
+                            if (auditLog != null) {
+                                String[] msgParams = error.getReportedErrorMessageParameters();
+                                auditLog.logMessage(methodName,
+                                        LineageEventSampleEventConnectorAuditCode.UPDATE_ASSET_FAILED_OWNED_BY_DIFFERENT_EXTERNAL_SOURCE.getMessageDefinition(
+                                                methodName,
+                                                msgParams[1],
+                                                msgParams[2],
+                                                msgParams[3],
+                                                msgParams[4],
+                                                msgParams[5],
+                                                msgParams[6],
+                                                msgParams[7]
+                                                ));
+                            }
+                        }
+                    }
                 }
             }
             assetGUIDs.add(assetGUID);
@@ -193,11 +215,10 @@ public class SampleLineageEventProcessor {
                 createPrimitiveSchemaAttribute(schemaTypeGUID, attribute);
             }
         } else {
-            // either the existing schema type is us - so we should update it or it is not so we should delete it.
+            // either the existing schema type is us - so we should update it or if it is not us we should delete it.
             schemaTypeGUID = childSchemaType.getElementHeader().getGUID();
             if (jsonEventTypeQualifiedName.equals(childSchemaType.getSchemaTypeProperties().getQualifiedName())) {
                 // update
-
 
                 myContext.updateSchemaType(schemaTypeGUID, false, schemaTypeProperties, null);
 
