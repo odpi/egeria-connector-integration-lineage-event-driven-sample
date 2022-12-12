@@ -68,8 +68,7 @@ public enum LineageEventSampleEventConnectorAuditCode implements AuditLogMessage
             "Method {0} running on behalf of external source {1} ({2}) is unable to modify {3} instance {4} because " +
             "it is has metadata provenance of {5} with an externalSourceGUID of {6} and an externalSourceName of {7}",
             "The asset update does not occur and the system carries on processing the event.",
-            "Investigate the reason why there is an attempt to update an asset that is owned by a different external source."),
-
+            "Investigate the reason why there is an attempt to update an asset that is owned by a different external source.")
     ;
 
 

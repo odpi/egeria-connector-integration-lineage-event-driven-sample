@@ -61,27 +61,27 @@ public class SampleLineageEventProcessor {
 
         } catch (InvalidParameterException error) {
             if (auditLog != null) {
-                auditLog.logException(methodName,
+                auditLog.logMessage(methodName,
                         LineageEventSampleEventConnectorAuditCode.INVALID_PARAMETER_EXCEPTION.getMessageDefinition(
                                 error.getClass().getName(),
                                 connectorName,
-                                error.getMessage()),error);
+                                error.getMessage()));
             }
         } catch (PropertyServerException error) {
             if (auditLog != null) {
-                auditLog.logException(methodName,
+                auditLog.logMessage(methodName,
                         LineageEventSampleEventConnectorAuditCode.PROPERTY_SERVER_EXCEPTION.getMessageDefinition(
                                 error.getClass().getName(),
                                 connectorName,
-                                error.getMessage()),error);
+                                error.getMessage()));
             }
         } catch (UserNotAuthorizedException error) {
             if (auditLog != null) {
-                auditLog.logException(methodName,
+                auditLog.logMessage(methodName,
                         LineageEventSampleEventConnectorAuditCode.USER_NOT_AUTHORISED_EXCEPTION.getMessageDefinition(
                                 error.getClass().getName(),
                                 connectorName,
-                                error.getMessage()),error);
+                                error.getMessage()));
             }
         } catch (Exception error) {
             if (auditLog != null) {
@@ -125,7 +125,7 @@ public class SampleLineageEventProcessor {
                 } catch (InvalidParameterException error) {
                     if (error.getReportedHTTPCode() == 409 &&
                             error.getParameterName().equals("qualifiedName") &&
-                             error.getReportedErrorMessageId().equals("OMAG-COMMON-409-001")
+                            error.getReportedErrorMessageId().equals("OMAG-COMMON-409-001")
                     ) {
                         // qualifiedName already exists and is not a Data Asset.
                         if (auditLog != null) {
@@ -157,7 +157,7 @@ public class SampleLineageEventProcessor {
                                                 msgParams[5],
                                                 msgParams[6],
                                                 msgParams[7]
-                                                ));
+                                        ));
                             }
                         }
                     }
@@ -229,9 +229,9 @@ public class SampleLineageEventProcessor {
                 Map<String, SchemaAttributeElement> existingSchemaAttributesMap = new HashMap<>();
                 Map<String, LineageEventContentforSample.Attribute> jsonAttributeMap = new HashMap<>();
 
-                    for (SchemaAttributeElement schemaAttributeElement : existingSchemaAttributes) {
-                        existingSchemaAttributesMap.put(schemaAttributeElement.getSchemaAttributeProperties().getQualifiedName(), schemaAttributeElement);
-                    }
+                for (SchemaAttributeElement schemaAttributeElement : existingSchemaAttributes) {
+                    existingSchemaAttributesMap.put(schemaAttributeElement.getSchemaAttributeProperties().getQualifiedName(), schemaAttributeElement);
+                }
 
                 for (LineageEventContentforSample.Attribute attribute : eventTypeFromJSON.getAttributes()) {
                     jsonAttributeMap.put(attribute.getQualifiedName(), attribute);
