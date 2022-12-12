@@ -1,6 +1,6 @@
 /* SPDX-License-Identifier: Apache-2.0 */
 /* Copyright Contributors to the ODPi Egeria project. */
-package org.odpi.openmetadata.adapters.connectors.integration.lineage.utils;
+package org.odpi.openmetadata.adapters.connectors.integration.lineage.sample.utils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -101,7 +101,6 @@ public class EventProducerUtility {
                     messageStr)).get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
-            // handle the exception
         }
     }
 

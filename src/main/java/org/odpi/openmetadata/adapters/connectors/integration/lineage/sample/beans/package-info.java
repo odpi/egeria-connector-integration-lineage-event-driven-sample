@@ -3,4 +3,7 @@
 /**
  * This package contains the sample lineage connector, its provider and extracted classes that make unit testing simpler.
  */
-package org.odpi.openmetadata.adapters.connectors.integration.lineage;
+/**
+ * Package to hold the beans used to de-serialise the event using Jackson
+ */
+package org.odpi.openmetadata.adapters.connectors.integration.lineage.sample.beans;

@@ -1,7 +1,7 @@
 /* SPDX-License-Identifier: Apache-2.0 */
 /* Copyright Contributors to the ODPi Egeria project. */
 
-package org.odpi.openmetadata.adapters.connectors.integration.lineage;
+package org.odpi.openmetadata.adapters.connectors.integration.lineage.sample;
 
 import org.odpi.openmetadata.frameworks.connectors.ConnectorProviderBase;
 import org.odpi.openmetadata.frameworks.connectors.properties.beans.ConnectorType;
@@ -13,7 +13,7 @@ import org.odpi.openmetadata.frameworks.connectors.properties.beans.ConnectorTyp
  */
 public class SampleLineageEventReceiverIntegrationProvider extends ConnectorProviderBase
 {
-    //org.odpi.openmetadata.adapters.connectors.integration.lineage.SampleLineageEventReceiverIntegrationProvider
+    //org.odpi.openmetadata.adapters.connectors.integration.lineage.sample.SampleLineageEventReceiverIntegrationProvider
     private static final String connectorTypeGUID          = "f9d2da2d-0cd3-475a-8c38-f2ee50980ee5";
     private static final String connectorTypeQualifiedName = "Lineage event sample Integration Connector";
     private static final String connectorTypeDisplayName   = "Lineage event sample Integration Connector";
