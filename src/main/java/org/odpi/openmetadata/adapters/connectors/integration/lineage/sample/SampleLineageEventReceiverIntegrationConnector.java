@@ -1,9 +1,9 @@
 /* SPDX-License-Identifier: Apache-2.0 */
 /* Copyright Contributors to the ODPi Egeria project. */
 
-package org.odpi.openmetadata.adapters.connectors.integration.lineage;
+package org.odpi.openmetadata.adapters.connectors.integration.lineage.sample;
 
-import org.odpi.openmetadata.adapters.connectors.integration.lineage.ffdc.LineageEventSampleEventConnectorAuditCode;
+import org.odpi.openmetadata.adapters.connectors.integration.lineage.sample.ffdc.LineageEventSampleEventConnectorAuditCode;
 import org.odpi.openmetadata.adapters.connectors.integration.openlineage.ffdc.OpenLineageIntegrationConnectorAuditCode;
 import org.odpi.openmetadata.frameworks.connectors.Connector;
 import org.odpi.openmetadata.frameworks.connectors.ffdc.ConnectorCheckedException;
@@ -40,7 +40,6 @@ public class SampleLineageEventReceiverIntegrationConnector extends LineageInteg
         myContext = super.getContext();
 
         if (myContext != null) {
-            // TODO do we need anything else from the config
             if (embeddedConnectors != null) {
                 for (Connector embeddedConnector : embeddedConnectors) {
                     if (embeddedConnector instanceof OpenMetadataTopicConnector) {

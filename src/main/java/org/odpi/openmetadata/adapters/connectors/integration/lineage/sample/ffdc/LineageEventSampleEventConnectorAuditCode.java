@@ -1,6 +1,6 @@
 /* SPDX-License-Identifier: Apache-2.0 */
 /* Copyright © 2021 Atruvia AG <opensource@atruvia.de> as contributor to the ODPi Egeria project. */
-package org.odpi.openmetadata.adapters.connectors.integration.lineage.ffdc;
+package org.odpi.openmetadata.adapters.connectors.integration.lineage.sample.ffdc;
 
 import org.odpi.openmetadata.frameworks.auditlog.messagesets.AuditLogMessageDefinition;
 import org.odpi.openmetadata.frameworks.auditlog.messagesets.AuditLogMessageSet;
@@ -8,7 +8,7 @@ import org.odpi.openmetadata.repositoryservices.auditlog.OMRSAuditLogRecordSever
 
 
 /**
- * The EventSchemaIntegrationConnectorAuditCode is used to define the message content for the OMRS Audit Log.
+ * The LineageEventSampleEventConnectorAuditCode is used to define the message content for the OMRS Audit Log.
  * <p>
  * The 5 fields in the enum are:
  * <ul>
@@ -68,8 +68,7 @@ public enum LineageEventSampleEventConnectorAuditCode implements AuditLogMessage
             "Method {0} running on behalf of external source {1} ({2}) is unable to modify {3} instance {4} because " +
             "it is has metadata provenance of {5} with an externalSourceGUID of {6} and an externalSourceName of {7}",
             "The asset update does not occur and the system carries on processing the event.",
-            "Investigate the reason why there is an attempt to update an asset that is owned by a different external source."),
-
+            "Investigate the reason why there is an attempt to update an asset that is owned by a different external source.")
     ;
 
 
@@ -81,10 +80,10 @@ public enum LineageEventSampleEventConnectorAuditCode implements AuditLogMessage
 
 
     /**
-     * The constructor for EventSchemaIntegrationConnectorAuditCode expects to be passed one of the enumeration rows defined in
-     * EventSchemaIntegrationConnectorAuditCode above.   For example:
+     * The constructor for LineageEventSampleEventConnectorAuditCode expects to be passed one of the enumeration rows defined in
+     * LineageEventSampleEventConnectorAuditCode above.   For example:
      * <p>
-     * EventSchemaIntegrationConnectorAuditCode   auditCode = EventSchemaIntegrationConnectorAuditCode.SERVER_NOT_AVAILABLE;
+     * LineageEventSampleEventConnectorAuditCode   auditCode = LineageEventSampleEventConnectorAuditCode.SUPDATE_ASSET_FAILED_OWNED_BY_DIFFERENT_EXTERNAL_SOURCE;
      * <p>
      * This will expand out to the 4 parameters shown below.
      *
@@ -147,7 +146,7 @@ public enum LineageEventSampleEventConnectorAuditCode implements AuditLogMessage
      */
     @Override
     public String toString() {
-        return "StrimziIntegrationConnectorAuditCode{" +
+        return "LineageEventSampleEventConnectorAuditCode" +
                 "logMessageId='" + logMessageId + '\'' +
                 ", severity=" + severity +
                 ", logMessage='" + logMessage + '\'' +

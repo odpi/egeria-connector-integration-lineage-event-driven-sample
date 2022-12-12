@@ -1,13 +1,13 @@
 /* SPDX-License-Identifier: Apache-2.0 */
 /* Copyright Contributors to the ODPi Egeria project. */
-package org.odpi.openmetadata.adapters.connectors.integration.lineage;
+package org.odpi.openmetadata.adapters.connectors.integration.lineage.sample;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.odpi.openmetadata.adapters.connectors.integration.lineage.beans.AssetBean;
-import org.odpi.openmetadata.adapters.connectors.integration.lineage.beans.EventBean;
-import org.odpi.openmetadata.adapters.connectors.integration.lineage.beans.SchemaBean;
-import org.odpi.openmetadata.adapters.connectors.integration.lineage.ffdc.LineageEventSampleConnectorErrorCode;
+import org.odpi.openmetadata.adapters.connectors.integration.lineage.sample.beans.AssetBean;
+import org.odpi.openmetadata.adapters.connectors.integration.lineage.sample.beans.EventBean;
+import org.odpi.openmetadata.adapters.connectors.integration.lineage.sample.beans.SchemaBean;
+import org.odpi.openmetadata.adapters.connectors.integration.lineage.sample.ffdc.LineageEventSampleConnectorErrorCode;
 import org.odpi.openmetadata.frameworks.connectors.ffdc.ConnectorCheckedException;
 import java.util.*;
 
@@ -80,7 +80,7 @@ public class LineageEventContentforSample {
                         this.getClass().getName(),
                         methodName);
             }
-            String displayName = inputAssetBean.getDisplayName();
+            String displayName = inputAssetBean.getName();
 
             String formula = inputAssetBean.getFormula();
             if (formula != null) {
@@ -106,7 +106,7 @@ public class LineageEventContentforSample {
                         this.getClass().getName(),
                         methodName);
             }
-            String displayName = outputAssetBean.getDisplayName();
+            String displayName = outputAssetBean.getName();
             List<SchemaBean> schemaBeans = outputAssetBean.getSchemas();
 
             SchemaBean schemaBean = null;

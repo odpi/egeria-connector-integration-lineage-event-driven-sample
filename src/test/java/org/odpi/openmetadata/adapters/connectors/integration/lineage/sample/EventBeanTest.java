@@ -1,28 +1,21 @@
 /* SPDX-License-Identifier: Apache-2.0 */
 /* Copyright Contributors to the ODPi Egeria project. */
 
-package org.odpi.openmetadata.adapters.connectors.integration.lineage;
+package org.odpi.openmetadata.adapters.connectors.integration.lineage.sample;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
-import org.odpi.openmetadata.accessservices.assetmanager.metadataelements.*;
-import org.odpi.openmetadata.accessservices.assetmanager.properties.PrimitiveSchemaTypeProperties;
-import org.odpi.openmetadata.accessservices.assetmanager.properties.SchemaAttributeProperties;
-import org.odpi.openmetadata.accessservices.assetmanager.properties.SchemaTypeProperties;
-import org.odpi.openmetadata.adapters.connectors.integration.lineage.beans.EventBean;
+import org.odpi.openmetadata.adapters.connectors.integration.lineage.sample.beans.EventBean;
 import org.odpi.openmetadata.frameworks.connectors.ffdc.ConnectorCheckedException;
 import org.odpi.openmetadata.frameworks.connectors.ffdc.InvalidParameterException;
 import org.odpi.openmetadata.frameworks.connectors.ffdc.PropertyServerException;
 import org.odpi.openmetadata.frameworks.connectors.ffdc.UserNotAuthorizedException;
-import org.odpi.openmetadata.integrationservices.lineage.connector.LineageIntegratorContext;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Date;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
