@@ -24,51 +24,66 @@ public class EventBean {
     private List<AssetBean> input = new ArrayList<AssetBean>();
     @JsonProperty("Output")
     private List<AssetBean> output = new ArrayList<AssetBean>();
-
+    /**
+     * Returns the stored qualified name property for the metadata entity.
+     * If no qualified name is available then the empty string is returned.
+     *
+     * @return string qualifiedName
+     */
     public String getQualifiedName() {
         return qualifiedName;
     }
-
-    public void setQualifiedName(String qualifiedName) {
-        this.qualifiedName = qualifiedName;
-    }
-
+    /**
+     * Returns the stored technical name property for the event.
+     * If no technical name is available then null is returned.
+     *
+     * @return String name
+     */
     public String getTechnicalName() {
         return technicalName;
     }
-
-    public void setTechnicalName(String technicalName) {
-        this.technicalName = technicalName;
-    }
-
+    /**
+     * Return the description of the event.
+     *
+     * @return string description
+     */
     public String getDescription() {
         return description;
     }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
+    /**
+     * Return the team associated with the event.
+     *
+     * @return string team name
+     */
     public String getTeam() {
         return team;
     }
 
-    public void setTeam(String team) {
-        this.team = team;
-    }
-
+    /**
+     * Return a list of input asset beans
+     * @return a list of AssetBeans
+     */
     public List<AssetBean> getInput() {
         return input;
     }
-
+    /**
+     * Set a list of input asset beans
+     * @param input list of AssetBeans
+     */
     public void setInput(List<AssetBean> input) {
         this.input = input;
     }
-
+    /**
+     * Return a list of output asset beans
+     * @return a list of AssetBeans
+     */
     public List<AssetBean> getOutput() {
         return output;
     }
-
+    /**
+     * Set a list of output asset beans
+     * @param output list of AssetBeans
+     */
     public void setOutput(List<AssetBean> output) {
         this.output = output;
     }

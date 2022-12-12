@@ -80,7 +80,7 @@ public class LineageEventContentforSample {
                         this.getClass().getName(),
                         methodName);
             }
-            String displayName = inputAssetBean.getDisplayName();
+            String displayName = inputAssetBean.getName();
 
             String formula = inputAssetBean.getFormula();
             if (formula != null) {
@@ -106,7 +106,7 @@ public class LineageEventContentforSample {
                         this.getClass().getName(),
                         methodName);
             }
-            String displayName = outputAssetBean.getDisplayName();
+            String displayName = outputAssetBean.getName();
             List<SchemaBean> schemaBeans = outputAssetBean.getSchemas();
 
             SchemaBean schemaBean = null;

@@ -17,7 +17,7 @@ There is a sample postman file [here](https://github.com/odpi/egeria-connector-i
 configure and start this connector.
 
 ## Test Utility
-This is a java application that produces events for testing [here](https://github.com/odpi/egeria-connector-integration-lineage-event-driven-sample/blob/main/src/test/java/org/odpi/openmetadata/adapters/connectors/integration/lineage/utils/EventProducerUtility.java). It allows the user to easily submit any of the json files used in the junit.
+There is a java application that produces events for testing [here](https://github.com/odpi/egeria-connector-integration-lineage-event-driven-sample/blob/main/src/test/java/org/odpi/openmetadata/adapters/connectors/integration/lineage/utils/EventProducerUtility.java). It allows the user to easily submit any of the json files used in the junit.
 It is built with the junit tests using the top level gradle file.
 
 ## Event json 

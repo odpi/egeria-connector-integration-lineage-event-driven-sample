@@ -6,8 +6,8 @@ import org.odpi.openmetadata.frameworks.auditlog.messagesets.ExceptionMessageDef
 import org.odpi.openmetadata.frameworks.auditlog.messagesets.ExceptionMessageSet;
 
 /**
- * The EventSchemaIntegrationConnectorErrorCode is used to define first failure data capture (FFDC) for errors that occur when working with
- * the Event Schema monitor integration connector.  It is used in conjunction with both Checked and Runtime (unchecked) exceptions.
+ * The LineageEventSampleConnectorErrorCode is used to define first failure data capture (FFDC) for errors that occur when working with
+ * the egeria lineage sample integration connector.  It is used in conjunction with both Checked and Runtime (unchecked) exceptions.
  * <p>
  * The 5 fields in the enum are:
  * <ul>
@@ -48,9 +48,7 @@ public enum LineageEventSampleConnectorErrorCode implements ExceptionMessageSet 
             "The connector requires input assets in events to have an Id.",
             "Supply a json event with input assets that have an Id.")
     ;
-
-
-
+    
     @SuppressWarnings("ImmutableEnumChecker")
     private final ExceptionMessageDefinition messageDefinition;
 
@@ -110,7 +108,7 @@ public enum LineageEventSampleConnectorErrorCode implements ExceptionMessageSet 
      */
     @Override
     public String toString() {
-        return "StrimziIntegrationConnectorErrorCode{" +
+        return "LineageEventSampleConnectorErrorCode{" +
                 "messageDefinition=" + messageDefinition +
                 '}';
     }
