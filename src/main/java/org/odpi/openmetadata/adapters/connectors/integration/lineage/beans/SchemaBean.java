@@ -54,8 +54,8 @@ public class SchemaBean {
     }
 
     /**
-     * Set the properties for this Schema
-     * @param properties
+     * Set the properties for this Schema (the attributes)
+     * @param properties properties associated with the schema
      */
     public void setProperties(Map<String, Map<String, Object>> properties) {
         this.properties = properties;

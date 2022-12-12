@@ -40,7 +40,6 @@ public class SampleLineageEventReceiverIntegrationConnector extends LineageInteg
         myContext = super.getContext();
 
         if (myContext != null) {
-            // TODO do we need anything else from the config
             if (embeddedConnectors != null) {
                 for (Connector embeddedConnector : embeddedConnectors) {
                     if (embeddedConnector instanceof OpenMetadataTopicConnector) {
