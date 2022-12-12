@@ -5,6 +5,7 @@ package org.odpi.openmetadata.adapters.connectors.integration.lineage.sample;
 
 
 import org.junit.jupiter.api.Test;
+import org.odpi.openmetadata.adapters.connectors.integration.lineage.sample.LineageEventContentforSample;
 import org.odpi.openmetadata.frameworks.connectors.ffdc.ConnectorCheckedException;
 
 import java.io.IOException;
