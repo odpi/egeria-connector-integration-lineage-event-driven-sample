@@ -1,10 +1,11 @@
 /* SPDX-License-Identifier: Apache-2.0 */
 /* Copyright Contributors to the ODPi Egeria project. */
 
-package org.odpi.openmetadata.adapters.connectors.integration.lineage;
+package org.odpi.openmetadata.adapters.connectors.integration.lineage.sample;
 
 
 import org.junit.jupiter.api.Test;
+import org.odpi.openmetadata.adapters.connectors.integration.lineage.sample.LineageEventContentforSample;
 import org.odpi.openmetadata.frameworks.connectors.ffdc.ConnectorCheckedException;
 
 import java.io.IOException;
