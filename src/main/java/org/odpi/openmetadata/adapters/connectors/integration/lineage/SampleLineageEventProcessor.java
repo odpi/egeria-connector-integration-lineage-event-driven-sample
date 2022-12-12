@@ -16,6 +16,8 @@ import java.util.*;
 
 /**
  * This class processes an event. The code here has been extracted from the integration connector, so it is easier to unit test.
+ * The event payload is a proprietary format. This sample shows that it is possible to process events containing lineage information
+ * that are not the open lineage format.
  */
 
 public class SampleLineageEventProcessor {
@@ -286,9 +288,6 @@ public class SampleLineageEventProcessor {
                 }
             }
         }
-        // the schema should now be there reflecting the event values.
-
-
     }
 
     /**

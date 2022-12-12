@@ -8,7 +8,7 @@ import org.odpi.openmetadata.repositoryservices.auditlog.OMRSAuditLogRecordSever
 
 
 /**
- * The EventSchemaIntegrationConnectorAuditCode is used to define the message content for the OMRS Audit Log.
+ * The LineageEventSampleEventConnectorAuditCode is used to define the message content for the OMRS Audit Log.
  * <p>
  * The 5 fields in the enum are:
  * <ul>
@@ -80,10 +80,10 @@ public enum LineageEventSampleEventConnectorAuditCode implements AuditLogMessage
 
 
     /**
-     * The constructor for EventSchemaIntegrationConnectorAuditCode expects to be passed one of the enumeration rows defined in
-     * EventSchemaIntegrationConnectorAuditCode above.   For example:
+     * The constructor for LineageEventSampleEventConnectorAuditCode expects to be passed one of the enumeration rows defined in
+     * LineageEventSampleEventConnectorAuditCode above.   For example:
      * <p>
-     * EventSchemaIntegrationConnectorAuditCode   auditCode = EventSchemaIntegrationConnectorAuditCode.SERVER_NOT_AVAILABLE;
+     * LineageEventSampleEventConnectorAuditCode   auditCode = LineageEventSampleEventConnectorAuditCode.SUPDATE_ASSET_FAILED_OWNED_BY_DIFFERENT_EXTERNAL_SOURCE;
      * <p>
      * This will expand out to the 4 parameters shown below.
      *
@@ -146,7 +146,7 @@ public enum LineageEventSampleEventConnectorAuditCode implements AuditLogMessage
      */
     @Override
     public String toString() {
-        return "StrimziIntegrationConnectorAuditCode{" +
+        return "LineageEventSampleEventConnectorAuditCode" +
                 "logMessageId='" + logMessageId + '\'' +
                 ", severity=" + severity +
                 ", logMessage='" + logMessage + '\'' +
