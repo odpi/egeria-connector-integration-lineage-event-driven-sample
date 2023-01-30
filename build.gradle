@@ -39,6 +39,7 @@ configurations.all {
     resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
 }
 
+
 // TODO: Specify group, description, version of new code being built. The name is in settings.gradle
 group = 'org.odpi.egeria'
 version = '1.0-SNAPSHOT'
@@ -64,7 +65,7 @@ dependencies {
     compileOnly "org.odpi.egeria:repository-services-apis"
     compileOnly "org.odpi.egeria:repository-services:${egeriaVersion}"
     compileOnly "org.odpi.egeria:topic-integrator-api:${egeriaVersion}"
-    implementation "org.odpi.egeria:asset-manager-api:${egeriaVersion}"
+    compileOnly "org.odpi.egeria:asset-manager-api:${egeriaVersion}"
     compileOnly "org.odpi.egeria:openlineage-integration-connectors:${egeriaVersion}"
     api "org.odpi.egeria:lineage-integrator-api:${egeriaVersion}"
     testImplementation 'org.junit.jupiter:junit-jupiter-api:${jupiterVersion}'
