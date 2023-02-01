@@ -50,7 +50,7 @@ ext {
     egeriaVersion = '3.13'
     slf4jVersion = '1.7.36'
     jacksonVersion = '2.14.0'
-    jupiterVersion = '5.9.1'
+    jupiterVersion = '5.9.2'
 }
 dependencies {
     // This will set constraints so that dependencies here follow egeria versions
