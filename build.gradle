@@ -28,10 +28,27 @@ if (System.getenv("CI")) {
     apply plugin: 'signing'
 }
 
+if (System.getenv("CUSTOM_REPOSITORIES")) {
+    logger.info("Custom repositories found!")
+
+// TODO: Check if the env is split correctly with ";"
+    System.getenv("CUSTOM_REPOSITORIES").split(";").each {
+        logger.info("Adding custom repository: " + it.toString())
+        project.repositories.maven { repo ->
+            repo.url = uri(it.toString()) }
+    }
+}
+
 repositories {
     mavenCentral()
     maven { url("https://oss.sonatype.org/content/repositories/snapshots") }
 }
+
+logger.info("Repository list:")
+project.repositories.each { logger.info("Name: " + it.name + " url: " + it.url) }
+
+logger.info("Buildscript:")
+project.buildscript.repositories.each { logger.info("Name: " + it.name + " url: " + it.url) }
 
 // ensures we pick up the very latest snapshots when built
 configurations.all {
