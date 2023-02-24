@@ -100,8 +100,11 @@ dependencies {
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${jupiterVersion}"
 
     testImplementation "org.apache.kafka:kafka-clients:${kafkaVersion}"
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 77a8788 (new configuration property topicPrefix)
 
 }
 
