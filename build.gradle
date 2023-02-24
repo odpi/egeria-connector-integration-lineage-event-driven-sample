@@ -9,17 +9,17 @@ plugins {
     id 'idea'
     id 'maven-publish'
     // Checks for unnecessary dependencies
-    id 'com.autonomousapps.dependency-analysis' version "1.14.1"
+    id 'com.autonomousapps.dependency-analysis' version "1.18.0"
     // helps resolve log implementation clashes
     id 'dev.jacomet.logging-capabilities' version "0.10.0"
     // This plugin helps resolve jakarta/javax dev.jacomet.logging-capabilities
-    id 'de.jjohannes.java-ecosystem-capabilities' version "0.8"
+    id 'org.gradlex.java-ecosystem-capabilities' version "1.0"
 }
 
 // Mostly java, so default to this for now
 apply plugin: 'java'
 apply plugin: 'jacoco'
-apply plugin: 'de.jjohannes.java-ecosystem-capabilities'
+apply plugin: 'org.gradlex.java-ecosystem-capabilities'
 apply plugin: 'dev.jacomet.logging-capabilities'
 // As we've migrated from maven - we'll assume all submodules publish directly to maven
 apply plugin: 'maven-publish'
@@ -64,10 +64,11 @@ description = 'New code for Egeria'
 
 // TODO: Specify Dependency versions as variables
 ext {
-    egeriaVersion = '3.13'
+    egeriaVersion = '3.15'
+    kafkaVersion = '3.3.2'
     slf4jVersion = '1.7.36'
-    jacksonVersion = '2.14.0'
-    jupiterVersion = '5.9.1'
+    jacksonVersion = '2.14.2'
+    jupiterVersion = '5.9.2'
 }
 dependencies {
     // This will set constraints so that dependencies here follow egeria versions
@@ -97,7 +98,7 @@ dependencies {
 
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${jupiterVersion}"
 
-    testImplementation 'org.apache.kafka:kafka-clients:3.3.1'
+    testImplementation "org.apache.kafka:kafka-clients:${kafkaVersion}"
 
 }
 
