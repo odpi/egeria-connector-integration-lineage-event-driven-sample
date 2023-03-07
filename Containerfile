@@ -1,3 +1,6 @@
+ARG EGERIA_BASE_IMAGE=quay.io/odpi/egeria
+ARG EGERIA_VERSION=latest
+
 FROM quay.io/ibmgaragecloud/gradle:jdk11 as build
 
 ARG GRADLE_OPTS=""
@@ -14,7 +17,8 @@ COPY gradle.properties .
 RUN ./gradlew assemble --no-daemon && \
 	./gradlew testClasses --no-daemon
 
-FROM quay.io/odpi/egeria:latest
+
+FROM ${EGERIA_BASE_IMAGE}:${EGERIA_VERSION}
 
 ARG CONNECTOR_NAME="egeria-connector-integration-lineage-sample"
 ARG CONNECTOR_VERSION="1.0-SNAPSHOT"
