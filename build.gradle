@@ -76,6 +76,7 @@ dependencies {
     // Only used for build - already present in server chassis at runtime
     compileOnly "org.odpi.egeria:audit-log-framework"
     compileOnly "org.odpi.egeria:data-manager-api"
+    compileOnly 'org.apache.commons:commons-lang3:3.12.0'
     // TODO: this is a dependency on an optional connector. validate, document as needed, consider packaging impact
 
     // compileOnly "org.odpi.egeria:kafka-open-metadata-topic-connector"
@@ -99,6 +100,8 @@ dependencies {
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${jupiterVersion}"
 
     testImplementation "org.apache.kafka:kafka-clients:${kafkaVersion}"
+
+
 
 }
 
