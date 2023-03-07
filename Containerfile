@@ -1,5 +1,7 @@
 FROM quay.io/ibmgaragecloud/gradle:jdk11 as build
 
+ARG GRADLE_OPTS=""
+
 # Copy files
 COPY gradle gradle
 COPY settings.gradle .
