@@ -38,7 +38,7 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 public class EventProducerUtility {
 
     public static  String topicName = "legacyLineage";
-    private KafkaProducer producer;
+    private KafkaProducer<Integer,String> producer;
     private int messageNoCount = 0;
 
     public static void main(String[] args) throws IOException {
@@ -90,13 +90,12 @@ public class EventProducerUtility {
 
     private String getFileContent(String textPath) throws IOException {
         Path path = Paths.get(textPath);
-        String content = Files.readString(path);
-        return content;
+        return Files.readString(path);
     }
 
     private void sendMessage(String messageStr) {
         try {
-            producer.send(new ProducerRecord<>(topicName,
+            producer.send(new ProducerRecord<Integer,String>(topicName,
                     messageNoCount++,
                     messageStr)).get();
         } catch (InterruptedException | ExecutionException e) {
@@ -104,13 +103,12 @@ public class EventProducerUtility {
         }
     }
 
-    private KafkaProducer getKafkaProducer() {
+    private KafkaProducer<Integer,String> getKafkaProducer() {
         Properties properties = new Properties();
         properties.put("bootstrap.servers", "localhost:9092");
         properties.put("client.id", "DemoProducer");
         properties.put("key.serializer", "org.apache.kafka.common.serialization.IntegerSerializer");
         properties.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-        KafkaProducer producer = new KafkaProducer<>(properties);
-        return producer;
+        return new KafkaProducer<>(properties);
     }
 }
