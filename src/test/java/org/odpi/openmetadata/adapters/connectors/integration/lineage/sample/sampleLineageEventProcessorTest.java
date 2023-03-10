@@ -32,12 +32,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class sampleLineageEventProcessorTest
 {
 
+    private final String topicNamespace = "";
     @Test
     void testEventProcessor() throws IOException, ConnectorCheckedException, InvalidParameterException, PropertyServerException, UserNotAuthorizedException {
         String textPath = "src/test/resources/Sample1.json";
         Path path = Paths.get(textPath);
         String content = Files.readString(path);
-        LineageEventContentforSample eventContent = new LineageEventContentforSample(content, "");
+        LineageEventContentforSample eventContent = new LineageEventContentforSample(content, "", topicNamespace);
 
         LineageIntegratorContext mockContext = new MockLineageIntegratorContext();
         SampleLineageEventProcessor eventProcessor = new SampleLineageEventProcessor(mockContext, null, "");
@@ -151,7 +152,7 @@ public class sampleLineageEventProcessorTest
         textPath = "src/test/resources/Sample2-update-assets-and-process.json";
         path = Paths.get(textPath);
         content = Files.readString(path);
-        eventContent = new LineageEventContentforSample(content, "");
+        eventContent = new LineageEventContentforSample(content, "", topicNamespace);
 
         eventProcessor = new SampleLineageEventProcessor(mockContext, null, "");
         eventProcessor.processEvent(eventContent);
@@ -184,7 +185,7 @@ public class sampleLineageEventProcessorTest
         textPath = "src/test/resources/Sample3-replace-assets.json";
         path = Paths.get(textPath);
         content = Files.readString(path);
-        eventContent = new LineageEventContentforSample(content, "");
+        eventContent = new LineageEventContentforSample(content, "", topicNamespace);
 
         eventProcessor = new SampleLineageEventProcessor(mockContext, null, "");
         eventProcessor.processEvent(eventContent);
@@ -217,7 +218,7 @@ public class sampleLineageEventProcessorTest
         textPath = "src/test/resources/Sample4-update-attributes.json";
         path = Paths.get(textPath);
         content = Files.readString(path);
-        eventContent = new LineageEventContentforSample(content, "");
+        eventContent = new LineageEventContentforSample(content, "", topicNamespace);
 
         eventProcessor = new SampleLineageEventProcessor(mockContext, null, "");
         eventProcessor.processEvent(eventContent);
@@ -316,7 +317,7 @@ public class sampleLineageEventProcessorTest
         textPath = "src/test/resources/Sample5-replace-eventtype.json";
         path = Paths.get(textPath);
         content = Files.readString(path);
-        eventContent = new LineageEventContentforSample(content, "");
+        eventContent = new LineageEventContentforSample(content, "", topicNamespace);
 
         eventProcessor = new SampleLineageEventProcessor(mockContext, null, "");
         eventProcessor.processEvent(eventContent);
@@ -393,7 +394,7 @@ public class sampleLineageEventProcessorTest
         textPath = "src/test/resources/Sample6-update-SQL.json";
         path = Paths.get(textPath);
         content = Files.readString(path);
-        eventContent = new LineageEventContentforSample(content, "");
+        eventContent = new LineageEventContentforSample(content, "", topicNamespace);
 
         eventProcessor = new SampleLineageEventProcessor(mockContext, null, "");
         eventProcessor.processEvent(eventContent);
