@@ -30,10 +30,15 @@ public class LineageEventContentforSample {
 
     private Map<String, String> inputAssetFormulaMap = new HashMap<>();
 
-    static final String SEPARATOR = "~";
+    private String topicNamespace;
 
-    protected LineageEventContentforSample(String jsonString, String connectorName) throws ConnectorCheckedException {
+    static final String SEPARATOR = "~";
+    static final String TOPIC_SEPARATOR = ".";
+
+    protected LineageEventContentforSample(String jsonString, String connectorName, String topicNamespace) throws ConnectorCheckedException {
         String methodName = "LineageEventContentforSample -constructor";
+
+        this.topicNamespace = topicNamespace;
 
         // process json
 
@@ -100,6 +105,9 @@ public class LineageEventContentforSample {
         }
         for (AssetBean outputAssetBean:outputAssetBeans) {
             String qualifiedName = outputAssetBean.getQualifiedName();
+            if( topicNamespace != "") {
+                qualifiedName = topicNamespace.concat(TOPIC_SEPARATOR).concat(qualifiedName);
+            }
             if (qualifiedName == null || qualifiedName.length() == 0) {
                 throw new ConnectorCheckedException(LineageEventSampleConnectorErrorCode.INVALID_EVENT_INPUT_ASSET_HAS_NO_ID.getMessageDefinition(connectorName,
                         jsonString),

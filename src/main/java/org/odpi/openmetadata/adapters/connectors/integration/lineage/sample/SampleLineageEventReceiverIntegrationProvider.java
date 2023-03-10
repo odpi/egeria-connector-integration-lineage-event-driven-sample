@@ -3,13 +3,10 @@
 
 package org.odpi.openmetadata.adapters.connectors.integration.lineage.sample;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.odpi.openmetadata.frameworks.connectors.ConnectorProviderBase;
 import org.odpi.openmetadata.frameworks.connectors.properties.beans.ConnectorType;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -19,6 +16,7 @@ import java.util.Arrays;
 public class SampleLineageEventReceiverIntegrationProvider extends ConnectorProviderBase
 {
     //org.odpi.openmetadata.adapters.connectors.integration.lineage.sample.SampleLineageEventReceiverIntegrationProvider
+    public static final String TOPIC_NAMESPACE = "topicNamespace";
     private static final String connectorTypeGUID          = "f9d2da2d-0cd3-475a-8c38-f2ee50980ee5";
     private static final String connectorTypeQualifiedName = "Lineage event sample Integration Connector";
     private static final String connectorTypeDisplayName   = "Lineage event sample Integration Connector";
@@ -41,7 +39,7 @@ public class SampleLineageEventReceiverIntegrationProvider extends ConnectorProv
         connectorType.setDisplayName(connectorTypeDisplayName);
         connectorType.setDescription(connectorTypeDescription);
         connectorType.setConnectorProviderClassName(this.getClass().getName());
-        connectorType.setRecognizedConfigurationProperties(Arrays.asList("topicPrefix"));
+        connectorType.setRecognizedConfigurationProperties(List.of(TOPIC_NAMESPACE));
 
         super.connectorTypeBean = connectorType;
     }
