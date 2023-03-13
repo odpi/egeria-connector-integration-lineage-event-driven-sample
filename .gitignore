@@ -104,6 +104,4 @@ jitdump*dmp
 !gradle/**
 .gradle/
 build/
-/helm/egeria-connector-integration-lineage-event-driven-sample/.helmignore
-/helm/
-/certs/
+Atruvia/
