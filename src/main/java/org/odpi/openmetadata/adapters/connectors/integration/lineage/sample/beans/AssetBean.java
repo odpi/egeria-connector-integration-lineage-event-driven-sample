@@ -37,7 +37,7 @@ public class AssetBean {
     /**
      * Set the prefix for the qualifiedName. This will be prepended when querying the qualifiedName.
      *
-     * @param qualifiedNamePrefix
+     * @param qualifiedNamePrefix the prefix for the qualifiedName
      */
     public void setQualifiedNamePrefix(String qualifiedNamePrefix) {
         this.qualifiedNamePrefix = qualifiedNamePrefix;
@@ -55,7 +55,7 @@ public class AssetBean {
     /**
      * Set the separator used between the qualifiedName and its prefix.
      *
-     * @param qualifiedNameSeparator
+     * @param qualifiedNameSeparator the separator
      */
     public void setQualifiedNameSeparator(String qualifiedNameSeparator) {
         this.qualifiedNameSeparator = qualifiedNameSeparator;
