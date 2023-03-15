@@ -105,14 +105,14 @@ public class LineageEventContentforSample {
         }
         for (AssetBean outputAssetBean:outputAssetBeans) {
             String qualifiedName = outputAssetBean.getQualifiedName();
-            if( topicNamespace != "") {
-                qualifiedName = topicNamespace.concat(TOPIC_SEPARATOR).concat(qualifiedName);
-            }
             if (qualifiedName == null || qualifiedName.length() == 0) {
                 throw new ConnectorCheckedException(LineageEventSampleConnectorErrorCode.INVALID_EVENT_INPUT_ASSET_HAS_NO_ID.getMessageDefinition(connectorName,
                         jsonString),
                         this.getClass().getName(),
                         methodName);
+            }
+            if( topicNamespace != null && topicNamespace.length() != 0) {
+                qualifiedName = topicNamespace.concat(TOPIC_SEPARATOR).concat(qualifiedName);
             }
             String displayName = outputAssetBean.getName();
             List<SchemaBean> schemaBeans = outputAssetBean.getSchemas();
