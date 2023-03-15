@@ -37,7 +37,7 @@ public class AssetBean {
     /**
      * Set the prefix for the qualifiedName. This will be prepended when querying the qualifiedName.
      *
-     * @param qualifiedNamePrefix
+     *
      */
     public void setQualifiedNamePrefix(String qualifiedNamePrefix) {
         this.qualifiedNamePrefix = qualifiedNamePrefix;
