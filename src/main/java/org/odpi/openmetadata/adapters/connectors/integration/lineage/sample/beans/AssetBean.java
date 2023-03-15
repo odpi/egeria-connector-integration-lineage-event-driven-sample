@@ -55,7 +55,7 @@ public class AssetBean {
     /**
      * Set the separator used between the qualifiedName and its prefix.
      *
-     * @param qualifiedNameSeparator
+     *
      */
     public void setQualifiedNameSeparator(String qualifiedNameSeparator) {
         this.qualifiedNameSeparator = qualifiedNameSeparator;
