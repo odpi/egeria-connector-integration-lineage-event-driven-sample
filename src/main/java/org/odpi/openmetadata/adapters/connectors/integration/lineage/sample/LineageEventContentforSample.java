@@ -105,7 +105,7 @@ public class LineageEventContentforSample {
         }
         for (AssetBean outputAssetBean:outputAssetBeans) {
             String qualifiedName = outputAssetBean.getQualifiedName();
-            if( topicNamespace != "") {
+            if( !"".equals(topicNamespace)) {
                 qualifiedName = topicNamespace.concat(TOPIC_SEPARATOR).concat(qualifiedName);
             }
             if (qualifiedName == null || qualifiedName.length() == 0) {
