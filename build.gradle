@@ -22,7 +22,7 @@ apply plugin: 'java'
 apply plugin: 'java-library'
 apply plugin: 'jacoco'
 apply plugin: 'org.gradlex.java-ecosystem-capabilities'
-// temp disabled due to https://github.com/odpi/egeria/issues/7426
+// temp disabled due to k/wrapp
 // apply plugin: 'dev.jacomet.logging-capabilities'
 // As we've migrated from maven - we'll assume all submodules publish directly to maven
 apply plugin: 'maven-publish'
