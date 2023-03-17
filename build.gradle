@@ -5,22 +5,25 @@
 
 plugins {
     id 'java-library'
-    id "com.github.johnrengelman.shadow" version "7.1.2"
+    id "com.github.johnrengelman.shadow" version "8.1.0"
     id 'idea'
     id 'maven-publish'
     // Checks for unnecessary dependencies
-    id 'com.autonomousapps.dependency-analysis' version "1.18.0"
+    id 'com.autonomousapps.dependency-analysis' version "1.19.0"
     // helps resolve log implementation clashes
-    id 'dev.jacomet.logging-capabilities' version "0.10.0"
+    // temp disabled due to https://github.com/odpi/egeria/issues/7426
+    //id 'dev.jacomet.logging-capabilities' version "0.11.0"
     // This plugin helps resolve jakarta/javax dev.jacomet.logging-capabilities
-    id 'org.gradlex.java-ecosystem-capabilities' version "1.0"
+    id 'org.gradlex.java-ecosystem-capabilities' version "1.1"
 }
 
 // Mostly java, so default to this for now
 apply plugin: 'java'
+apply plugin: 'java-library'
 apply plugin: 'jacoco'
 apply plugin: 'org.gradlex.java-ecosystem-capabilities'
-apply plugin: 'dev.jacomet.logging-capabilities'
+// temp disabled due to k/wrapp
+// apply plugin: 'dev.jacomet.logging-capabilities'
 // As we've migrated from maven - we'll assume all submodules publish directly to maven
 apply plugin: 'maven-publish'
 
@@ -65,63 +68,47 @@ description = 'New code for Egeria'
 // TODO: Specify Dependency versions as variables
 ext {
     egeriaVersion = '3.15'
-    kafkaVersion = '3.3.2'
-    slf4jVersion = '1.7.36'
-    jacksonVersion = '2.14.2'
-    jupiterVersion = '5.9.2'
 }
 dependencies {
     // This will set constraints so that dependencies here follow egeria versions
-    platform "org.odpi.egeria:egeria:${egeriaVersion}"
+    // this will include egeria, junit, jackson, jupiter, kafka - so no versions are needed below
+    implementation platform("org.odpi.egeria:egeria:${egeriaVersion}")
     // Only used for build - already present in server chassis at runtime
     compileOnly "org.odpi.egeria:audit-log-framework"
     compileOnly "org.odpi.egeria:data-manager-api"
-    compileOnly 'org.apache.commons:commons-lang3:3.12.0'
     // TODO: this is a dependency on an optional connector. validate, document as needed, consider packaging impact
-
     // compileOnly "org.odpi.egeria:kafka-open-metadata-topic-connector"
     compileOnly "org.odpi.egeria:open-connector-framework"
     compileOnly "org.odpi.egeria:repository-services-apis"
-    compileOnly "org.odpi.egeria:repository-services:${egeriaVersion}"
-    compileOnly "org.odpi.egeria:topic-integrator-api:${egeriaVersion}"
-    compileOnly "org.odpi.egeria:asset-manager-api:${egeriaVersion}"
-    compileOnly "org.odpi.egeria:openlineage-integration-connectors:${egeriaVersion}"
-    api "org.odpi.egeria:lineage-integrator-api:${egeriaVersion}"
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:${jupiterVersion}'
-    testImplementation 'org.odpi.egeria:asset-manager-client:${egeriaVersion}'
+    compileOnly "org.odpi.egeria:topic-integrator-api"
+    compileOnly "org.odpi.egeria:asset-manager-api"
+    compileOnly "org.odpi.egeria:openlineage-integration-connectors"
+    api "org.odpi.egeria:lineage-integrator-api"
     // Needed for build and run
-    api "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}"
-    implementation "com.fasterxml.jackson.core:jackson-core:${jacksonVersion}"
-    implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
+    compileOnly "com.fasterxml.jackson.core:jackson-annotations"
+    implementation "com.fasterxml.jackson.core:jackson-core"
+    implementation "com.fasterxml.jackson.core:jackson-databind"
 
     // Only needed to compile test code
-    testCompileOnly "org.junit.jupiter:junit-jupiter-api:${jupiterVersion}"
-
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${jupiterVersion}"
-
-    testImplementation "org.apache.kafka:kafka-clients:${kafkaVersion}"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+    testImplementation "org.odpi.egeria:asset-manager-client"
+    testCompileOnly "org.odpi.egeria:lineage-integrator-api"
+    testImplementation "org.junit.jupiter:junit-jupiter-api"
+    testImplementation "org.apache.kafka:kafka-clients"
 
 }
 
 
 // Testing
 test {
-    useJUnitPlatform {
-        includeEngines 'junit-jupiter'
-    }
-    dependencies {
-        testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${jupiterVersion}"
-    }
-
+    useJUnitPlatform()
     testLogging {
         events "passed", "skipped", "failed"
     }
-
     reports {
         html.required = true
     }
 }
-
 
 // Maven Central (technically sonatype oss) requires we distribute source and javadoc.
 java {
@@ -261,7 +248,7 @@ subprojects {
  * Additional aggregate tasks run only at parent
  */
 
-// Jacoco reporting -- from gradle docs
+// Jacoco reporting -- from gradle
 task codeCoverageReport(type: JacocoReport) {
     // Gather execution data from all subprojects
     executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
@@ -295,9 +282,6 @@ dependencyAnalysis {
         all {
             onAny {
                 severity('fail')
-            }
-            onUnusedDependencies {
-                exclude("junit:junit", "org.junit.jupiter:junit-jupiter-api", "org.junit.jupiter:junit-jupiter-engine", "com.fasterxml.jackson.core:jackson-annotations")
             }
         }
     }

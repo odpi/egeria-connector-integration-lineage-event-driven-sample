@@ -105,3 +105,6 @@ jitdump*dmp
 .gradle/
 build/
 Atruvia/
+
+# output files
+out
