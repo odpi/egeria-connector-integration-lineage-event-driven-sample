@@ -12,6 +12,8 @@ import org.odpi.openmetadata.frameworks.connectors.ffdc.PropertyServerException;
 import org.odpi.openmetadata.frameworks.connectors.ffdc.UserNotAuthorizedException;
 import org.odpi.openmetadata.integrationservices.lineage.connector.LineageIntegratorContext;
 
+import java.time.Instant;
+import java.time.LocalDate;
 import java.util.*;
 
 /**
@@ -109,6 +111,7 @@ public class SampleLineageEventProcessor {
      * @throws UserNotAuthorizedException user is not authorised
      * @throws PropertyServerException property server Exception
      */
+    @SuppressWarnings("JavaUtilDate")
     public List<String> upsertAssets(  List<LineageEventContentforSample.AssetFromJSON> jsonAssets) throws InvalidParameterException, UserNotAuthorizedException, PropertyServerException {
         String methodName = "upsertAssets";
         List<String> assetGUIDs = new ArrayList<>();
@@ -120,6 +123,7 @@ public class SampleLineageEventProcessor {
             assetProperties.setTypeName(jsonAsset.getTypeName());
             assetProperties.setQualifiedName(assetQualifiedName);
             assetProperties.setTechnicalName(jsonAsset.getDisplayName());
+
             if (dataAssetElements == null || dataAssetElements.isEmpty()) {
                 // create asset
                 try {
@@ -142,7 +146,7 @@ public class SampleLineageEventProcessor {
                 if ( dataAssetElement.getElementHeader() != null) {
                     assetGUID = dataAssetElement.getElementHeader().getGUID();
                     try {
-                        myContext.updateDataAsset(assetGUID, assetManagerIsHome, assetProperties, null);
+                        myContext.updateDataAsset(assetGUID, assetManagerIsHome, assetProperties, new Date());
                     } catch (UserNotAuthorizedException error) {
                         if (error.getReportedErrorMessageId().equals("OMAG-REPOSITORY-HANDLER-400-007")) {
                             // cannot update this asset as it is already owned by another metadata collection
