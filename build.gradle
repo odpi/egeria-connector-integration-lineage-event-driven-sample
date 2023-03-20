@@ -51,7 +51,7 @@ logger.info("Repository list:")
 project.repositories.each { logger.info("Name: " + it.name + " url: " + it.url) }
 
 logger.info("Buildscript:")
-project.buildscript.repositories.each { logger.info("Name: " + it.name + " url: " + it.url) }
+project.buildscript.repositories.each { logger.info("Name: " + it.name) }
 
 // ensures we pick up the very latest snapshots when built
 configurations.all {
