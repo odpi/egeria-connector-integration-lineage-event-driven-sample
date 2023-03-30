@@ -26,7 +26,6 @@ public class SampleLineageEventReceiverIntegrationConnector extends LineageInteg
     private final Map<String, OpenMetadataTopicConnector> topicConnectors = new HashMap<>();
 
     private LineageIntegratorContext myContext = null;
-    private String topicNamespace = "";
 
     public SampleLineageEventReceiverIntegrationConnector() {
 
@@ -37,13 +36,6 @@ public class SampleLineageEventReceiverIntegrationConnector extends LineageInteg
         super.start();
 
         final String methodName = "start";
-
-        if( this.connectionProperties != null  ) {
-            Map<String, Object> configurationProps = this.connectionProperties.getConfigurationProperties();
-            if( configurationProps != null ) {
-                this.topicNamespace = configurationProps.getOrDefault(SampleLineageEventReceiverIntegrationProvider.TOPIC_NAMESPACE, "").toString();
-            }
-        }
 
         myContext = super.getContext();
 
@@ -104,7 +96,7 @@ public class SampleLineageEventReceiverIntegrationConnector extends LineageInteg
         }
         if (myContext != null) {
             try {
-                LineageEventContentforSample eventContent = new LineageEventContentforSample(event, connectorName, topicNamespace);
+                LineageEventContentforSample eventContent = new LineageEventContentforSample(event, connectorName);
                 SampleLineageEventProcessor eventProcessor = new SampleLineageEventProcessor(myContext, auditLog, connectorName);
                 eventProcessor.processEvent(eventContent);
                 if (auditLog != null) {
