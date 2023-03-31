@@ -16,7 +16,7 @@
     "Schemas": [{
       "$id": "https://example.com/person.schema.json",
       "$schema": "https://json-schema.org/draft/2020-12/schema",
-      "title": "Person",
+      "id": "Person",
       "type": "object",
       "properties": {
         "firstName": {

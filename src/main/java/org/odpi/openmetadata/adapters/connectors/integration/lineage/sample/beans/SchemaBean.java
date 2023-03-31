@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.JsonNode;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SchemaBean {
-    @JsonProperty("title")
+    @JsonProperty("id")
     private String displayName;
     @JsonProperty("type")
     private String type;
