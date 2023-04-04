@@ -111,17 +111,14 @@ public class LineageEventContentforSample {
             String displayName = outputAssetBean.getName();
             List<SchemaBean> schemaBeans = outputAssetBean.getSchemas();
 
-            SchemaBean schemaBean = null;
-            if (schemaBeans != null && schemaBeans.size() > 0) {
-                // TODO hard coding to only 1 EventType - until support for EventTypeLists is present in the context API
-                schemaBean = schemaBeans.get(0);
-            }
-            String outputEventTypeDisplayName = schemaBean.getDisplayName();
-            String outputEventTypeQualifiedName = qualifiedName + SEPARATOR + outputEventTypeDisplayName;
-            List<Attribute> outputAttributes = getAttributes(schemaBean.getProperties(), outputEventTypeQualifiedName);
-            EventTypeFromJSON eventTypeFromJSON = new EventTypeFromJSON(outputEventTypeDisplayName, outputEventTypeQualifiedName, outputAttributes);
             List<EventTypeFromJSON> eventTypesFromJSON = new ArrayList<>();
-            eventTypesFromJSON.add(eventTypeFromJSON);
+            for (SchemaBean schemaBean : schemaBeans) {
+                String outputEventTypeDisplayName = schemaBean.getDisplayName();
+                String outputEventTypeQualifiedName = qualifiedName + SEPARATOR + outputEventTypeDisplayName;
+                List<Attribute> outputAttributes = getAttributes(schemaBean.getProperties(), outputEventTypeQualifiedName);
+                EventTypeFromJSON eventTypeFromJSON = new EventTypeFromJSON(outputEventTypeDisplayName, outputEventTypeQualifiedName, outputAttributes);
+                eventTypesFromJSON.add(eventTypeFromJSON);
+            }
 
             AssetFromJSON assetFromJSON = new AssetFromJSON(displayName, qualifiedName, "KafkaTopic", eventTypesFromJSON);
 
