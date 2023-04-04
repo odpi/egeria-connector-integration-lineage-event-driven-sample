@@ -221,17 +221,18 @@ public class SampleLineageEventProcessor {
         if (childSchemaType != null) {
             myContext.removeSchemaType(childSchemaType.getElementHeader().getGUID(), null);
         }
-        LineageEventContentforSample.EventTypeFromJSON eventTypeFromJSON = assetFromJSON.getEventTypes().get(0);
-        SchemaTypeProperties schemaTypeProperties = new SchemaTypeProperties();
-        schemaTypeProperties.setTypeName("EventType");
-        schemaTypeProperties.setQualifiedName(eventTypeFromJSON.getQualifiedName());
-        schemaTypeProperties.setDisplayName(eventTypeFromJSON.getTechnicalName());
-        // create schema type
-        String schemaTypeGUID = myContext.createSchemaType(assetManagerIsHome, schemaTypeProperties);
-        myContext.setupSchemaTypeParent(assetManagerIsHome, schemaTypeGUID, assetGUID, "KafkaTopic", null, null);
-        // collect all attributes
-        for (LineageEventContentforSample.Attribute attribute : eventTypeFromJSON.getAttributes()) {
-            createPrimitiveSchemaAttribute(schemaTypeGUID, attribute);
+        for (LineageEventContentforSample.EventTypeFromJSON eventTypeFromJSON : assetFromJSON.getEventTypes()) {
+            SchemaTypeProperties schemaTypeProperties = new SchemaTypeProperties();
+            schemaTypeProperties.setTypeName("EventType");
+            schemaTypeProperties.setQualifiedName(eventTypeFromJSON.getQualifiedName());
+            schemaTypeProperties.setDisplayName(eventTypeFromJSON.getTechnicalName());
+            // create schema type
+            String schemaTypeGUID = myContext.createSchemaType(assetManagerIsHome, schemaTypeProperties);
+            myContext.setupSchemaTypeParent(assetManagerIsHome, schemaTypeGUID, assetGUID, "KafkaTopic", null, null);
+            // collect all attributes
+            for (LineageEventContentforSample.Attribute attribute : eventTypeFromJSON.getAttributes()) {
+                createPrimitiveSchemaAttribute(schemaTypeGUID, attribute);
+            }
         }
     }
 

@@ -483,7 +483,6 @@ public class SampleLineageEventProcessorTest {
         LineageIntegratorContext mockContext = new MockLineageIntegratorContext();
         SampleLineageEventProcessor eventProcessor = new SampleLineageEventProcessor(mockContext, null, "");
         eventProcessor.processEvent(eventContent);
-        System.out.println("Test");
     }
 }
 
