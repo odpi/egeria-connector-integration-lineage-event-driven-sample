@@ -139,7 +139,7 @@
             },
             "aggregateAttribute": {
               "type": "object",
-              "id": "urn:jsonschema:de:test:nt:project:api:events:AggregateAttributeProduktEvent",
+              "id": "urn:jsonschema:de:test:nt:project:api:events:AggregateAttribute",
               "properties": {
                 "mandantenId": {
                   "type": "integer"

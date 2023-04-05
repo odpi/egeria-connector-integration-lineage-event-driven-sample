@@ -115,7 +115,7 @@ public class LineageEventContentforSample {
             for (SchemaBean schemaBean : schemaBeans) {
                 String outputEventTypeDisplayName = schemaBean.getDisplayName();
                 String outputEventTypeQualifiedName = qualifiedName + SEPARATOR + outputEventTypeDisplayName;
-                List<Attribute> outputAttributes = getAttributes(schemaBean.getProperties(), outputEventTypeQualifiedName);
+                List<Attribute> outputAttributes = getAttributes(schemaBean.getProperties(), null, outputEventTypeQualifiedName);
                 EventTypeFromJSON eventTypeFromJSON = new EventTypeFromJSON(outputEventTypeDisplayName, outputEventTypeQualifiedName, outputAttributes);
                 eventTypesFromJSON.add(eventTypeFromJSON);
             }
@@ -126,7 +126,7 @@ public class LineageEventContentforSample {
         }
     }
 
-    private List<Attribute> getAttributes(JsonNode properties, String outputEventTypeQualifiedName) {
+    private List<Attribute> getAttributes(JsonNode properties, String parentDisplayName, String outputEventTypeQualifiedName) {
         List<Attribute> outputAttributes = new ArrayList<>();
         Iterator<Map.Entry<String, JsonNode>> nodes = properties.fields();
         while (nodes.hasNext()) {
@@ -134,7 +134,12 @@ public class LineageEventContentforSample {
             String attributeDisplayName = entry.getKey();
             JsonNode attributeNode = entry.getValue();
             //assume key can't be null.
-            String attributeQualifiedName = outputEventTypeQualifiedName + SEPARATOR + attributeDisplayName;
+            String attributeQualifiedName;
+            if (parentDisplayName == null) {
+                attributeQualifiedName = outputEventTypeQualifiedName + SEPARATOR + attributeDisplayName;
+            } else {
+                attributeQualifiedName = outputEventTypeQualifiedName + SEPARATOR + parentDisplayName + SEPARATOR + attributeDisplayName;
+            }
             String attributeType = null;
             List<Attribute> nestedAttributes = null;
             if (attributeNode.has("type")) {
@@ -142,7 +147,7 @@ public class LineageEventContentforSample {
                 attributeType = attributeTypeNode.asText();
                 if ("object".equals(attributeType) &&
                         attributeNode.has("properties")) {
-                    nestedAttributes = getAttributes(attributeNode.get("properties"), outputEventTypeQualifiedName);
+                    nestedAttributes = getAttributes(attributeNode.get("properties"), attributeDisplayName, outputEventTypeQualifiedName);
                 }
             }
             String attributeDescription = null;
