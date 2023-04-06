@@ -214,14 +214,17 @@ public class SampleLineageEventProcessor {
      */
 
     private void ensureSchemaIsCatalogued(LineageEventContentforSample.AssetFromJSON assetFromJSON, String assetGUID) throws InvalidParameterException, PropertyServerException, UserNotAuthorizedException {
-        SchemaTypeElement childSchemaType = myContext.getSchemaTypeForElement(
-                assetGUID,
-                assetFromJSON.getTypeName(),
-                null);
-        if (childSchemaType != null) {
-            myContext.removeSchemaType(childSchemaType.getElementHeader().getGUID(), null);
-        }
         for (LineageEventContentforSample.EventTypeFromJSON eventTypeFromJSON : assetFromJSON.getEventTypes()) {
+            List<SchemaTypeElement> schemaTypeByName = myContext.getSchemaTypeByName(
+                    eventTypeFromJSON.getQualifiedName(),
+                    0,
+                    1000,
+                    null);
+            if (schemaTypeByName != null) {
+                for (SchemaTypeElement schemaTypeElement : schemaTypeByName) {
+                    myContext.removeSchemaType(schemaTypeElement.getElementHeader().getGUID(), null);
+                }
+            }
             SchemaTypeProperties schemaTypeProperties = new SchemaTypeProperties();
             schemaTypeProperties.setTypeName("EventType");
             schemaTypeProperties.setQualifiedName(eventTypeFromJSON.getQualifiedName());
