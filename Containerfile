@@ -1,4 +1,4 @@
-gitARG EGERIA_BASE_IMAGE=quay.io/odpi/egeria
+ARG EGERIA_BASE_IMAGE=quay.io/odpi/egeria
 ARG EGERIA_VERSION=latest
 
 FROM quay.io/ibmgaragecloud/gradle:jdk11 as build
