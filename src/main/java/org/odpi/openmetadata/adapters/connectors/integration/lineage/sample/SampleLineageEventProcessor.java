@@ -142,7 +142,6 @@ public class SampleLineageEventProcessor {
             assetProperties.setTypeName(jsonAsset.getTypeName());
             assetProperties.setQualifiedName(assetQualifiedName);
             assetProperties.setTechnicalName(jsonAsset.getDisplayName());
-
             if (dataAssetElements == null || dataAssetElements.isEmpty()) {
                 // create asset
                 try {

@@ -21,11 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class LineageEventContentForSampleTest {
 
-    private static LineageEventContentforSample getLineageEventContentforSample(String textPath) throws IOException, ConnectorCheckedException {
-        Path path = Paths.get(textPath);
-        String content = Files.readString(path);
-        return new LineageEventContentforSample(content, "unit test");
-    }
+    private static final String topicNamespace = "repnest-etu";
 
     @Test
     void testEventContent() throws IOException, ConnectorCheckedException {
@@ -166,7 +162,7 @@ public class LineageEventContentForSampleTest {
         }
         if (content != null) {
             try {
-                new LineageEventContentforSample(content, "unit test badly formed");
+                new LineageEventContentforSample(content, "unit test badly formed", topicNamespace);
                 passed = false;
             } catch (ConnectorCheckedException e) {
                 assertTrue(e.getMessage().contains(expectedMsg), "File " + textPath + ". Got " + e.getMessage() + ", expected " + expectedMsg);
@@ -175,6 +171,12 @@ public class LineageEventContentForSampleTest {
         }
         return passed;
 
+    }
+
+    private static LineageEventContentforSample getLineageEventContentforSample(String textPath) throws IOException, ConnectorCheckedException {
+        Path path = Paths.get(textPath);
+        String content = Files.readString(path);
+        return new LineageEventContentforSample(content, "unit test", topicNamespace);
     }
 
 }
