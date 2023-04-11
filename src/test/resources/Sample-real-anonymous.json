@@ -1,0 +1,403 @@
+{
+  "Id": "TestID",
+  "Name": "Test",
+  "Description": "Neartime-Events vom Test",
+  "Bounded Context": "Test Context",
+  "Team": "Test Team",
+  "Input": [
+    {
+      "Id": "Test #001",
+      "Name": "Lesen Meinung",
+      "Type": "SQL",
+      "Value": "SELECT * FROM MEANING"
+    },
+    {
+      "Id": "Test #002",
+      "Name": "Lesen Produkte",
+      "Type": "SQL",
+      "Value": "SELECT * FROM PRODUCT"
+    },
+    {
+      "Id": "Test #003",
+      "Name": "Lesen Assetklassen",
+      "Type": "SQL",
+      "Value": "SELECT * FROM ASSET"
+    },
+    {
+      "Id": "Test #004",
+      "Name": "Lesen Kategorien",
+      "Type": "SQL",
+      "Value": "SELECT * FROM CATEGORIES"
+    },
+    {
+      "Id": "Test #005",
+      "Name": "Lesen Bedarfsfelder",
+      "Type": "SQL",
+      "Value": "SELECT * FROM FIELDS"
+    },
+    {
+      "Id": "Test #006",
+      "Name": "Lesen ProduktDaten",
+      "Type": "SQL",
+      "Value": "SELECT * FROM PRODUCTDATA"
+    },
+    {
+      "Id": "Test #007",
+      "Name": "Lesen Unterkategorien",
+      "Type": "SQL",
+      "Value": "SELECT * FROM SUBCATEGORIES"
+    }
+  ],
+  "Output": [
+    {
+      "Id": "Topic Name",
+      "Name": "Test Input Neartime",
+      "Schemas": [
+        {
+          "type": "object",
+          "id": "urn:jsonschema:de:buv:neartimereplikation:hausmeinung:zbf:api:events:EndeEvent",
+          "properties": {
+            "eventId": {
+              "type": "string"
+            },
+            "aggregateId": {
+              "type": "object",
+              "$ref": "urn:jsonschema:de:buv:neartimereplikation:hausmeinung:zbf:api:events:AggregateId"
+            },
+            "aggregateAttribute": {
+              "type": "object",
+              "id": "urn:jsonschema:de:buv:neartimereplikation:hausmeinung:zbf:api:events:EndeEvent:AggregateAttribute",
+              "properties": {
+                "tsAnfang": {
+                  "type": "string"
+                },
+                "tsEnde": {
+                  "type": "string"
+                },
+                "anzahlProdukte": {
+                  "type": "integer"
+                },
+                "produktListe": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "id": "urn:jsonschema:de:buv:neartimereplikation:hausmeinung:zbf:api:strukt:ProduktEintrag",
+                    "properties": {
+                      "produktNummer": {
+                        "type": "integer"
+                      },
+                      "wkn": {
+                        "type": "string"
+                      },
+                      "isin": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "id": "urn:jsonschema:de:test:nt:project:api:events:StartEvent",
+          "properties": {
+            "eventId": {
+              "type": "string"
+            },
+            "aggregateId": {
+              "type": "object",
+              "$ref": "urn:jsonschema:de:test:nt:project:api:events:AggregateId"
+            },
+            "aggregateAttribute": {
+              "type": "object",
+              "id": "urn:jsonschema:de:test:nt:project:api:events:StartEvent:AggregateAttribute",
+              "properties": {
+                "tsAnfang": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "id": "urn:jsonschema:de:test:nt:project:api:events:ProduktEvent",
+          "properties": {
+            "eventId": {
+              "type": "string"
+            },
+            "aggregateId": {
+              "type": "object",
+              "id": "urn:jsonschema:de:test:nt:project:api:events:AggregateId",
+              "properties": {
+                "mandantenId": {
+                  "type": "integer"
+                }
+              }
+            },
+            "aggregateAttribute": {
+              "type": "object",
+              "id": "urn:jsonschema:de:test:nt:project:api:events:AggregateAttribute",
+              "properties": {
+                "mandantenId": {
+                  "type": "integer"
+                },
+                "tsAnfang": {
+                  "type": "string"
+                },
+                "nrProduktnr": {
+                  "type": "integer"
+                },
+                "txtISIN": {
+                  "type": "string"
+                },
+                "txtWKN": {
+                  "type": "string"
+                },
+                "txtName": {
+                  "type": "string"
+                },
+                "datAufgenommen": {
+                  "type": "string"
+                },
+                "nrVerbundpart": {
+                  "type": "integer"
+                },
+                "nrStatus": {
+                  "type": "integer"
+                },
+                "datFaelligkeit": {
+                  "type": "string"
+                },
+                "txtBemerkung": {
+                  "type": "string"
+                },
+                "txtEmpfSonst": {
+                  "type": "string"
+                },
+                "nrVerbProdnr": {
+                  "type": "string"
+                },
+                "kzTopprodukt": {
+                  "type": "string"
+                },
+                "timGueltigab": {
+                  "type": "string"
+                },
+                "timGueltigbis": {
+                  "type": "string"
+                },
+                "kzRklanspber": {
+                  "type": "string"
+                },
+                "monAsinternet": {
+                  "type": "number"
+                },
+                "monEsinternet": {
+                  "type": "number"
+                },
+                "monAsvkarten": {
+                  "type": "number"
+                },
+                "monEsvkarten": {
+                  "type": "number"
+                },
+                "monAsgkarte": {
+                  "type": "number"
+                },
+                "monEsgkarte": {
+                  "type": "number"
+                },
+                "nrForwardmonvon": {
+                  "type": "integer"
+                },
+                "nrForwardmonbis": {
+                  "type": "integer"
+                },
+                "nrProduktsparte": {
+                  "type": "integer"
+                },
+                "txtAnbieter": {
+                  "type": "string"
+                },
+                "nrKstStilgopt": {
+                  "type": "integer"
+                },
+                "nrKstTsatzwechsel": {
+                  "type": "integer"
+                },
+                "kzHerkunftVerbu": {
+                  "type": "string"
+                },
+                "nrLebensalterVon": {
+                  "type": "integer"
+                },
+                "nrLebensalterBis": {
+                  "type": "integer"
+                },
+                "kzZielmarktRelev": {
+                  "type": "string"
+                },
+                "kzDepotanlage": {
+                  "type": "string"
+                },
+                "kzIddRelevant": {
+                  "type": "string"
+                },
+                "kzProfiBroker": {
+                  "type": "string"
+                },
+                "prcBeleihAuslauf": {
+                  "type": "number"
+                },
+                "nrVerknProduktnr": {
+                  "type": "integer"
+                },
+                "txtVerknWkn": {
+                  "type": "string"
+                },
+                "txtVerknText": {
+                  "type": "string"
+                },
+                "kzPerAutoVerkn": {
+                  "type": "string"
+                },
+                "nrBeitrNachhaltig": {
+                  "type": "integer"
+                },
+                "prcBeitrNachhVkp": {
+                  "type": "number"
+                },
+                "prcBeitrNachhTat": {
+                  "type": "number"
+                },
+                "nrBeitrOeko": {
+                  "type": "integer"
+                },
+                "prcBeitrOekoVkp": {
+                  "type": "number"
+                },
+                "prcBeitrOekoTat": {
+                  "type": "number"
+                },
+                "dzProduktdaten": {
+                  "type": "object",
+                  "id": "urn:jsonschema:de:test:nt:project:api:events:DZProduktdatenSubEvent",
+                  "properties": {
+                    "kzHinweisvorh": {
+                      "type": "string"
+                    },
+                    "kzHangebZert": {
+                      "type": "string"
+                    },
+                    "kzHangebZinsprod": {
+                      "type": "string"
+                    },
+                    "kzHangebFonds": {
+                      "type": "string"
+                    },
+                    "kzPerabo": {
+                      "type": "string"
+                    },
+                    "kzZeichnAngeb": {
+                      "type": "string"
+                    },
+                    "nrDzStatus": {
+                      "type": "integer"
+                    },
+                    "prcMarge": {
+                      "type": "number"
+                    },
+                    "timZeichnBeginn": {
+                      "type": "string"
+                    },
+                    "timZeichnEnde": {
+                      "type": "string"
+                    },
+                    "txtEmittent": {
+                      "type": "string"
+                    },
+                    "txtGruppMerkmal": {
+                      "type": "string"
+                    },
+                    "txtTopargument": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "kategorien": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "id": "urn:jsonschema:de:test:nt:project:api:strukt:KategorieEintrag",
+                    "properties": {
+                      "kategorie": {
+                        "type": "integer"
+                      },
+                      "auspraegung": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                },
+                "assetklassen": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "id": "urn:jsonschema:de:test:nt:project:api:strukt:AssetklasseEintrag",
+                    "properties": {
+                      "nrAssetklasse": {
+                        "type": "integer"
+                      },
+                      "prcAnteil": {
+                        "type": "number"
+                      },
+                      "nrAssetoberklasse": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                },
+                "bedarfsfelderZusatz": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "id": "urn:jsonschema:de:test:nt:project:api:strukt:BedarfsfeldEintrag",
+                    "properties": {
+                      "nrBedfeld": {
+                        "type": "integer"
+                      },
+                      "nrProdabschl": {
+                        "type": "integer"
+                      },
+                      "kzFixInOptifoli": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "unterKategorien": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "id": "urn:jsonschema:de:test:nt:project:api:strukt:UnterkatEintrag",
+                    "properties": {
+                      "kategorie": {
+                        "type": "integer"
+                      },
+                      "auspraegung": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

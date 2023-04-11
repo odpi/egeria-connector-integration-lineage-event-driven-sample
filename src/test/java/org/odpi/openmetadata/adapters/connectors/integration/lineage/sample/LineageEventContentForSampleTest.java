@@ -13,14 +13,14 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 /**
- *  Test of the event parsing into the EventContent object
+ * Test of the event parsing into the EventContent object
  */
-public class LineageEventContentForSampleTest
-{
+public class LineageEventContentForSampleTest {
+
     private static final String topicNamespace = "repnest-etu";
 
     @Test
@@ -28,100 +28,111 @@ public class LineageEventContentForSampleTest
         String textPath = "src/test/resources/Sample1.json";
         LineageEventContentforSample eventContent = getLineageEventContentforSample(textPath);
 
-        assertTrue("TestRes".equals(eventContent.getProcessTechnicalName()));
-        assertTrue("1234567890".equals(eventContent.getProcessQualifiedName()));
+        assertEquals("TestRes", eventContent.getProcessTechnicalName());
+        assertEquals("1234567890", eventContent.getProcessQualifiedName());
 
         List<LineageEventContentforSample.AssetFromJSON> inputAssets = eventContent.getInputAssets();
         List<LineageEventContentforSample.AssetFromJSON> outputAssets = eventContent.getOutputAssets();
 
-        assertTrue(inputAssets.size() ==1);
+        assertEquals(1, inputAssets.size());
 
-        LineageEventContentforSample.AssetFromJSON inputAsset =inputAssets.get(0);
-        assertTrue(inputAsset.getTypeName().equals("DataSet"));
-        assertTrue(inputAsset.getDisplayName().equals("Foo"));
-        assertTrue(inputAsset.getQualifiedName().equals("C6B7B1B717C840F686EE2426241ED18CE1D053019534F03495E8CD644976FA37"));
-        assertTrue(eventContent.getFormulaForInputAsset(inputAsset.getQualifiedName()).equals("select * from foo;"));
-        LineageEventContentforSample.AssetFromJSON outputAsset =outputAssets.get(0);
-        assertTrue(outputAsset.getTypeName().equals("KafkaTopic"));
-        assertTrue(outputAsset.getDisplayName().equals("Kundendaten"));
-        assertTrue(outputAsset.getQualifiedName().equals("repnest-etu.vertriebskunde-services.agree-kundendaten"));
-        LineageEventContentforSample.EventTypeFromJSON eventType =outputAsset.getEventTypes().get(0);
-        assertTrue(eventType.getTechnicalName().equals("Person"));
-        assertTrue(eventType.getQualifiedName().equals("repnest-etu.vertriebskunde-services.agree-kundendaten~Person"));
+        LineageEventContentforSample.AssetFromJSON inputAsset = inputAssets.get(0);
+        assertEquals("DataSet", inputAsset.getTypeName());
+        assertEquals("Foo", inputAsset.getDisplayName());
+        assertEquals("C6B7B1B717C840F686EE2426241ED18CE1D053019534F03495E8CD644976FA37", inputAsset.getQualifiedName());
+        assertEquals("select * from foo;", eventContent.getFormulaForInputAsset(inputAsset.getQualifiedName()));
+        LineageEventContentforSample.AssetFromJSON outputAsset = outputAssets.get(0);
+        assertEquals("KafkaTopic", outputAsset.getTypeName());
+        assertEquals("Kundendaten", outputAsset.getDisplayName());
+        assertEquals("vertriebskunde-services.agree-kundendaten", outputAsset.getQualifiedName());
+        LineageEventContentforSample.EventTypeFromJSON eventType = outputAsset.getEventTypes().get(0);
+        assertEquals("Person", eventType.getTechnicalName());
+        assertEquals("vertriebskunde-services.agree-kundendaten~Person", eventType.getQualifiedName());
         List<LineageEventContentforSample.Attribute> attributes = eventType.getAttributes();
-        assertTrue(attributes != null);
-        assertTrue(attributes.size() == 5);
+        assertNotNull(attributes);
+        assertEquals(5, attributes.size());
 
         LineageEventContentforSample.Attribute firstNameAttr = attributes.get(0);
-        assertTrue(firstNameAttr.getDisplayName().equals("firstName"));
-        assertTrue(firstNameAttr.getDescription().equals("The person's first name."));
-        assertTrue(firstNameAttr.getType().equals("string"));
-        assertTrue(firstNameAttr.getQualifiedName().equals("repnest-etu.vertriebskunde-services.agree-kundendaten~Person~firstName"));
+        assertEquals("firstName", firstNameAttr.getDisplayName());
+        assertEquals("The person's first name.", firstNameAttr.getDescription());
+        assertEquals("string", firstNameAttr.getType());
+        assertEquals("vertriebskunde-services.agree-kundendaten~Person~firstName", firstNameAttr.getQualifiedName());
 
         LineageEventContentforSample.Attribute lastNameAttr = attributes.get(1);
-        assertTrue(lastNameAttr.getDisplayName().equals("lastName"));
-        assertTrue(lastNameAttr.getDescription().equals("The person's last name."));
-        assertTrue(lastNameAttr.getType().equals("string"));
-        assertTrue(lastNameAttr.getQualifiedName().equals("repnest-etu.vertriebskunde-services.agree-kundendaten~Person~lastName"));
+        assertEquals("lastName", lastNameAttr.getDisplayName());
+        assertEquals("The person's last name.", lastNameAttr.getDescription());
+        assertEquals("string", lastNameAttr.getType());
+        assertEquals("vertriebskunde-services.agree-kundendaten~Person~lastName", lastNameAttr.getQualifiedName());
 
         LineageEventContentforSample.Attribute ageAttr = attributes.get(2);
-        assertTrue(ageAttr.getDisplayName().equals("age"));
-        assertTrue(ageAttr.getDescription().equals("Age in years which must be equal to or greater than zero."));
-        assertTrue(ageAttr.getType().equals("integer"));
-        assertTrue(ageAttr.getQualifiedName().equals("repnest-etu.vertriebskunde-services.agree-kundendaten~Person~age"));
+        assertEquals("age", ageAttr.getDisplayName());
+        assertEquals("Age in years which must be equal to or greater than zero.", ageAttr.getDescription());
+        assertEquals("integer", ageAttr.getType());
+        assertEquals("vertriebskunde-services.agree-kundendaten~Person~age", ageAttr.getQualifiedName());
 
         LineageEventContentforSample.Attribute derivedAgeAttr = attributes.get(3);
-        assertTrue(derivedAgeAttr.getDisplayName().equals("derivedAge"));
-        assertTrue(derivedAgeAttr.getDescription().equals("Derived Age."));
-        assertTrue(derivedAgeAttr.getType().equals("integer"));
-        assertTrue(derivedAgeAttr.getFormula().equals("test-formula"));
-        assertTrue(derivedAgeAttr.getQualifiedName().equals("repnest-etu.vertriebskunde-services.agree-kundendaten~Person~derivedAge"));
+        assertEquals("derivedAge", derivedAgeAttr.getDisplayName());
+        assertEquals("Derived Age.", derivedAgeAttr.getDescription());
+        assertEquals("integer", derivedAgeAttr.getType());
+        assertEquals("test-formula", derivedAgeAttr.getFormula());
+        assertEquals("vertriebskunde-services.agree-kundendaten~Person~derivedAge", derivedAgeAttr.getQualifiedName());
 
         LineageEventContentforSample.Attribute derivedAgeAttr2 = attributes.get(4);
-        assertTrue(derivedAgeAttr2.getDisplayName().equals("derivedAge2"));
-        assertTrue(derivedAgeAttr2.getDescription().equals("Derived Age."));
-        assertTrue(derivedAgeAttr2.getType().equals("integer"));
-        assertTrue(derivedAgeAttr2.getFormula().equals("test-formula2"));
-        assertTrue(derivedAgeAttr2.getQualifiedName().equals("repnest-etu.vertriebskunde-services.agree-kundendaten~Person~derivedAge2"));
-
+        assertEquals("derivedAge2", derivedAgeAttr2.getDisplayName());
+        assertEquals("Derived Age.", derivedAgeAttr2.getDescription());
+        assertEquals("integer", derivedAgeAttr2.getType());
+        assertEquals("test-formula2", derivedAgeAttr2.getFormula());
+        assertEquals("vertriebskunde-services.agree-kundendaten~Person~derivedAge2", derivedAgeAttr2.getQualifiedName());
     }
 
-
+    @Test
+    void testEventContentFromHausmeinung() throws IOException, ConnectorCheckedException {
+        String textPath = "src/test/resources/Sample-real-anonymous.json";
+        LineageEventContentforSample eventContent = getLineageEventContentforSample(textPath);
+        assertEquals("Test", eventContent.getProcessTechnicalName());
+        List<LineageEventContentforSample.AssetFromJSON> outputAssets = eventContent.getOutputAssets();
+        LineageEventContentforSample.AssetFromJSON outputAsset = outputAssets.get(0);
+        LineageEventContentforSample.EventTypeFromJSON eventType = outputAsset.getEventTypes().get(0);
+        List<LineageEventContentforSample.Attribute> attributes = eventType.getAttributes();
+        assertNotNull(attributes);
+        assertEquals(3, attributes.size());
+        assertEquals(4, attributes.get(2).getNestedAttributes().size());
+    }
 
     @Test
-    void testBadlyFormedEventContent()  {
+    void testBadlyFormedEventContent() {
         //  assertTrue(false,"Bad File name is " + textPath);
-        boolean passed = testBadEvent( "src/test/resources/badly-formed-events/notjson.txt",
+        boolean passed = testBadEvent("src/test/resources/badly-formed-events/notjson.txt",
                 "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-001");
         assertTrue(passed);
-        passed = testBadEvent( "src/test/resources/badly-formed-events/empty.json",
+        passed = testBadEvent("src/test/resources/badly-formed-events/empty.json",
                 "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-001");
         assertTrue(passed);
-        passed = testBadEvent( "src/test/resources/badly-formed-events/EmptyInput.json",
+        passed = testBadEvent("src/test/resources/badly-formed-events/EmptyInput.json",
                 "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-002");
         assertTrue(passed);
-        passed = testBadEvent( "src/test/resources/badly-formed-events/InputWithEmptyObject.json",
+        passed = testBadEvent("src/test/resources/badly-formed-events/InputWithEmptyObject.json",
                 "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-005");
         assertTrue(passed);
-        passed = testBadEvent( "src/test/resources/badly-formed-events/topid.json",
+        passed = testBadEvent("src/test/resources/badly-formed-events/topid.json",
                 "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-002");
         assertTrue(passed);
-        passed = testBadEvent( "src/test/resources/badly-formed-events/ValidInputNoOutput.json",
+        passed = testBadEvent("src/test/resources/badly-formed-events/ValidInputNoOutput.json",
                 "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-003");
         assertTrue(passed);
-        passed = testBadEvent( "src/test/resources/badly-formed-events/ValidInputEmptyOutput.json",
+        passed = testBadEvent("src/test/resources/badly-formed-events/ValidInputEmptyOutput.json",
                 "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-003");
         assertTrue(passed);
-        passed = testBadEvent( "src/test/resources/badly-formed-events/ValidInputOutputEmptyAsset.json",
+        passed = testBadEvent("src/test/resources/badly-formed-events/ValidInputOutputEmptyAsset.json",
                 "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-005");
         assertTrue(passed);
-        passed = testBadEvent( "src/test/resources/badly-formed-events/ValidOutputNoInput.json",
+        passed = testBadEvent("src/test/resources/badly-formed-events/ValidOutputNoInput.json",
                 "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-002");
         assertTrue(passed);
-        passed = testBadEvent( "src/test/resources/badly-formed-events/ValidOutputEmptyInput.json",
+        passed = testBadEvent("src/test/resources/badly-formed-events/ValidOutputEmptyInput.json",
                 "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-002");
         assertTrue(passed);
-        passed = testBadEvent( "src/test/resources/badly-formed-events/ValidOutputInputHasOneEmptyObject.json",
+        passed = testBadEvent("src/test/resources/badly-formed-events/ValidOutputInputHasOneEmptyObject.json",
                 "LINEAGE_SAMPLE-INTEGRATION-CONNECTOR-400-005");
         assertTrue(passed);
 
@@ -133,11 +144,12 @@ public class LineageEventContentForSampleTest
      * testing on the Mac is insensitive to case. If it fails on the build machine we only get the line number where the assert fails
      * so the asserts are done in the calling code, so it is possible to determine which file is incorrect from the build
      * machine pr output.
-     * @param textPath path to file
+     *
+     * @param textPath    path to file
      * @param expectedMsg expected message
      * @return return which it passed.
      */
-    boolean testBadEvent(String textPath, String expectedMsg)  {
+    boolean testBadEvent(String textPath, String expectedMsg) {
         boolean passed = true;
         Path path = Paths.get(textPath);
 
@@ -145,10 +157,10 @@ public class LineageEventContentForSampleTest
         try {
             content = Files.readString(path);
         } catch (IOException e) {
-            passed =false;
+            passed = false;
 
         }
-        if (content !=null) {
+        if (content != null) {
             try {
                 new LineageEventContentforSample(content, "unit test badly formed", topicNamespace);
                 passed = false;
