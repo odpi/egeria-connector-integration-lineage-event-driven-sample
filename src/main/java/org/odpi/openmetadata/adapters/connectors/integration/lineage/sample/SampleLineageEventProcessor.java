@@ -10,6 +10,7 @@ import org.odpi.openmetadata.accessservices.assetmanager.metadataelements.Schema
 import org.odpi.openmetadata.accessservices.assetmanager.properties.*;
 import org.odpi.openmetadata.adapters.connectors.integration.lineage.sample.ffdc.LineageEventSampleEventConnectorAuditCode;
 import org.odpi.openmetadata.frameworks.auditlog.AuditLog;
+import org.odpi.openmetadata.frameworks.auditlog.messagesets.AuditLogMessageDefinition;
 import org.odpi.openmetadata.frameworks.connectors.ffdc.InvalidParameterException;
 import org.odpi.openmetadata.frameworks.connectors.ffdc.PropertyServerException;
 import org.odpi.openmetadata.frameworks.connectors.ffdc.UserNotAuthorizedException;
@@ -18,6 +19,7 @@ import org.odpi.openmetadata.integrationservices.lineage.connector.LineageIntegr
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * This class processes an event. The code here has been extracted from the integration connector, so it is easier to unit test.
@@ -34,7 +36,7 @@ public class SampleLineageEventProcessor {
     private LineageIntegratorContext myContext;
     private List<String> inAssetGUIDs = null;
     private List<String> outAssetGUIDs = null;
-    private boolean assetManagerIsHome = true;
+    private final boolean assetManagerIsHome = true;
 
 
     /**
@@ -279,18 +281,20 @@ public class SampleLineageEventProcessor {
     private void saveLineage(LineageEventContentforSample eventContent) throws InvalidParameterException, PropertyServerException, UserNotAuthorizedException {
         String processQualifiedName = eventContent.getProcessQualifiedName();
         String processGUID;
-        List<ProcessElement> processElementList = myContext.getProcessesByName(processQualifiedName, 0, 1000, null);
+        // TODO: use workaround with findProcesses(...) because getProcessesByName(...) always returns null
+        List<ProcessElement> processes = myContext.findProcesses(".*", 0, 0, null);
+        Optional<ProcessElement> processElementOptional = processes.stream().filter(it -> it.getProcessProperties().getQualifiedName().equals(processQualifiedName)).findFirst();
         ProcessProperties processProperties = new ProcessProperties();
         processProperties.setQualifiedName(processQualifiedName);
         processProperties.setTechnicalName(eventContent.getProcessTechnicalName());
         processProperties.setTechnicalDescription(eventContent.getProcessDescription());
         // does this process already exist?
-        if (processElementList == null || processElementList.isEmpty()) {
+        if (processElementOptional.isEmpty()) {
             // process does not exist
             processGUID = myContext.createProcess(assetManagerIsHome, ProcessStatus.ACTIVE, processProperties);
         } else {
             // process exists update it
-            ProcessElement processElement = processElementList.get(0);
+            ProcessElement processElement = processElementOptional.get();
             processGUID = processElement.getElementHeader().getGUID();
             myContext.updateProcess(processGUID, false, processProperties, null);
         }
