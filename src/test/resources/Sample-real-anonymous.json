@@ -6,53 +6,53 @@
   "Team": "Test Team",
   "Input": [
     {
-      "Id": "Test #001",
-      "Name": "Lesen Meinung",
-      "Type": "SQL",
-      "Value": "SELECT * FROM MEANING"
+      "id": "Test #001",
+      "name": "Lesen Meinung",
+      "type": "SQL",
+      "value": "SELECT * FROM MEANING"
     },
     {
-      "Id": "Test #002",
-      "Name": "Lesen Produkte",
-      "Type": "SQL",
-      "Value": "SELECT * FROM PRODUCT"
+      "id": "Test #002",
+      "name": "Lesen Produkte",
+      "type": "SQL",
+      "value": "SELECT * FROM PRODUCT"
     },
     {
-      "Id": "Test #003",
-      "Name": "Lesen Assetklassen",
-      "Type": "SQL",
-      "Value": "SELECT * FROM ASSET"
+      "id": "Test #003",
+      "name": "Lesen Assetklassen",
+      "type": "SQL",
+      "value": "SELECT * FROM ASSET"
     },
     {
-      "Id": "Test #004",
-      "Name": "Lesen Kategorien",
-      "Type": "SQL",
-      "Value": "SELECT * FROM CATEGORIES"
+      "id": "Test #004",
+      "name": "Lesen Kategorien",
+      "type": "SQL",
+      "value": "SELECT * FROM CATEGORIES"
     },
     {
-      "Id": "Test #005",
-      "Name": "Lesen Bedarfsfelder",
-      "Type": "SQL",
-      "Value": "SELECT * FROM FIELDS"
+      "id": "Test #005",
+      "name": "Lesen Bedarfsfelder",
+      "type": "SQL",
+      "value": "SELECT * FROM FIELDS"
     },
     {
-      "Id": "Test #006",
-      "Name": "Lesen ProduktDaten",
-      "Type": "SQL",
-      "Value": "SELECT * FROM PRODUCTDATA"
+      "id": "Test #006",
+      "name": "Lesen ProduktDaten",
+      "type": "SQL",
+      "value": "SELECT * FROM PRODUCTDATA"
     },
     {
-      "Id": "Test #007",
-      "Name": "Lesen Unterkategorien",
-      "Type": "SQL",
-      "Value": "SELECT * FROM SUBCATEGORIES"
+      "id": "Test #007",
+      "name": "Lesen Unterkategorien",
+      "type": "SQL",
+      "value": "SELECT * FROM SUBCATEGORIES"
     }
   ],
   "Output": [
     {
-      "Id": "Topic Name",
-      "Name": "Test Input Neartime",
-      "Schemas": [
+      "id": "Topic Name",
+      "name": "Test Input Neartime",
+      "schemas": [
         {
           "type": "object",
           "id": "urn:jsonschema:de:buv:neartimereplikation:hausmeinung:zbf:api:events:EndeEvent",

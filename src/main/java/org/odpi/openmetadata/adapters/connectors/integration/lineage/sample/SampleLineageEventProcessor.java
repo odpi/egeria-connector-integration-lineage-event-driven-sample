@@ -278,11 +278,8 @@ public class SampleLineageEventProcessor {
      */
     private void saveLineage(LineageEventContentforSample eventContent) throws InvalidParameterException, PropertyServerException, UserNotAuthorizedException {
         String processQualifiedName = eventContent.getProcessQualifiedName();
-        String processGUID = null;
-
-
+        String processGUID;
         List<ProcessElement> processElementList = myContext.getProcessesByName(processQualifiedName, 0, 1000, null);
-
         ProcessProperties processProperties = new ProcessProperties();
         processProperties.setQualifiedName(processQualifiedName);
         processProperties.setTechnicalName(eventContent.getProcessTechnicalName());
@@ -296,16 +293,16 @@ public class SampleLineageEventProcessor {
             ProcessElement processElement = processElementList.get(0);
             processGUID = processElement.getElementHeader().getGUID();
             myContext.updateProcess(processGUID, false, processProperties, null);
-
-
         }
         for (String assetGUID : inAssetGUIDs) {
             DataFlowProperties properties = new DataFlowProperties();
             DataAssetElement dataAssetElement = myContext.getDataAssetByGUID(assetGUID, null);
-
-            String sql = eventContent.getFormulaForInputAsset(dataAssetElement.getDataAssetProperties().getQualifiedName());
-            if (sql != null) {
-                properties.setFormula(sql);
+            String typeValue = eventContent.getFormulaForInputAsset(dataAssetElement.getDataAssetProperties().getQualifiedName());
+            if (typeValue != null) {
+                properties.setFormula(typeValue);
+            }
+            if (dataAssetElement.getDataAssetProperties().getQualifiedName() != null) {
+                properties.setQualifiedName(dataAssetElement.getDataAssetProperties().getQualifiedName());
             }
             // if there is already a dataflow - update it, if not create it
             DataFlowElement existingDataflow = myContext.getDataFlow(assetGUID, processGUID, null, null);

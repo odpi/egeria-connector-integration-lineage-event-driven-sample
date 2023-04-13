@@ -89,9 +89,10 @@ public class LineageEventContentforSample {
             }
             String displayName = inputAssetBean.getName();
 
-            String formula = inputAssetBean.getFormula();
-            if (formula != null) {
-                inputAssetFormulaMap.put(qualifiedName, formula);
+            String type = inputAssetBean.getType();
+            String value = inputAssetBean.getValue();
+            if (type != null && value != null) {
+                inputAssetFormulaMap.put(qualifiedName, type + " - " + value);
             }
             AssetFromJSON assetFromJSON = new AssetFromJSON(displayName, qualifiedName, "DataSet");
 

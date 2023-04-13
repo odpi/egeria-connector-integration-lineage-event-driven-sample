@@ -1,5 +1,5 @@
 {
   "Id": "test",
   "Input": [],
-  "Output": [{"Id": "test"}]
+  "Output": [{"id": "test"}]
 }

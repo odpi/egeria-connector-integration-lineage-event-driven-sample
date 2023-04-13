@@ -40,14 +40,14 @@ public class LineageEventContentForSampleTest {
         assertEquals("DataSet", inputAsset.getTypeName());
         assertEquals("Foo", inputAsset.getDisplayName());
         assertEquals("C6B7B1B717C840F686EE2426241ED18CE1D053019534F03495E8CD644976FA37", inputAsset.getQualifiedName());
-        assertEquals("select * from foo;", eventContent.getFormulaForInputAsset(inputAsset.getQualifiedName()));
+        assertEquals("SQL - select * from foo;", eventContent.getFormulaForInputAsset(inputAsset.getQualifiedName()));
         LineageEventContentforSample.AssetFromJSON outputAsset = outputAssets.get(0);
         assertEquals("KafkaTopic", outputAsset.getTypeName());
         assertEquals("Kundendaten", outputAsset.getDisplayName());
-        assertEquals("vertriebskunde-services.agree-kundendaten", outputAsset.getQualifiedName());
+        assertEquals("repnest-etu.vertriebskunde-services.agree-kundendaten", outputAsset.getQualifiedName());
         LineageEventContentforSample.EventTypeFromJSON eventType = outputAsset.getEventTypes().get(0);
         assertEquals("Person", eventType.getTechnicalName());
-        assertEquals("vertriebskunde-services.agree-kundendaten~Person", eventType.getQualifiedName());
+        assertEquals("repnest-etu.vertriebskunde-services.agree-kundendaten~Person", eventType.getQualifiedName());
         List<LineageEventContentforSample.Attribute> attributes = eventType.getAttributes();
         assertNotNull(attributes);
         assertEquals(5, attributes.size());
@@ -56,33 +56,33 @@ public class LineageEventContentForSampleTest {
         assertEquals("firstName", firstNameAttr.getDisplayName());
         assertEquals("The person's first name.", firstNameAttr.getDescription());
         assertEquals("string", firstNameAttr.getType());
-        assertEquals("vertriebskunde-services.agree-kundendaten~Person~firstName", firstNameAttr.getQualifiedName());
+        assertEquals("repnest-etu.vertriebskunde-services.agree-kundendaten~Person~firstName", firstNameAttr.getQualifiedName());
 
         LineageEventContentforSample.Attribute lastNameAttr = attributes.get(1);
         assertEquals("lastName", lastNameAttr.getDisplayName());
         assertEquals("The person's last name.", lastNameAttr.getDescription());
         assertEquals("string", lastNameAttr.getType());
-        assertEquals("vertriebskunde-services.agree-kundendaten~Person~lastName", lastNameAttr.getQualifiedName());
+        assertEquals("repnest-etu.vertriebskunde-services.agree-kundendaten~Person~lastName", lastNameAttr.getQualifiedName());
 
         LineageEventContentforSample.Attribute ageAttr = attributes.get(2);
         assertEquals("age", ageAttr.getDisplayName());
         assertEquals("Age in years which must be equal to or greater than zero.", ageAttr.getDescription());
         assertEquals("integer", ageAttr.getType());
-        assertEquals("vertriebskunde-services.agree-kundendaten~Person~age", ageAttr.getQualifiedName());
+        assertEquals("repnest-etu.vertriebskunde-services.agree-kundendaten~Person~age", ageAttr.getQualifiedName());
 
         LineageEventContentforSample.Attribute derivedAgeAttr = attributes.get(3);
         assertEquals("derivedAge", derivedAgeAttr.getDisplayName());
         assertEquals("Derived Age.", derivedAgeAttr.getDescription());
         assertEquals("integer", derivedAgeAttr.getType());
         assertEquals("test-formula", derivedAgeAttr.getFormula());
-        assertEquals("vertriebskunde-services.agree-kundendaten~Person~derivedAge", derivedAgeAttr.getQualifiedName());
+        assertEquals("repnest-etu.vertriebskunde-services.agree-kundendaten~Person~derivedAge", derivedAgeAttr.getQualifiedName());
 
         LineageEventContentforSample.Attribute derivedAgeAttr2 = attributes.get(4);
         assertEquals("derivedAge2", derivedAgeAttr2.getDisplayName());
         assertEquals("Derived Age.", derivedAgeAttr2.getDescription());
         assertEquals("integer", derivedAgeAttr2.getType());
         assertEquals("test-formula2", derivedAgeAttr2.getFormula());
-        assertEquals("vertriebskunde-services.agree-kundendaten~Person~derivedAge2", derivedAgeAttr2.getQualifiedName());
+        assertEquals("repnest-etu.vertriebskunde-services.agree-kundendaten~Person~derivedAge2", derivedAgeAttr2.getQualifiedName());
     }
 
     @Test
