@@ -16,10 +16,7 @@ import org.odpi.openmetadata.frameworks.connectors.ffdc.PropertyServerException;
 import org.odpi.openmetadata.frameworks.connectors.ffdc.UserNotAuthorizedException;
 import org.odpi.openmetadata.integrationservices.lineage.connector.LineageIntegratorContext;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * This class processes an event. The code here has been extracted from the integration connector, so it is easier to unit test.
@@ -283,7 +280,10 @@ public class SampleLineageEventProcessor {
         String processGUID;
         // TODO: use workaround with findProcesses(...) because getProcessesByName(...) always returns null
         List<ProcessElement> processes = myContext.findProcesses(".*", 0, 0, null);
-        Optional<ProcessElement> processElementOptional = processes.stream().filter(it -> it.getProcessProperties().getQualifiedName().equals(processQualifiedName)).findFirst();
+        Optional<ProcessElement> processElementOptional = Optional.empty();
+        if (processes != null) {
+            processElementOptional = processes.stream().filter(it -> it.getProcessProperties().getQualifiedName().equals(processQualifiedName)).findFirst();
+        }
         ProcessProperties processProperties = new ProcessProperties();
         processProperties.setQualifiedName(processQualifiedName);
         processProperties.setTechnicalName(eventContent.getProcessTechnicalName());
