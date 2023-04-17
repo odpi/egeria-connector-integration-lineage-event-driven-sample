@@ -278,23 +278,18 @@ public class SampleLineageEventProcessor {
     private void saveLineage(LineageEventContentforSample eventContent) throws InvalidParameterException, PropertyServerException, UserNotAuthorizedException {
         String processQualifiedName = eventContent.getProcessQualifiedName();
         String processGUID;
-        // TODO: use workaround with findProcesses(...) because getProcessesByName(...) always returns null
-        List<ProcessElement> processes = myContext.findProcesses(".*", 0, 0, null);
-        Optional<ProcessElement> processElementOptional = Optional.empty();
-        if (processes != null) {
-            processElementOptional = processes.stream().filter(it -> it.getProcessProperties().getQualifiedName().equals(processQualifiedName)).findFirst();
-        }
+        List<ProcessElement> processes = myContext.getProcessesByName(processQualifiedName, 0, 0, null);
         ProcessProperties processProperties = new ProcessProperties();
         processProperties.setQualifiedName(processQualifiedName);
         processProperties.setTechnicalName(eventContent.getProcessTechnicalName());
         processProperties.setTechnicalDescription(eventContent.getProcessDescription());
         // does this process already exist?
-        if (processElementOptional.isEmpty()) {
+        if (processes == null || processes.isEmpty()) {
             // process does not exist
             processGUID = myContext.createProcess(assetManagerIsHome, ProcessStatus.ACTIVE, processProperties);
         } else {
             // process exists update it
-            ProcessElement processElement = processElementOptional.get();
+            ProcessElement processElement = processes.get(0);
             processGUID = processElement.getElementHeader().getGUID();
             myContext.updateProcess(processGUID, false, processProperties, null);
         }
