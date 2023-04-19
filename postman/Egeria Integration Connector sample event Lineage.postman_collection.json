@@ -547,7 +547,7 @@
 		},
 		{
 			"key": "consumerid",
-			"value": "itg.egeria-lineage-replication-2",
+			"value": "itg.egeria-lineage-replication",
 			"type": "default"
 		},
 		{
