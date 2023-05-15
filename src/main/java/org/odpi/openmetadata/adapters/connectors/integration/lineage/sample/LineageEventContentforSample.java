@@ -153,7 +153,7 @@ public class LineageEventContentforSample {
             if (attributeNode.has("type")) {
                 JsonNode attributeTypeNode = attributeNode.get("type");
                 attributeType = attributeTypeNode.asText();
-                if ("object".equals(attributeType) &&
+                if (Objects.equals(attributeType, "object") &&
                         attributeNode.has("properties")) {
                     nestedAttributes = getAttributes(attributeNode.get("properties"), attributeDisplayName, outputEventTypeQualifiedName);
                 }

@@ -257,7 +257,7 @@ public class SampleLineageEventProcessor {
     }
 
     private boolean isObjectTypeWithNestedAttributes(LineageEventContentforSample.Attribute attribute) {
-        return "object".equals(attribute.getType()) && !attribute.getNestedAttributes().isEmpty();
+        return Objects.equals(attribute.getType(), "object") && !attribute.getNestedAttributes().isEmpty();
     }
 
     /**
