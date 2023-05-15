@@ -5,18 +5,19 @@
   "Bounded Context": "TestResource",
   "Team": "ITG",
   "Input": [{
-    "Id": "C6B7B1B717C840F686EE2426241ED18CE1D053019534F03495E8CD644976FA37-3",
-    "Name": "Foo-3",
-    "SQL": "select * from foo;"
+    "id": "C6B7B1B717C840F686EE2426241ED18CE1D053019534F03495E8CD644976FA37-3",
+    "name": "Foo-3",
+    "type": "SQL",
+    "value": "select * from foo;"
   }],
   "Output": [{
-    "Id": "vertriebskunde-services.agree-kundendaten-3",
-    "Name": "Kundendaten-3",
-    "Schema-type": "json-schema",
-    "Schemas": [{
+    "id": "vertriebskunde-services.agree-kundendaten-3",
+    "name": "Kundendaten-3",
+    "schema-type": "json-schema",
+    "schemas": [{
       "$id": "https://example.com/person.schema.json",
       "$schema": "https://json-schema.org/draft/2020-12/schema",
-      "title": "Person",
+      "id": "Person",
       "type": "object",
       "properties": {
         "firstName": {

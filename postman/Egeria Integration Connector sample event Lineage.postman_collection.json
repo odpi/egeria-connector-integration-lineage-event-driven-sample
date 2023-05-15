@@ -1,135 +1,209 @@
 {
 	"info": {
-		"_postman_id": "5c7cd9b9-0b8d-4096-8184-2807963ef391",
+		"_postman_id": "a5e4d355-1c3d-4f0a-a231-f099d21df1f2",
 		"name": "Egeria Integration Connector sample event Lineage",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "2330095"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "1. Update the server type",
+			"name": "lineage replication connector",
+			"item": [
+				{
+					"name": "1. Update the server type name",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{lineage-baseURL}}/open-metadata/admin-services/users/{{user}}/servers/{{lineage-server}}/server-type?typeName=Integration%20Daemon",
+							"host": [
+								"{{lineage-baseURL}}"
+							],
+							"path": [
+								"open-metadata",
+								"admin-services",
+								"users",
+								"{{user}}",
+								"servers",
+								"{{lineage-server}}",
+								"server-type"
+							],
+							"query": [
+								{
+									"key": "typeName",
+									"value": "Integration%20Daemon"
+								}
+							]
+						},
+						"description": "Requests information about the author of the server platform."
+					},
+					"response": []
+				},
+				{
+					"name": "2. Configure the default audit log",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{lineage-baseURL}}/open-metadata/admin-services/users/{{user}}/servers/{{lineage-server}}/audit-log-destinations/default",
+							"host": [
+								"{{lineage-baseURL}}"
+							],
+							"path": [
+								"open-metadata",
+								"admin-services",
+								"users",
+								"{{user}}",
+								"servers",
+								"{{lineage-server}}",
+								"audit-log-destinations",
+								"default"
+							]
+						},
+						"description": "Requests information about the author of the server platform."
+					},
+					"response": []
+				},
+				{
+					"name": "3. Configure the lineage integrator service",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"class\": \"IntegrationServiceRequestBody\",\n    \"omagserverPlatformRootURL\": \"{{mds-baseURL}}\",\n    \"omagserverName\": \"{{mds-server}}\",\n    \"connectorUserId\": \"{{user}}\",\n    \"integrationConnectorConfigs\": [\n        {\n            \"class\": \"IntegrationConnectorConfig\",\n            \"connectorName\": \"LineageReplicationIntegrator\",\n            \"typeName\": \"Lineage Replication Integration Connector\",\n            \"connection\": {\n                \"class\": \"VirtualConnection\",\n                \"qualifiedName\": \"replication-1\",\n                \"connectorType\": {\n                    \"class\": \"ConnectorType\",\n                    \"connectorProviderClassName\": \"org.odpi.openmetadata.adapters.connectors.integration.lineage.sample.SampleLineageEventReceiverIntegrationProvider\"\n                },\n                \"configurationProperties\": {\n                    \"topicNamespace\": \"repnest-etu\"\n                },\n                \"embeddedConnections\": [\n                    {\n                        \"class\": \"EmbeddedConnection\",\n                        \"embeddedConnection\": {\n                            \"class\": \"Connection\",\n                            \"qualifiedName\": \"repnest-etu\",\n                            \"connectorType\": {\n                                \"class\": \"ConnectorType\",\n                                \"connectorProviderClassName\": \"org.odpi.openmetadata.adapters.eventbus.topic.kafka.KafkaOpenMetadataTopicProvider\"\n                            },\n                            \"endpoint\": {\n                                \"class\": \"Endpoint\",\n                                \"headerVersion\": 0,\n                                \"address\": \"{{topic-name}}\"\n                            },\n                            \"configurationProperties\": {\n                                \"local.server.id\": \"{{consumerid}}\",\n                                \"consumer\": {\n                                    \"bootstrap.servers\": \"{{kafkaep}}\",\n                                    \"ssl.keystore.location\": \"{{keystore-location}}\",\n                                    \"ssl.keystore.password\": \"{{keystore-password}}\",\n                                    \"ssl.truststore.location\": \"{{truststore-location}}\",\n                                    \"ssl.truststore.password\": \"{{truststore-password}}\",\n                                    \"auto.offset.reset\": \"earliest\",\n                                    \"security.protocol\": \"SSL\"\n                                },\n                                \"producer\": {\n                                    \"bootstrap.servers\": \"{{kafkaep}}\",\n                                    \"ssl.keystore.location\": \"{{keystore-location}}\",\n                                    \"ssl.keystore.password\": \"{{keystore-password}}\",\n                                    \"ssl.truststore.location\": \"{{truststore-location}}\",\n                                    \"ssl.truststore.password\": \"{{truststore-password}}\",\n                                    \"security.protocol\": \"SSL\"\n                                }\n                            }\n                        }\n                    }\n                ]\n            },\n            \"metadataSourceQualifiedName\": \"repnest-kafka\",\n            \"refreshTimeInterval\": \"1\",\n            \"permittedSynchronization\": \"FROM_THIRD_PARTY\"\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{lineage-baseURL}}/open-metadata/admin-services/users/{{user}}/servers/{{lineage-server}}/integration-services/lineage-integrator",
+							"host": [
+								"{{lineage-baseURL}}"
+							],
+							"path": [
+								"open-metadata",
+								"admin-services",
+								"users",
+								"{{user}}",
+								"servers",
+								"{{lineage-server}}",
+								"integration-services",
+								"lineage-integrator"
+							]
+						},
+						"description": "Requests information about the author of the server platform."
+					},
+					"response": []
+				},
+				{
+					"name": "4. Start the Lineage Integration server",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{lineage-baseURL}}/open-metadata/admin-services/users/{{user}}/servers/{{lineage-server}}/instance",
+							"host": [
+								"{{lineage-baseURL}}"
+							],
+							"path": [
+								"open-metadata",
+								"admin-services",
+								"users",
+								"{{user}}",
+								"servers",
+								"{{lineage-server}}",
+								"instance"
+							]
+						},
+						"description": "Requests information about the author of the server platform."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Find all topics",
 			"request": {
 				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
+				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": ""
+					"raw": "{\n  \"searchString\": \"vertriebskunde-services.agree-kundendaten\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
 				},
 				"url": {
-					"raw": "{{baseURL}}/open-metadata/admin-services/users/{{user}}/servers/{{server}}/server-type?typeName=Integration Daemon",
+					"raw": "{{mds-baseURL}}/servers/{{mds-server}}/open-metadata/access-services/data-manager/users/{{user}}/topics/by-search-string?startFrom=0&pageSize=0",
 					"host": [
-						"{{baseURL}}"
+						"{{mds-baseURL}}"
 					],
 					"path": [
+						"servers",
+						"{{mds-server}}",
 						"open-metadata",
-						"admin-services",
+						"access-services",
+						"data-manager",
 						"users",
 						"{{user}}",
-						"servers",
-						"{{server}}",
-						"server-type"
+						"topics",
+						"by-search-string"
 					],
 					"query": [
 						{
-							"key": "typeName",
-							"value": "Integration Daemon"
+							"key": "startFrom",
+							"value": "0"
+						},
+						{
+							"key": "pageSize",
+							"value": "0"
 						}
 					]
-				},
-				"description": "Requests information about the author of the server platform."
-			},
-			"response": []
-		},
-		{
-			"name": "2. Configure the integration services audit log",
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {
-					"content-type": true
 				}
 			},
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"type": "text",
-						"value": "application/json"
-					}
-				],
-				"url": {
-					"raw": "{{baseURL}}/open-metadata/admin-services/users/{{user}}/servers/{{server}}/audit-log-destinations/default",
-					"host": [
-						"{{baseURL}}"
-					],
-					"path": [
-						"open-metadata",
-						"admin-services",
-						"users",
-						"{{user}}",
-						"servers",
-						"{{server}}",
-						"audit-log-destinations",
-						"default"
-					]
-				},
-				"description": "Requests information about the author of the server platform."
-			},
 			"response": []
 		},
 		{
-			"name": "3. Configure the sample lineage integrator service",
+			"name": "Delete lineage server",
 			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"type": "text",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"class\": \"IntegrationServiceRequestBody\",\n    \"omagserverPlatformRootURL\": \"https://localhost:9443\",\n    \"omagserverName\": \"cocoMDS1\",\n    \"connectorUserId\": \"{{user}}\",\n    \"integrationConnectorConfigs\": [\n        {\n            \"class\": \"IntegrationConnectorConfig\",\n            \"connectorId\": \"ba6dc870-2303-48fc-8611-d50b49706f48\",\n            \"connectorName\": \"LineageIntegrator\",\n            \"metadataSourceQualifiedName\": \"TestMetadataSourceQualifiedName\",\n            \"connection\": {\n                \"class\": \"VirtualConnection\",\n                \"headerVersion\": 0,\n                \"qualifiedName\": \"Egeria:IntegrationConnector:Lineage:OpenLineageEventReceiverConnection\",\n                \"connectorType\": {\n                    \"class\": \"ConnectorType\",\n                    \"headerVersion\": 0,\n                    \"connectorProviderClassName\": \"org.odpi.openmetadata.adapters.connectors.integration.lineage.sample.SampleLineageEventReceiverIntegrationProvider\"\n                },\n                \"embeddedConnections\": [\n                    {\n                        \"class\": \"EmbeddedConnection\",\n                        \"headerVersion\": 0,\n                        \"position\": 0,\n                        \"embeddedConnection\": {\n                            \"class\": \"Connection\",\n                            \"headerVersion\": 0,\n                            \"qualifiedName\": \"Kafka Open Metadata Topic Connector for sample lineage\",\n                            \"connectorType\": {\n                                \"class\": \"ConnectorType\",\n                                \"headerVersion\": 0,\n                                \"connectorProviderClassName\": \"org.odpi.openmetadata.adapters.eventbus.topic.kafka.KafkaOpenMetadataTopicProvider\"\n                            },\n                            \"endpoint\": {\n                                \"class\": \"Endpoint\",\n                                \"headerVersion\": 0,\n                                \"address\": \"{{topicName}}\"\n                            },\n                            \"configurationProperties\": {\n                                \"producer\": {\n                                    \"bootstrap.servers\": \"{{kafkaep}}\"\n                                },\n                                \"local.server.id\": \"{{consumerid}}\",\n                                \"consumer\": {\n                                    \"bootstrap.servers\": \"{{kafkaep}}\"\n                                }\n                            }\n                        }\n                    }\n                ]\n            },\n            \"refreshTimeInterval\": 0,\n            \"usesBlockingCalls\": false\n        }\n    ]\n}"
-				},
-				"url": {
-					"raw": "{{baseURL}}/open-metadata/admin-services/users/{{user}}/servers/{{server}}/integration-services/lineage-integrator",
-					"host": [
-						"{{baseURL}}"
-					],
-					"path": [
-						"open-metadata",
-						"admin-services",
-						"users",
-						"{{user}}",
-						"servers",
-						"{{server}}",
-						"integration-services",
-						"lineage-integrator"
-					]
-				},
-				"description": "Requests information about the author of the server platform."
-			},
-			"response": []
-		},
-		{
-			"name": "4. Start the server",
-			"request": {
-				"method": "POST",
+				"method": "DELETE",
 				"header": [],
 				"body": {
 					"mode": "raw",
 					"raw": ""
 				},
 				"url": {
-					"raw": "{{baseURL}}/open-metadata/admin-services/users/{{user}}/servers/{{server}}/instance",
+					"raw": "{{lineage-baseURL}}/open-metadata/admin-services/users/{{user}}/servers/{{lineage-server}}",
 					"host": [
-						"{{baseURL}}"
+						"{{lineage-baseURL}}"
 					],
 					"path": [
 						"open-metadata",
@@ -137,13 +211,374 @@
 						"users",
 						"{{user}}",
 						"servers",
-						"{{server}}",
-						"instance"
+						"{{lineage-server}}"
 					]
 				},
 				"description": "Requests information about the author of the server platform."
 			},
 			"response": []
+		},
+		{
+			"name": "Get active server configuration",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{lineage-baseURL}}/open-metadata/admin-services/users/{{user}}/servers/{{lineage-server}}/instance/configuration",
+					"host": [
+						"{{lineage-baseURL}}"
+					],
+					"path": [
+						"open-metadata",
+						"admin-services",
+						"users",
+						"{{user}}",
+						"servers",
+						"{{lineage-server}}",
+						"instance",
+						"configuration"
+					]
+				},
+				"description": "Retrieve the configuration document used to start the named server."
+			},
+			"response": []
+		},
+		{
+			"name": "Get active server configuration in egeria-base",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{mds-baseURL}}/open-metadata/admin-services/users/{{user}}/servers/{{mds-server}}/instance/configuration",
+					"host": [
+						"{{mds-baseURL}}"
+					],
+					"path": [
+						"open-metadata",
+						"admin-services",
+						"users",
+						"{{user}}",
+						"servers",
+						"{{mds-server}}",
+						"instance",
+						"configuration"
+					]
+				},
+				"description": "Retrieve the configuration document used to start the named server."
+			},
+			"response": []
+		},
+		{
+			"name": "Find processes",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"searchString\": \".*\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{mds-baseURL}}/servers/{{mds-server}}/open-metadata/access-services/asset-manager/users/{{user}}/processes/by-search-string?startFrom=0&pageSize=0",
+					"host": [
+						"{{mds-baseURL}}"
+					],
+					"path": [
+						"servers",
+						"{{mds-server}}",
+						"open-metadata",
+						"access-services",
+						"asset-manager",
+						"users",
+						"{{user}}",
+						"processes",
+						"by-search-string"
+					],
+					"query": [
+						{
+							"key": "startFrom",
+							"value": "0"
+						},
+						{
+							"key": "pageSize",
+							"value": "0"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve ports of process",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{mds-baseURL}}/servers/{{mds-server}}/open-metadata/access-services/asset-manager/users/{{user}}/processes/7d37b708-b17e-487a-b3cb-aa45f2a68cf9/ports/retrieve?startFrom=0&pageSize=0&forLineage=true&forDuplicateProcessing=false",
+					"host": [
+						"{{mds-baseURL}}"
+					],
+					"path": [
+						"servers",
+						"{{mds-server}}",
+						"open-metadata",
+						"access-services",
+						"asset-manager",
+						"users",
+						"{{user}}",
+						"processes",
+						"7d37b708-b17e-487a-b3cb-aa45f2a68cf9",
+						"ports",
+						"retrieve"
+					],
+					"query": [
+						{
+							"key": "startFrom",
+							"value": "0"
+						},
+						{
+							"key": "pageSize",
+							"value": "0"
+						},
+						{
+							"key": "forLineage",
+							"value": "true"
+						},
+						{
+							"key": "forDuplicateProcessing",
+							"value": "false"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve ports",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"searchString\": \".*\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{mds-baseURL}}/servers/{{mds-server}}/open-metadata/access-services/asset-manager/users/{{user}}/data-assets/by-search-string?startFrom=0&pageSize=0",
+					"host": [
+						"{{mds-baseURL}}"
+					],
+					"path": [
+						"servers",
+						"{{mds-server}}",
+						"open-metadata",
+						"access-services",
+						"asset-manager",
+						"users",
+						"{{user}}",
+						"data-assets",
+						"by-search-string"
+					],
+					"query": [
+						{
+							"key": "startFrom",
+							"value": "0"
+						},
+						{
+							"key": "pageSize",
+							"value": "0"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Data Asset",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"searchString\": \".*\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{mds-baseURL}}/servers/{{mds-server}}/open-metadata/access-services/asset-manager/users/{{user}}/data-assets/by-search-string?startFrom=0&pageSize=0",
+					"host": [
+						"{{mds-baseURL}}"
+					],
+					"path": [
+						"servers",
+						"{{mds-server}}",
+						"open-metadata",
+						"access-services",
+						"asset-manager",
+						"users",
+						"{{user}}",
+						"data-assets",
+						"by-search-string"
+					],
+					"query": [
+						{
+							"key": "startFrom",
+							"value": "0"
+						},
+						{
+							"key": "pageSize",
+							"value": "0"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get a DataSet by GUID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{mds-baseURL}}/servers/{{mds-server}}/open-metadata/access-services/asset-catalog/users/{{user}}/asset-details/9b8efc31-ff87-4a2f-9217-0da1446bbeb0",
+					"host": [
+						"{{mds-baseURL}}"
+					],
+					"path": [
+						"servers",
+						"{{mds-server}}",
+						"open-metadata",
+						"access-services",
+						"asset-catalog",
+						"users",
+						"{{user}}",
+						"asset-details",
+						"9b8efc31-ff87-4a2f-9217-0da1446bbeb0"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": "https://localhost:29443",
+			"type": "default"
+		},
+		{
+			"key": "user",
+			"value": "garygeeke",
+			"type": "default"
+		},
+		{
+			"key": "mds-server",
+			"value": "mds1",
+			"type": "default"
+		},
+		{
+			"key": "mds-baseURL",
+			"value": "https://localhost:19443",
+			"type": "default"
+		},
+		{
+			"key": "topic-name",
+			"value": "itg.replication-metadata",
+			"type": "default"
+		},
+		{
+			"key": "lineage-server",
+			"value": "lineage1",
+			"type": "default"
+		},
+		{
+			"key": "consumerid",
+			"value": "itg.egeria-lineage-replication",
+			"type": "default"
+		},
+		{
+			"key": "kafkaep",
+			"value": "repnest-kafka-kafka-bootstrap-repnest-etu.apps.caas-ekad-test01.rz.bankenit.de:443",
+			"type": "default"
+		},
+		{
+			"key": "lineage-baseURL",
+			"value": "https://localhost:39443",
+			"type": "default"
+		},
+		{
+			"key": "keystore-location",
+			"value": "/certs/keystore.jks",
+			"type": "default"
+		},
+		{
+			"key": "keystore-password",
+			"value": "s5JyYqxtBxfL6dnNJGHhQplaWLbB4IrdaMphXGToTmUcxYJLbzZyYKHe5nMGySsP",
+			"type": "default"
+		},
+		{
+			"key": "truststore-location",
+			"value": "/certs/truststore.jks",
+			"type": "default"
+		},
+		{
+			"key": "truststore-password",
+			"value": "FZM9jc1z5tbGHa2XglAEKqv8XevWc7lnoxy1GZBGDLnbJSywHcP8SOGU4xR7NLAf",
+			"type": "default"
 		}
 	]
 }

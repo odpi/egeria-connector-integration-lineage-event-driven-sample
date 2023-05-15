@@ -3,6 +3,7 @@
 package org.odpi.openmetadata.adapters.connectors.integration.lineage.sample;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.odpi.openmetadata.adapters.connectors.integration.lineage.sample.beans.AssetBean;
 import org.odpi.openmetadata.adapters.connectors.integration.lineage.sample.beans.EventBean;
@@ -87,9 +88,10 @@ public class LineageEventContentforSample {
             }
             String displayName = inputAssetBean.getName();
 
-            String formula = inputAssetBean.getFormula();
-            if (formula != null) {
-                inputAssetFormulaMap.put(qualifiedName,formula);
+            String type = inputAssetBean.getType();
+            String value = inputAssetBean.getValue();
+            if (type != null && value != null) {
+                inputAssetFormulaMap.put(qualifiedName, type + " - " + value);
             }
             AssetFromJSON assetFromJSON = new AssetFromJSON(displayName, qualifiedName, "DataSet");
 
@@ -117,52 +119,64 @@ public class LineageEventContentforSample {
             String displayName = outputAssetBean.getName();
             List<SchemaBean> schemaBeans = outputAssetBean.getSchemas();
 
-            SchemaBean schemaBean = null;
-            if (schemaBeans != null && schemaBeans.size() > 0) {
-                // TODO hard coding to only 1 EventType - until support for EventTypeLists is present in the context API
-                schemaBean = schemaBeans.get(0);
+            List<EventTypeFromJSON> eventTypesFromJSON = new ArrayList<>();
+            for (SchemaBean schemaBean : schemaBeans) {
+                String outputEventTypeDisplayName = schemaBean.getDisplayName();
+                String outputEventTypeQualifiedName = qualifiedName + SEPARATOR + outputEventTypeDisplayName;
+                List<Attribute> outputAttributes = getAttributes(schemaBean.getProperties(), null, outputEventTypeQualifiedName);
+                EventTypeFromJSON eventTypeFromJSON = new EventTypeFromJSON(outputEventTypeDisplayName, outputEventTypeQualifiedName, outputAttributes);
+                eventTypesFromJSON.add(eventTypeFromJSON);
             }
-            String outputEventTypeDisplayName =  schemaBean.getDisplayName();
-            String outputEventTypeQualifiedName = qualifiedName + SEPARATOR + outputEventTypeDisplayName;
-
-            Map<String, Map<String, Object>> properties = schemaBean.getProperties();
-            Set<Map.Entry<String, Map<String, Object>>> propertyEntrySet = properties.entrySet();
-            Iterator<Map.Entry<String, Map<String, Object>>> iter = propertyEntrySet.iterator();
-            List<Attribute> outputAttributes = new ArrayList<>();
-            while (iter.hasNext()) {
-                Map.Entry<String, Map<String, Object>> entry = iter.next();
-                String attributeDisplayName = entry.getKey();
-                //assume key can't be null.
-                String attributeQualifiedName = outputEventTypeQualifiedName + SEPARATOR + attributeDisplayName;
-                Map attrMap = (Map) entry.getValue();
-                Object attributeTypeObject =  attrMap.get("type");
-                String attributeType = null;
-                if (attributeTypeObject != null) {
-                    attributeType = (String)attributeTypeObject;
-                }
-                Object attributeDescriptionObject = attrMap.get("description");
-                String attributeDescription = null;
-                if (attributeDescriptionObject != null) {
-                    attributeDescription = (String)attributeDescriptionObject;
-                }
-                Object attributeFormulaObject = attrMap.get("formula");
-                String attributeFormula = null;
-                if (attributeFormulaObject != null) {
-                    attributeFormula = (String)attributeFormulaObject;
-                }
-                Attribute outputAttribute = new Attribute(attributeDisplayName,attributeQualifiedName, attributeType, attributeDescription, attributeFormula);
-                outputAttributes.add(outputAttribute);
-
-            }
-            EventTypeFromJSON eventTypeFromJSON = new EventTypeFromJSON(outputEventTypeDisplayName,outputEventTypeQualifiedName,outputAttributes);
-            List< EventTypeFromJSON> eventTypesFromJSON = new ArrayList<>();
-            eventTypesFromJSON.add(eventTypeFromJSON);
 
             AssetFromJSON assetFromJSON = new AssetFromJSON(displayName, qualifiedName, "KafkaTopic", eventTypesFromJSON);
 
             outputAssets.add(assetFromJSON);
         }
+    }
 
+    private List<Attribute> getAttributes(JsonNode properties, String parentDisplayName, String outputEventTypeQualifiedName) {
+        List<Attribute> outputAttributes = new ArrayList<>();
+        Iterator<Map.Entry<String, JsonNode>> nodes = properties.fields();
+        while (nodes.hasNext()) {
+            Map.Entry<String, JsonNode> entry = nodes.next();
+            String attributeDisplayName = entry.getKey();
+            JsonNode attributeNode = entry.getValue();
+            //assume key can't be null.
+            String attributeQualifiedName;
+            if (parentDisplayName == null) {
+                attributeQualifiedName = outputEventTypeQualifiedName + SEPARATOR + attributeDisplayName;
+            } else {
+                attributeQualifiedName = outputEventTypeQualifiedName + SEPARATOR + parentDisplayName + SEPARATOR + attributeDisplayName;
+            }
+            String attributeType = null;
+            List<Attribute> nestedAttributes = null;
+            if (attributeNode.has("type")) {
+                JsonNode attributeTypeNode = attributeNode.get("type");
+                attributeType = attributeTypeNode.asText();
+                if ("object".equals(attributeType) &&
+                        attributeNode.has("properties")) {
+                    nestedAttributes = getAttributes(attributeNode.get("properties"), attributeDisplayName, outputEventTypeQualifiedName);
+                }
+            }
+            String attributeDescription = null;
+            if (attributeNode.has("description")) {
+                JsonNode attributeDescriptionObject = attributeNode.get("description");
+                attributeDescription = attributeDescriptionObject.asText();
+
+            }
+            String attributeFormula = null;
+            if (attributeNode.has("formula")) {
+                JsonNode attributeFormulaObject = attributeNode.get("formula");
+                attributeFormula = attributeFormulaObject.asText();
+
+            }
+            Attribute outputAttribute = new Attribute(attributeDisplayName, attributeQualifiedName, attributeType, attributeDescription, attributeFormula);
+            if (nestedAttributes != null) {
+                outputAttribute.setNestedAttributes(nestedAttributes);
+            }
+            outputAttributes.add(outputAttribute);
+        }
+        return outputAttributes;
     }
 
     //getters and setters
@@ -230,22 +244,25 @@ public class LineageEventContentforSample {
     }
 
     static class Attribute {
-        private String displayName;
-        private String qualifiedName;
-        private String type;
-        private String description;
+        private final String displayName;
+        private final String qualifiedName;
+        private final String type;
+        private final String description;
+        private final String formula;
+        private List<Attribute> nestedAttributes;
 
-        private String formula;
 
         protected Attribute(String displayName, String qualifiedName, String type, String description) {
-            this(displayName, qualifiedName, type, description,null);
+            this(displayName, qualifiedName, type, description, null);
         }
+
         protected Attribute(String displayName, String qualifiedName, String type, String description, String formula) {
             this.displayName = displayName;
             this.description = description;
             this.type = type;
             this.qualifiedName = qualifiedName;
             this.formula = formula;
+            this.nestedAttributes = new ArrayList<>();
         }
 
 
@@ -268,6 +285,14 @@ public class LineageEventContentforSample {
         public String getFormula() {
             return formula;
         }
+
+        public List<Attribute> getNestedAttributes() {
+            return nestedAttributes;
+        }
+
+        public void setNestedAttributes(List<Attribute> nestedAttributes) {
+            this.nestedAttributes = nestedAttributes;
+        }
     }
 
     static class EventTypeFromJSON {
@@ -280,10 +305,12 @@ public class LineageEventContentforSample {
             this.qualifiedName = qualifiedName;
             this.attributes = attributes;
         }
+
         public String getTechnicalName() {
             return technicalName;
         }
-        public String getQualifiedName () {
+
+        public String getQualifiedName() {
             return qualifiedName;
         }
         public List<Attribute> getAttributes() {
