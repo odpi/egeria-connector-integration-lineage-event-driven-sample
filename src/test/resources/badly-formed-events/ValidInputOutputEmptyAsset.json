@@ -1,5 +1,11 @@
 {
   "Id": "test",
-  "Input": [{"Id": "test"}],
-  "Output": [{}]
+  "Input": [
+    {
+      "id": "test"
+    }
+  ],
+  "Output": [
+    {}
+  ]
 }
