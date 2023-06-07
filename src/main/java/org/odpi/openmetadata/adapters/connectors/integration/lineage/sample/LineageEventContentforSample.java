@@ -32,15 +32,12 @@ public class LineageEventContentforSample {
 
     private Map<String, String> inputAssetFormulaMap = new HashMap<>();
 
-    private String topicNamespace;
 
     static final String SEPARATOR = "~";
     static final String TOPIC_SEPARATOR = ".";
 
     protected LineageEventContentforSample(String jsonString, String connectorName, String topicNamespace) throws ConnectorCheckedException {
         String methodName = "LineageEventContentforSample -constructor";
-
-        this.topicNamespace = topicNamespace;
 
         // process json
 
@@ -154,7 +151,7 @@ public class LineageEventContentforSample {
             if (attributeNode.has("type")) {
                 JsonNode attributeTypeNode = attributeNode.get("type");
                 attributeType = attributeTypeNode.asText();
-                if ("object".equals(attributeType) &&
+                if (attributeType.equals("object") &&
                         attributeNode.has("properties")) {
                     nestedAttributes = getAttributes(attributeNode.get("properties"), attributeDisplayName, outputEventTypeQualifiedName);
                 }
