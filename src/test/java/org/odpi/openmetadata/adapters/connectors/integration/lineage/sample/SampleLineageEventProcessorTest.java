@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -88,10 +89,13 @@ public class SampleLineageEventProcessorTest {
         assertTrue(schemaTypeElementGUID != null);
         SchemaTypeProperties schemaTypeProperties = schemaTypeElement.getSchemaTypeProperties();
         assertTrue(schemaTypeProperties != null);
-        assertTrue(schemaTypeProperties.getQualifiedName().equals("vertriebskunde-services.agree-kundendaten~Person"));
-        assertTrue(schemaTypeProperties.getDisplayName().equals("Person"));
-        List<SchemaAttributeElement> attributes = mockContext.getNestedSchemaAttributes(schemaTypeElementGUID, 0, 1000, new Date());
-
+        assertTrue(schemaTypeProperties.getQualifiedName().equals("vertriebskunde-services.agree-kundendaten-EventTypes"));
+        assertTrue(schemaTypeProperties.getDisplayName().equals("vertriebskunde-services.agree-kundendaten-EventTypes"));
+        List<SchemaTypeElement> schemaTypeElementList = ((MockLineageIntegratorContext) mockContext).getSchemaTypeForElements(schemaTypeElementGUID);
+        List<SchemaAttributeElement> attributes = new ArrayList<>();
+        for (SchemaTypeElement schemaTypeElement1 : schemaTypeElementList) {
+            attributes.addAll(mockContext.getNestedSchemaAttributes(schemaTypeElement1.getElementHeader().getGUID(), 0, 0, new Date()));
+        }
         assertTrue(attributes != null);
         assertTrue(attributes.size() == 5);
         boolean firstNameFound = false;
@@ -251,9 +255,13 @@ public class SampleLineageEventProcessorTest {
         schemaTypeElementGUID = schemaTypeElement.getElementHeader().getGUID();
         assertTrue(schemaTypeElementGUID != null);
         assertTrue(schemaTypeProperties != null);
-        assertTrue(schemaTypeProperties.getQualifiedName().equals("vertriebskunde-services.agree-kundendaten-3~Person"));
-        assertTrue(schemaTypeProperties.getDisplayName().equals("Person"));
-        attributes = mockContext.getNestedSchemaAttributes(schemaTypeElementGUID, 0, 1000, new Date());
+        assertTrue(schemaTypeProperties.getQualifiedName().equals("vertriebskunde-services.agree-kundendaten-3-EventTypes"));
+        assertTrue(schemaTypeProperties.getDisplayName().equals("vertriebskunde-services.agree-kundendaten-3-EventTypes"));
+        schemaTypeElementList = ((MockLineageIntegratorContext) mockContext).getSchemaTypeForElements(schemaTypeElementGUID);
+        attributes = new ArrayList<>();
+        for (SchemaTypeElement schemaTypeElement1 : schemaTypeElementList) {
+            attributes.addAll(mockContext.getNestedSchemaAttributes(schemaTypeElement1.getElementHeader().getGUID(), 0, 0, new Date()));
+        }
 
         assertTrue(attributes != null);
         assertTrue(attributes.size() == 5);

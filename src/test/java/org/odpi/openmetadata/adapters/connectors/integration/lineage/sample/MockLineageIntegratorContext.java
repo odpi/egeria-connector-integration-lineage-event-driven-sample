@@ -6,6 +6,9 @@ package org.odpi.openmetadata.adapters.connectors.integration.lineage.sample;
 
 import org.odpi.openmetadata.accessservices.assetmanager.metadataelements.*;
 import org.odpi.openmetadata.accessservices.assetmanager.properties.*;
+import org.odpi.openmetadata.frameworks.connectors.ffdc.InvalidParameterException;
+import org.odpi.openmetadata.frameworks.connectors.ffdc.PropertyServerException;
+import org.odpi.openmetadata.frameworks.connectors.ffdc.UserNotAuthorizedException;
 import org.odpi.openmetadata.frameworks.connectors.properties.beans.ElementHeader;
 import org.odpi.openmetadata.frameworks.connectors.properties.beans.ElementType;
 import org.odpi.openmetadata.integrationservices.lineage.connector.LineageIntegratorContext;
@@ -30,12 +33,8 @@ public class MockLineageIntegratorContext extends LineageIntegratorContext {
     // key is the schema type
     private Map<String, SchemaTypeElement> guidToSchemaTypeMap = new HashMap<>();
     private Map<String, SchemaTypeElement> qnameToSchemaTypeMap = new HashMap<>();
-
-
     private Map<String, RelationshipElement> guidToAssetSchemaTypeMap = new HashMap<>();
-
     private Map<String, SchemaAttributeElement> guidToSchemaAttributeElementMap = new HashMap<>();
-
     private Map<String, List<SchemaAttributeElement>> schemaTypeGUIDToNestedAttributesMap = new HashMap<>();
     private Map<String, String> attributeGuidToParentGuid = new HashMap<>();
 
@@ -242,8 +241,10 @@ public class MockLineageIntegratorContext extends LineageIntegratorContext {
         // called from elsewhere
         List<SchemaAttributeElement> attributes = schemaTypeGUIDToNestedAttributesMap.get(schemaTypeGUID);
         Set<String> guidsToRemove = new HashSet<>();
-        for (SchemaAttributeElement attributeElement : attributes) {
-            guidsToRemove.add(attributeElement.getElementHeader().getGUID());
+        if (attributes != null) {
+            for (SchemaAttributeElement attributeElement : attributes) {
+                guidsToRemove.add(attributeElement.getElementHeader().getGUID());
+            }
         }
         for (String guid : guidsToRemove) {
             removeSchemaAttribute(guid, null);
@@ -381,6 +382,41 @@ public class MockLineageIntegratorContext extends LineageIntegratorContext {
 
     private String createNewGUID() {
         return "" + guidCounter++;
+    }
+
+    @Override
+    public void setupSchemaElementRelationship(boolean assetManagerIsHome, String endOneGUID, String endTwoGUID, String relationshipName, Date effectiveTime, RelationshipProperties properties) throws InvalidParameterException, UserNotAuthorizedException, PropertyServerException {
+        RelationshipElement relationshipElement = new RelationshipElement();
+        String guid = createNewGUID();
+        ElementHeader header = new ElementHeader();
+        header.setGUID(guid);
+        ElementType elementType = new ElementType();
+        elementType.setTypeName(relationshipName);
+        header.setType(elementType);
+        relationshipElement.setRelationshipHeader(header);
+
+        ElementHeader header1 = new ElementHeader();
+        header1.setGUID(endTwoGUID);
+        relationshipElement.setEnd1GUID(header1);
+        ElementHeader header2 = new ElementHeader();
+        header2.setGUID(endOneGUID);
+        relationshipElement.setEnd2GUID(header2);
+
+        guidToAssetSchemaTypeMap.put(endTwoGUID, relationshipElement);
+    }
+
+    public List<SchemaTypeElement> getSchemaTypeForElements(String parentElementGUID) {
+        List<SchemaTypeElement> schemaTypeElements = new ArrayList<>();
+        // go through the asset schema type relationships for a match
+        for (String guid : guidToAssetSchemaTypeMap.keySet()) {
+            RelationshipElement relationshipElement = guidToAssetSchemaTypeMap.get(guid);
+            if (relationshipElement.getEnd1GUID().getGUID().equals(parentElementGUID)) {
+                String schemaTypeGUID = relationshipElement.getEnd2GUID().getGUID();
+                 schemaTypeElements.add(guidToSchemaTypeMap.get(schemaTypeGUID));
+            }
+        }
+        return schemaTypeElements;
+
     }
 }
 
