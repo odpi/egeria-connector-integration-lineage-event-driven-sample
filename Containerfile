@@ -1,10 +1,10 @@
 ARG EGERIA_BASE_IMAGE=quay.io/odpi/egeria
-ARG EGERIA_VERSION=latest
+ARG EGERIA_VERSION=4.2-SNAPSHOT
 
-#FROM quay.io/ibmgaragecloud/gradle:jdk11 as build
-
+# FROM quay.io/ibmgaragecloud/gradle:jdk11 as build
+#
 # ARG GRADLE_OPTS
-
+#
 # Copy files
 # COPY gradle gradle
 # COPY settings.gradle .
@@ -16,14 +16,13 @@ ARG EGERIA_VERSION=latest
 # # Build application and test it
 # RUN ./gradlew assemble --no-daemon && \
 # 	./gradlew testClasses --no-daemon
-#
-#
+
 FROM ${EGERIA_BASE_IMAGE}:${EGERIA_VERSION}
 
 
 
 ARG CONNECTOR_NAME="egeria-connector-integration-lineage-sample"
-ARG CONNECTOR_VERSION="1.0-SNAPSHOT"
+ARG CONNECTOR_VERSION="4.2-SNAPSHOT"
 ARG CONNECTOR_DESCRIPTION="Egeria with the sample integration lineage event driven connector"
 ARG CONNECTOR_DOCUMENTATION="https://github.com/odpi/egeria-connector-integration-lineage-event-driven-sample"
 

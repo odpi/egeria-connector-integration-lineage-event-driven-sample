@@ -59,10 +59,9 @@ public class SampleLineageEventProcessor {
         schemaAttributeProperties.setDisplayName(attributeDisplayName);
         schemaAttributeProperties.setTypeName(EVENT_SCHEMA_ATTRIBUTE);
         schemaAttributeProperties.setDescription(attribute.getDescription());
-        PrimitiveSchemaTypeProperties primitiveSchemaTypeProperties = new PrimitiveSchemaTypeProperties();
+        SchemaTypeProperties primitiveSchemaTypeProperties = new SchemaTypeProperties();
         primitiveSchemaTypeProperties.setQualifiedName(attributeQualifiedName);
         primitiveSchemaTypeProperties.setDisplayName(attributeDisplayName);
-        primitiveSchemaTypeProperties.setDataType(attribute.getType());
         primitiveSchemaTypeProperties.setFormula(attribute.getFormula());
         primitiveSchemaTypeProperties.setTypeName(PRIMITIVE_SCHEMA_TYPE);
         schemaAttributeProperties.setSchemaType(primitiveSchemaTypeProperties);
@@ -218,18 +217,18 @@ public class SampleLineageEventProcessor {
         if (schemaTypeForElement != null) {
             myContext.removeSchemaType(schemaTypeForElement.getElementHeader().getGUID(), null);
         }
-        SchemaTypeChoiceProperties schemaTypeChoiceProperties = new SchemaTypeChoiceProperties();
-        schemaTypeChoiceProperties.setQualifiedName(assetFromJSON.getQualifiedName() + "-EventTypes");
-        schemaTypeChoiceProperties.setDisplayName(assetFromJSON.getQualifiedName() + "-EventTypes");
-        schemaTypeChoiceProperties.setTypeName("EventTypeList");
-        String schemaTypeChoiceGUID = myContext.createSchemaType(assetManagerIsHome, schemaTypeChoiceProperties);
+        SchemaTypeProperties typeProperties = new SchemaTypeProperties();
+        typeProperties.setQualifiedName(assetFromJSON.getQualifiedName() + "-EventTypes");
+        typeProperties.setDisplayName(assetFromJSON.getQualifiedName() + "-EventTypes");
+        typeProperties.setTypeName("EventTypeList");
+        String schemaTypeChoiceGUID = myContext.createAnchoredSchemaType(assetManagerIsHome, assetGUID, null, typeProperties);
         for (LineageEventContentforSample.EventTypeFromJSON eventTypeFromJSON : assetFromJSON.getEventTypes()) {
             SchemaTypeProperties schemaTypeProperties = new SchemaTypeProperties();
             schemaTypeProperties.setTypeName("EventType");
             schemaTypeProperties.setQualifiedName(eventTypeFromJSON.getQualifiedName());
             schemaTypeProperties.setDisplayName(eventTypeFromJSON.getTechnicalName());
-            String schemaTypeGUID = myContext.createSchemaType(assetManagerIsHome, schemaTypeProperties);
-            myContext.setupSchemaElementRelationship(assetManagerIsHome, schemaTypeGUID, schemaTypeChoiceGUID, "SchemaTypeOption", null, null);
+            String schemaTypeGUID = myContext.createAnchoredSchemaType(assetManagerIsHome, schemaTypeChoiceGUID, null, schemaTypeProperties);
+            myContext.setupSchemaElementRelationship(assetManagerIsHome, schemaTypeChoiceGUID, schemaTypeGUID, "SchemaTypeOption", null, null);
             for (LineageEventContentforSample.Attribute attribute : eventTypeFromJSON.getAttributes()) {
                 createPrimitiveSchemaAttribute(schemaTypeGUID, attribute);
             }

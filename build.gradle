@@ -11,8 +11,7 @@ plugins {
     // Checks for unnecessary dependencies
     id 'com.autonomousapps.dependency-analysis' version "1.19.0"
     // helps resolve log implementation clashes
-    // temp disabled due to https://github.com/odpi/egeria/issues/7426
-    //id 'dev.jacomet.logging-capabilities' version "0.11.0"
+    id 'dev.jacomet.logging-capabilities' version "0.11.0"
     // This plugin helps resolve jakarta/javax dev.jacomet.logging-capabilities
     id 'org.gradlex.java-ecosystem-capabilities' version "1.1"
 }
@@ -62,46 +61,49 @@ configurations.all {
 
 // TODO: Specify group, description, version of new code being built. The name is in settings.gradle
 group = 'org.odpi.egeria'
-version = '1.0-SNAPSHOT'
-description = 'New code for Egeria'
+version = '4.2-SNAPSHOT'
+description = 'Integration lineage connector'
 
 // TODO: Specify Dependency versions as variables
 ext {
-    egeriaVersion = '3.15'
+    egeriaVersion = '4.2-SNAPSHOT'
 }
 dependencies {
-    // This will set constraints so that dependencies here follow egeria versions
-    // this will include egeria, junit, jackson, jupiter, kafka - so no versions are needed below
     implementation platform("org.odpi.egeria:egeria:${egeriaVersion}")
-    // Only used for build - already present in server chassis at runtime
+    implementation "com.fasterxml.jackson.core:jackson-core"
+    api "org.odpi.egeria:open-integration-framework"
+    api "org.odpi.egeria:open-connector-framework"
+    api "org.odpi.egeria:lineage-integrator-api"
+    api "com.fasterxml.jackson.core:jackson-databind"
+    api "org.odpi.egeria:open-connector-framework"
     compileOnly "org.odpi.egeria:audit-log-framework"
     compileOnly "org.odpi.egeria:data-manager-api"
-    // TODO: this is a dependency on an optional connector. validate, document as needed, consider packaging impact
-    // compileOnly "org.odpi.egeria:kafka-open-metadata-topic-connector"
-    compileOnly "org.odpi.egeria:open-connector-framework"
     compileOnly "org.odpi.egeria:repository-services-apis"
     compileOnly "org.odpi.egeria:topic-integrator-api"
     compileOnly "org.odpi.egeria:asset-manager-api"
-    compileOnly "org.odpi.egeria:openlineage-integration-connectors"
-    api "org.odpi.egeria:lineage-integrator-api"
-    // Needed for build and run
     compileOnly "com.fasterxml.jackson.core:jackson-annotations"
-    implementation "com.fasterxml.jackson.core:jackson-core"
-    api "com.fasterxml.jackson.core:jackson-databind"
 
-    // Only needed to compile test code
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
-    testImplementation "org.odpi.egeria:asset-manager-client"
     testCompileOnly "org.odpi.egeria:lineage-integrator-api"
+    testCompileOnly "org.odpi.egeria:audit-log-framework"
+    testCompileOnly "org.odpi.egeria:data-manager-api"
+    testCompileOnly "org.odpi.egeria:open-connector-framework"
+    testCompileOnly "org.odpi.egeria:repository-services-apis"
+    testCompileOnly "org.odpi.egeria:topic-integrator-api"
+    testCompileOnly "org.odpi.egeria:asset-manager-api"
+    testImplementation "org.odpi.egeria:asset-manager-client"
     testImplementation "org.junit.jupiter:junit-jupiter-api"
     testImplementation "org.apache.kafka:kafka-clients"
-
+    testImplementation "org.odpi.egeria:open-integration-framework"
+    testImplementation "org.odpi.egeria:governance-action-framework"
 }
 
 
 // Testing
 test {
-    useJUnitPlatform()
+    useJUnitPlatform {
+        includeEngines 'junit-jupiter'
+    }
     testLogging {
         events "passed", "skipped", "failed"
     }
@@ -112,8 +114,8 @@ test {
 
 // Maven Central (technically sonatype oss) requires we distribute source and javadoc.
 java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
     withJavadocJar()
     withSourcesJar()
 }
@@ -121,8 +123,8 @@ java {
 // More Java language settings
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
-    sourceCompatibility = "11"
-    targetCompatibility = "11"
+    sourceCompatibility = "17"
+    targetCompatibility = "17"
     options.incremental = true
     options.fork = false
     options.failOnError = true

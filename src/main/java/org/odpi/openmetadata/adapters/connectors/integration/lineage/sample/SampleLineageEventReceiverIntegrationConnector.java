@@ -4,7 +4,6 @@
 package org.odpi.openmetadata.adapters.connectors.integration.lineage.sample;
 
 import org.odpi.openmetadata.adapters.connectors.integration.lineage.sample.ffdc.LineageEventSampleEventConnectorAuditCode;
-import org.odpi.openmetadata.adapters.connectors.integration.openlineage.ffdc.OpenLineageIntegrationConnectorAuditCode;
 import org.odpi.openmetadata.frameworks.connectors.Connector;
 import org.odpi.openmetadata.frameworks.connectors.ffdc.ConnectorCheckedException;
 import org.odpi.openmetadata.frameworks.connectors.properties.ConnectionProperties;
@@ -79,7 +78,7 @@ public class SampleLineageEventReceiverIntegrationConnector extends LineageInteg
                  */
                 if (auditLog != null) {
                     auditLog.logMessage(methodName,
-                            OpenLineageIntegrationConnectorAuditCode.KAFKA_RECEIVER_CONFIGURATION.getMessageDefinition(connectorName,
+                            LineageEventSampleEventConnectorAuditCode.KAFKA_RECEIVER_CONFIGURATION.getMessageDefinition(connectorName,
                                     topicName,
                                     topicConnection.getConnectionName()));
                 }

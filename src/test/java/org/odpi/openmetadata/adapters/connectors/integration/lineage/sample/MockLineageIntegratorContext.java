@@ -33,15 +33,17 @@ public class MockLineageIntegratorContext extends LineageIntegratorContext {
     // key is the schema type
     private Map<String, SchemaTypeElement> guidToSchemaTypeMap = new HashMap<>();
     private Map<String, SchemaTypeElement> qnameToSchemaTypeMap = new HashMap<>();
+
+
     private Map<String, RelationshipElement> guidToAssetSchemaTypeMap = new HashMap<>();
+
     private Map<String, SchemaAttributeElement> guidToSchemaAttributeElementMap = new HashMap<>();
+
     private Map<String, List<SchemaAttributeElement>> schemaTypeGUIDToNestedAttributesMap = new HashMap<>();
     private Map<String, String> attributeGuidToParentGuid = new HashMap<>();
 
     public MockLineageIntegratorContext() {
-        super(null, null, null, null, null,
-                null, null, null, null, null, null, null);
-
+        super(null, null, null, null, null, null, null, null, null, null, null, false, null, null, null, null, null, null);
     }
 
     @Override
@@ -355,7 +357,6 @@ public class MockLineageIntegratorContext extends LineageIntegratorContext {
                                Date effectiveTime) {
         DataFlowElement dataFlowElement = guidToDataFlowElementMap.get(dataFlowGUID);
         dataFlowElement.setDataFlowProperties(properties);
-
     }
 
     @Override
@@ -385,38 +386,29 @@ public class MockLineageIntegratorContext extends LineageIntegratorContext {
     }
 
     @Override
-    public void setupSchemaElementRelationship(boolean assetManagerIsHome, String endOneGUID, String endTwoGUID, String relationshipName, Date effectiveTime, RelationshipProperties properties) throws InvalidParameterException, UserNotAuthorizedException, PropertyServerException {
-        RelationshipElement relationshipElement = new RelationshipElement();
-        String guid = createNewGUID();
-        ElementHeader header = new ElementHeader();
-        header.setGUID(guid);
-        ElementType elementType = new ElementType();
-        elementType.setTypeName(relationshipName);
-        header.setType(elementType);
-        relationshipElement.setRelationshipHeader(header);
-
-        ElementHeader header1 = new ElementHeader();
-        header1.setGUID(endTwoGUID);
-        relationshipElement.setEnd1GUID(header1);
-        ElementHeader header2 = new ElementHeader();
-        header2.setGUID(endOneGUID);
-        relationshipElement.setEnd2GUID(header2);
-
-        guidToAssetSchemaTypeMap.put(endTwoGUID, relationshipElement);
+    public void setupSchemaElementRelationship(boolean assetManagerIsHome, String endOneGUID, String endTwoGUID, String relationshipName, Date effectiveTime, RelationshipProperties properties) {
+        SchemaTypeElement schemaTypeChoiceElement = guidToSchemaTypeMap.get(endOneGUID);
+        SchemaTypeElement schemaTypeElement = guidToSchemaTypeMap.get(endTwoGUID);
+        List<SchemaTypeElement> schemaOptions = schemaTypeChoiceElement.getSchemaOptions();
+        if (schemaOptions == null) {
+            schemaOptions = new ArrayList<>();
+        }
+        schemaOptions.add(schemaTypeElement);
+        schemaTypeChoiceElement.setSchemaOptions(schemaOptions);
+        guidToSchemaTypeMap.put(endOneGUID, schemaTypeChoiceElement);
     }
 
-    public List<SchemaTypeElement> getSchemaTypeForElements(String parentElementGUID) {
-        List<SchemaTypeElement> schemaTypeElements = new ArrayList<>();
-        // go through the asset schema type relationships for a match
-        for (String guid : guidToAssetSchemaTypeMap.keySet()) {
-            RelationshipElement relationshipElement = guidToAssetSchemaTypeMap.get(guid);
-            if (relationshipElement.getEnd1GUID().getGUID().equals(parentElementGUID)) {
-                String schemaTypeGUID = relationshipElement.getEnd2GUID().getGUID();
-                 schemaTypeElements.add(guidToSchemaTypeMap.get(schemaTypeGUID));
-            }
-        }
-        return schemaTypeElements;
-
+    @Override
+    public String createAnchoredSchemaType(boolean assetManagerIsHome, String anchorGUID, ExternalIdentifierProperties externalIdentifierProperties, SchemaTypeProperties schemaTypeProperties) throws InvalidParameterException, UserNotAuthorizedException, PropertyServerException {
+        SchemaTypeElement schemaTypeElement = new SchemaTypeElement();
+        String guid = createNewGUID();
+        schemaTypeElement.setSchemaTypeProperties(schemaTypeProperties);
+        ElementHeader elementHeader = new ElementHeader();
+        elementHeader.setGUID(guid);
+        schemaTypeElement.setElementHeader(elementHeader);
+        guidToSchemaTypeMap.put(guid, schemaTypeElement);
+        qnameToSchemaTypeMap.put(schemaTypeProperties.getQualifiedName(), schemaTypeElement);
+        return guid;
     }
 }
 
