@@ -13,14 +13,15 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AssetBean {
 
-    @JsonProperty("Id")
+    @JsonProperty("id")
     private String qualifiedName;
-    @JsonProperty("Name")
+    @JsonProperty("name")
     private String name;
-    @JsonProperty("SQL")
-    private String formula;
-    // TODO change this to an array when we want to support multiple top level EventTypes
-    @JsonProperty("Schemas")
+    @JsonProperty("type")
+    private String type;
+    @JsonProperty("value")
+    private String value;
+    @JsonProperty("schemas")
     private List<SchemaBean> schemas;
     private String qualifiedNamePrefix = "";
     private String qualifiedNameSeparator = ".";
@@ -71,6 +72,7 @@ public class AssetBean {
     public String getQualifiedName() {
         return (this.qualifiedNamePrefix.equals( "" ) ) ? qualifiedName : qualifiedNamePrefix.concat(qualifiedNameSeparator).concat(qualifiedName);
     }
+
     /**
      * Returns the name property for the asset.
      * If no name is available then the empty string is returned.
@@ -81,15 +83,22 @@ public class AssetBean {
         return name;
     }
 
-    /**
-     *
-     * Return the formula used against the asset.
-     *
-     * @return String formula
-     */
-    public String getFormula() {
-        return formula;
+    public String getType() {
+        return type;
     }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
     public List<SchemaBean> getSchemas() {
         return schemas;
     }

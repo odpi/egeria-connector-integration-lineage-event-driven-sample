@@ -4,19 +4,20 @@ package org.odpi.openmetadata.adapters.connectors.integration.lineage.sample.bea
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.JsonNode;
 
-import java.util.Map;
 /**
  * SchemaBean is the Bean that is used to represent the schema part of the event json
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SchemaBean {
-    @JsonProperty("title")
+    @JsonProperty("id")
     private String displayName;
     @JsonProperty("type")
     private String type;
 
-    Map<String,Map<String,Object>> properties;
+    private JsonNode properties;
+
     /**
      * Returns the stored display name property for the schema.
      * If no display name is available then null is returned.
@@ -26,6 +27,11 @@ public class SchemaBean {
     public String getDisplayName() {
         return displayName;
     }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
     /**
      * Returns the stored open metadata type name for this schema type.
      *
@@ -44,20 +50,11 @@ public class SchemaBean {
         this.type = type;
     }
 
-    /**
-     * Get the properties for this Schema
-     * @return the properties
-     */
-
-    public Map<String, Map<String, Object>> getProperties() {
+    public JsonNode getProperties() {
         return properties;
     }
 
-    /**
-     * Set the properties for this Schema (the attributes)
-     * @param properties properties associated with the schema
-     */
-    public void setProperties(Map<String, Map<String, Object>> properties) {
+    public void setProperties(JsonNode properties) {
         this.properties = properties;
     }
 }
