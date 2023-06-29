@@ -6,6 +6,9 @@ package org.odpi.openmetadata.adapters.connectors.integration.lineage.sample;
 
 import org.odpi.openmetadata.accessservices.assetmanager.metadataelements.*;
 import org.odpi.openmetadata.accessservices.assetmanager.properties.*;
+import org.odpi.openmetadata.frameworks.connectors.ffdc.InvalidParameterException;
+import org.odpi.openmetadata.frameworks.connectors.ffdc.PropertyServerException;
+import org.odpi.openmetadata.frameworks.connectors.ffdc.UserNotAuthorizedException;
 import org.odpi.openmetadata.frameworks.connectors.properties.beans.ElementHeader;
 import org.odpi.openmetadata.frameworks.connectors.properties.beans.ElementType;
 import org.odpi.openmetadata.integrationservices.lineage.connector.LineageIntegratorContext;
@@ -40,9 +43,7 @@ public class MockLineageIntegratorContext extends LineageIntegratorContext {
     private Map<String, String> attributeGuidToParentGuid = new HashMap<>();
 
     public MockLineageIntegratorContext() {
-        super(null, null, null, null, null,
-                null, null, null, null, null, null, null);
-
+        super(null, null, null, null, null, null, null, null, null, null, null, false, null, null, null, null, null, null);
     }
 
     @Override
@@ -242,8 +243,10 @@ public class MockLineageIntegratorContext extends LineageIntegratorContext {
         // called from elsewhere
         List<SchemaAttributeElement> attributes = schemaTypeGUIDToNestedAttributesMap.get(schemaTypeGUID);
         Set<String> guidsToRemove = new HashSet<>();
-        for (SchemaAttributeElement attributeElement : attributes) {
-            guidsToRemove.add(attributeElement.getElementHeader().getGUID());
+        if (attributes != null) {
+            for (SchemaAttributeElement attributeElement : attributes) {
+                guidsToRemove.add(attributeElement.getElementHeader().getGUID());
+            }
         }
         for (String guid : guidsToRemove) {
             removeSchemaAttribute(guid, null);
@@ -354,7 +357,6 @@ public class MockLineageIntegratorContext extends LineageIntegratorContext {
                                Date effectiveTime) {
         DataFlowElement dataFlowElement = guidToDataFlowElementMap.get(dataFlowGUID);
         dataFlowElement.setDataFlowProperties(properties);
-
     }
 
     @Override
@@ -381,6 +383,32 @@ public class MockLineageIntegratorContext extends LineageIntegratorContext {
 
     private String createNewGUID() {
         return "" + guidCounter++;
+    }
+
+    @Override
+    public void setupSchemaElementRelationship(boolean assetManagerIsHome, String endOneGUID, String endTwoGUID, String relationshipName, Date effectiveTime, RelationshipProperties properties) {
+        SchemaTypeElement schemaTypeChoiceElement = guidToSchemaTypeMap.get(endOneGUID);
+        SchemaTypeElement schemaTypeElement = guidToSchemaTypeMap.get(endTwoGUID);
+        List<SchemaTypeElement> schemaOptions = schemaTypeChoiceElement.getSchemaOptions();
+        if (schemaOptions == null) {
+            schemaOptions = new ArrayList<>();
+        }
+        schemaOptions.add(schemaTypeElement);
+        schemaTypeChoiceElement.setSchemaOptions(schemaOptions);
+        guidToSchemaTypeMap.put(endOneGUID, schemaTypeChoiceElement);
+    }
+
+    @Override
+    public String createAnchoredSchemaType(boolean assetManagerIsHome, String anchorGUID, ExternalIdentifierProperties externalIdentifierProperties, SchemaTypeProperties schemaTypeProperties) throws InvalidParameterException, UserNotAuthorizedException, PropertyServerException {
+        SchemaTypeElement schemaTypeElement = new SchemaTypeElement();
+        String guid = createNewGUID();
+        schemaTypeElement.setSchemaTypeProperties(schemaTypeProperties);
+        ElementHeader elementHeader = new ElementHeader();
+        elementHeader.setGUID(guid);
+        schemaTypeElement.setElementHeader(elementHeader);
+        guidToSchemaTypeMap.put(guid, schemaTypeElement);
+        qnameToSchemaTypeMap.put(schemaTypeProperties.getQualifiedName(), schemaTypeElement);
+        return guid;
     }
 }
 
